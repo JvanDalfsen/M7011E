@@ -1,0 +1,1 @@
+﻿In this folder should be put all the typescript's definition for the building our environnement.

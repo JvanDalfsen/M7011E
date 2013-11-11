@@ -1,0 +1,1 @@
+﻿This folder will contain the executables (the server and maybe some dependencies).
