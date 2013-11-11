@@ -15,37 +15,25 @@ This web-service is written using the following technologies:
 
 Client side:
 
--JavaScript/HTML5/CSS3
+- JavaScript, HTML5 and CSS3
 
--
-Using the JavaScript framework JQuery, AngularJS to ease the browser
-compabilities and use databinding.
+- JQuery, AngularJS and HandleBars
 
 
-- rich internet application
+Server side:
 
+- NodeJS, ExpressJS
 
- 
+- MongoDB, Mongoose
+
 
 Communication:
 
--
-JSON, JavaScript
-
-- REST
-API
+- REST API, JSON
 
 
+Setup the project:
+==
 
-Server
-side:
 
--
-NodeJS, an asynchonous IO framework for JavaScript
 
--
-ExpressJS, a framework on top of NodeJS for building website (it looks like a
-lightweight Ruby on Rail, Django).
-
--
-MongoDB, a NoSQL database that use BSON/JSON internally (JavaScript again).
