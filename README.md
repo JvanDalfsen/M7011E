@@ -35,8 +35,20 @@ Communication:
 Setup the project:
 ==
 
+1. Install Node.js and its packet manager npm.
+
+2. Use the command `npm install` at the root of the project's folder to install its dependencies.
+
+3. Use the command `node ./build/build.js` to build the entire project.
+
 Run the project:
 ==
+
+1. Setup the project.
+
+2. Edit the file server/config.json according to your needs.
+
+3. Use the command 'node ./bin/server.js'.
 
 
 
