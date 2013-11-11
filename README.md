@@ -35,5 +35,8 @@ Communication:
 Setup the project:
 ==
 
+Run the project:
+==
+
 
 
