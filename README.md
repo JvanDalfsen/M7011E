@@ -48,7 +48,7 @@ Run the project:
 
 2. Edit the file server/config.json according to your needs.
 
-3. Use the command 'node ./bin/server.js'.
+3. Use the command `node ./bin/server.js`.
 
 
 
