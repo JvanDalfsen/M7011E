@@ -19,3 +19,6 @@ node_modules
 
 # Useless binaries
 # TODO
+
+# Eclipse
+.project
