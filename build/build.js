@@ -11,19 +11,29 @@ var buildSteps = [
     {
         message: 'Compiling the client...',
         command: 'node ./node_modules/typescript/bin/tsc client/mycalendar.ts \
-                  --out bin/mycalendar.js \
+                  --out client/static/js/mycalendar.js \
                   --target ES5 --sourcemap'
     }
 ];
 
-buildSteps.forEach(function (value, index) {
-    exec(function (err, stdout, stderr) {
+function build(steps) {
+    if (steps.length == 0) {
+        console.log('Build finished!');
+        return;
+    }
+
+    console.log(steps[0].message);
+    exec(steps[0].command, function (err, stdout, stderr) {
         if (err) {
             console.log(err);
             console.log(stdout);
             console.log(stderr);
         }
-    });
-});
 
-console.log('Build finished!');
+        steps.shift();
+        build(steps);
+    });
+}
+
+console.log('Starting build...');
+build(buildSteps);

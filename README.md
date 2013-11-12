@@ -50,5 +50,7 @@ Run the project:
 
 3. Use the command `node ./bin/server.js`.
 
+4. The server should be started on the port you specified.
+
 
 

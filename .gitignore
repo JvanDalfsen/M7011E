@@ -22,3 +22,7 @@ node_modules
 
 # Eclipse
 .project
+
+#Generated files
+bin/
+client/static/js
