@@ -1,51 +1,90 @@
-#main-header
-{
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 80px;
-    width: 100%;
-    background-color: hsl(200, 90%, 38%);
-    /* box-shadow: 0px 3px 5px #888888; */
+* {
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #333;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-#main-header > h1
+#main-header
 {
-    margin-left: 10px;
-    margin-right: 10px;
-    color: white;
+  position:relative;
+  height: 80px;
+  width: 100%;
+  background-color: hsl(200, 90%, 38%);
+  z-index: 10;
+  /* box-shadow: 0px 3px 5px #888888; */
+}
+
+#logo
+{
+  position: absolute;
+  padding: 5px;
+  top: 25%;
+  vertical-align: central; 
+  float: left;
+  color: white;
+}
+
+#logo:hover
+{
+  box-shadow: 0px 3px 5px hsl(200, 90%, 25%);
+  background-color: hsl(200, 90%, 35%);
+}
+
+#logo:active
+{
+  background-color: hsl(200, 90%, 25%);
 }
 
 html
 {
-    height: 100%;
+  height: 100%;
 }
 
-body 
+body
 {
-    background-color: hsl(200, 79%, 50%);
-    position: relative;
-    height: 100%;
-    min-height: 100%;
+  background-color: hsl(200, 79%, 50%);
+  position: relative;
+  height: 100%;
+  min-height: 100%;
+  font: normal 100% 'Open Sans', Helvetica, Sans-Serif;
 }
 
 #main-frame
 {
-    background-color: white;
-    margin-top: 160px;
-    margin-left: 80px;
-    margin-right: 80px;
-    top: 0px;
-    bottom: 80px;
-    width: auto;
-    height: 100%;
+  background-color: white;
+  margin-top: 80px;
+  height: 70%;
 }
 
 #main-footer
 {
-    position: absolute;
-    height: 80px;
-    width: 100%;
-    background-color: hsl(200, 79%, 50%);
-    bottom: 0px;
+  position: relative;
+  height: 80px;
+  background-color: hsl(200, 79%, 50%);
 }
+
+#copyright
+{
+  position: absolute;
+  bottom: 10px;  
+  color: hsl(0, 0%, 90%);
+}
+
+.centered
+{
+  margin-left: 160px;
+  margin-right: 160px;
+}
+
