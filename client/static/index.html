@@ -17,7 +17,21 @@
 <body>
     <header id="main-header">
         <div class="centered">
-            <h1 id="logo">My Calendar</h1>
+            <div id="user-settings-button"class="dark-blue-button">
+                <p>John Doe</p>
+                <img src="images/cartoon-avatar.png" alt="avatar" width="45" height="45">
+                </img>
+            </div>
+            <nav>
+                <ul>
+                    <li><a class="dark-blue-button breadcrumb-button"> My Calendar </a></li>
+                    <li><a class="dark-blue-button breadcrumb-button"> LTU Calendar </a></li>
+                    <li><a class="dark-blue-button breadcrumb-button" selected>Meeting</a></li>
+                </ul>
+            </nav>
+            <div id="main-search-bar">
+                <input type="text" value="Search"/>
+            </div>
         </div>
     </header>
 
@@ -25,8 +39,10 @@
 
     </section>
     
-    <footer id="main-footer" class="centered">
-        <p id="copyright">© MC Tm</p>
+    <footer id="main-footer">
+        <div class="centered">
+            <p id="copyright">© MC Tm</p>
+        </div>
     </footer>
 </body>
 </html>
