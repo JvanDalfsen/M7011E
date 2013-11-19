@@ -27,6 +27,7 @@ body
   height: 100%;
   min-height: 100%;
   font: normal 100% 'Open Sans', Helvetica, Sans-Serif;
+  font-weight: bold;
 }
 
 #main-header
@@ -34,7 +35,7 @@ body
   position:relative;
   height: 80px;
   background-color: hsl(200, 90%, 38%);
-  z-index: 10;
+  z-index: 2;
   color: white;
   font-weight: bold;
 }
@@ -60,20 +61,9 @@ body
 
 #user-settings-button
 {
-  float: right;
-  width: 76px;
-  height: 76px;
-  text-align: center;
-}
-
-#user-settings-button p
-{
-  margin: 1px 1px;
-}
-
-#user-settings-button img
-{
-  border: 1px solid white;
+  float: left;
+  z-index: 4;
+  margin: 2px;
 }
 
 #main-search-bar
@@ -97,10 +87,60 @@ body
   font-size: 2em;
 }
 
+#main-menu
+{
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  z-index: 3;
+  background-color: hsl(200, 90%, 25%);
+  height: 100%;
+  width: 80px;
+  color: white;
+  font-weight: bold;
+}
+
+#user-info p
+{
+  margin: 4px 10px 4px 10px;
+  text-align: center;
+  font-size: 12px;
+  padding: 2px;
+}
+
+.main-sub-menu
+{
+  clear:both;
+  margin: 90px 2px 90px 2px;
+}
+
+.main-sub-menu li
+{
+  padding: 5px;
+}
+
+.main-sub-menu li img
+{
+  float: right;
+}
+
+#toolbar
+{
+  position: relative;
+  height: 80px;
+  background-color: hsl(200, 79%, 50%);
+  color: white;
+}
+
+#page-number
+{
+  position: absolute;
+  bottom: 5px;
+}
+
 #main-frame
 {
   background-color: white;
-  margin-top: 80px;
   height: 70%;
 }
 
@@ -125,10 +165,6 @@ body
   height: 100%;
 }
 
-.dark-blue-button
-{
-}
-
 .dark-blue-button:hover
 {
   box-shadow: 0px 3px 5px hsl(200, 90%, 25%);
@@ -138,6 +174,17 @@ body
 .dark-blue-button:active, .dark-blue-button[selected]
 {
   background-color: hsl(200, 90%, 25%);
+}
+
+.deep-dark-blue-button:hover
+{
+  box-shadow: 0px 3px 5px hsl(200, 90%, 25%);
+  background-color: hsl(200, 90%, 20%);
+}
+
+.deep-dark-blue-button:active, .deep-dark-blue-button[selected]
+{
+  background-color: hsl(200, 90%, 15%);
 }
 
 .breadcrumb-button
@@ -191,3 +238,77 @@ body
   border-bottom-color: hsl(200, 90%, 25%);
 }
 
+.avatar
+{
+  width: 76px;
+  height: 76px;
+  text-align: center;
+}
+
+.avatar p
+{
+  margin: 1px 1px;
+}
+
+.avatar img
+{
+  border: 1px solid white;
+}
+
+.hidable-menu
+{
+  display: none;
+}
+
+.event-item
+{
+  position: relative;
+  display: inline-block;
+  width: 300px;
+  height: 200px;
+  margin: 5px;
+  background-color: hsl(200, 79%, 50%);
+  color:white;
+  text-align: center;
+}
+
+.event-item:hover
+{
+  box-shadow: 0px 3px 5px hsl(200, 90%, 25%);
+  background-color: hsl(200, 90%, 40%);
+}
+
+.event-date
+{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.event-content
+{
+  position: absolute;
+  top: 25%;
+  right: 0;
+  left: 0;
+}
+
+.event-picture
+{
+  padding: 0px;
+  margin: 0px;
+  position: absolute;
+  top:0;
+  left:0;
+}
+
+.event-picture img:after
+{
+  position: absolute;
+  top:0;
+  left:0;
+  background-color: hsl(0, 0%, 50%);
+  width: 300px;
+  height: 200px;
+}
