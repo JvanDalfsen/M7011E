@@ -110,8 +110,9 @@ body
 
 .main-sub-menu
 {
-  clear:both;
+  clear: both;
   margin: 90px 2px 90px 2px;
+  list-style: none;
 }
 
 .main-sub-menu li
@@ -311,4 +312,5 @@ body
   background-color: hsl(0, 0%, 50%);
   width: 300px;
   height: 200px;
+  z-index: 3;
 }
