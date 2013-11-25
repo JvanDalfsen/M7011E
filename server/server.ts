@@ -1,5 +1,6 @@
 ﻿/// <reference path="./definitions/server.d.ts"/>
 /// <reference path="./server-config.ts"/>
+/// <reference path="./router.ts"/>
 
 module MyCalendar {
 
@@ -9,6 +10,7 @@ module MyCalendar {
 
         /** @var {ServerConfig} The current config used by this server instance. */
         private _config: ServerConfig;
+
 
         constructor(config: ServerConfig) {
             this._config = config;
@@ -40,6 +42,9 @@ module MyCalendar {
 
             // The last middlewares must be the error handlers in case we want to handle them with another one.
             this._app.use(express.errorHandler());
+
+            // Install dynamic routes.
+            Router.setupRoutes(this._app);
 
             // Install static routes.
             var staticFolder: string = process.cwd() + '/' + this._config.staticFolderPath;
