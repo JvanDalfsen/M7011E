@@ -19,7 +19,7 @@ module MyCalendar {
             this.setupMongoose();
         }
 
-        private setupExpressServer() {
+        private setupExpressServer(): void {
             var express = require('express');
 
             this._app = express();
@@ -57,12 +57,14 @@ module MyCalendar {
         private setupMongoose(): void {
             var mongoose = require('mongoose');
 
-            // Connect mongoose to a local
+            console.log('Connecting mongoose on ' + this._config.database);
+
+            // Connect mongoose to the MongoDB's database.
             mongoose.connect(this._config.database);
 
             mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
             mongoose.connection.once('open', () => {
-                console.log('Mongoose connection opened on' + this._config.database);
+                console.log('Mongoose\'s connection opened on ' + this._config.database);
             });
         }
 
