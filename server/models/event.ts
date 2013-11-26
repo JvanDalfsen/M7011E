@@ -7,7 +7,9 @@ module MyCalendar.Models {
         name:        String,
         description: String,
         begin:       Date,
-        end:         Date 
+        end:         Date
+        // TODO: add an events.
+        // TODO: Ensure that this event is linked to at least one calendar otherwise destroy it.  
     });
 
     export var Event = mongoose.model('Event', eventSchema);

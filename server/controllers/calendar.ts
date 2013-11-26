@@ -1,4 +1,4 @@
-/// <reference path="../definitions/server.d.ts"/>4
+/// <reference path="../definitions/server.d.ts"/>
 
 module MyCalendar.Controllers {
     export class Calendar {

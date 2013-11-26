@@ -7,6 +7,7 @@ module MyCalendar.Models {
     var calendarSchema = new mongoose.Schema({
         name:   String,
         events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }]
+        // TODO: add an owner.
     });
 
     export var Calendar = mongoose.model('Calendar', calendarSchema);
