@@ -123,7 +123,7 @@ module MyCalendar {
              * @param {mongoose.Schema.Types.ObjectId} id The id of the event.
              * @return {Models.Event} The event in JSON format. 
              */
-            app.put('/events/:id', Controllers.Event.delete);
+            app.del('/events/:id', Controllers.Event.delete);
         }
     }
 }
