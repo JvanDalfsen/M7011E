@@ -1,0 +1,109 @@
+﻿<!doctype html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>My Item</title>
+    <!-- <link rel="stylesheet" type="text/css" href=""/> -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="js/mycalendar.js"></script>
+    <script src="js/Item.js"></script>
+    <link rel="stylesheet" href="css/mycalendar.css" type="text/css" />
+    <!-- page specific scripts -->
+    <script type="text/javascript" charset="utf-8">
+        $(function () {
+            $('.datepicker').datepicker({ clickInput: true })
+        });
+    </script>
+
+
+</head>
+
+<body>
+    <header id="main-header">
+        <div class="centered">
+            <div id="location-menu">
+                <nav>
+                    <ul>
+                        <li><a class="dark-blue-button breadcrumb-button" selected> My Calendar </a></li>
+                    </ul>
+                </nav>
+                <input type="button" value="add-menu" onclick="klickklick()">
+            </div>
+            <div id="main-search-bar">
+                <input type="text" value="Search" />
+            </div>
+        </div>
+    </header>
+
+    <menu id="main-menu">
+        <div id="user-settings-button" class="deep-dark-blue-button avatar">
+            <p>John Doe</p>
+            <img src="images/cartoon-avatar.png" alt="avatar" width="45" height="45" />
+        </div>
+        <div id="user-info" class="hidable-menu">
+            <p>JohnDoe@gmail.com</p>
+            <p>7 Calendars</p>
+            <p>Last seen: 19/11/2013</p>
+        </div>
+
+        <ul class="hidable-menu main-sub-menu">
+            <li class="deep-dark-blue-button">
+                <p>
+                    Disconnect
+                    <img src="icons/lock-button-small.png" alt="disconnect" width="19" height="19" />
+                </p>
+            </li>
+            <li class="deep-dark-blue-button">
+                <p>
+                    Delete this account
+                    <img src="icons/close-button-small.png" alt="disconnect" width="19" height="19" />
+                </p>
+            </li>
+        </ul>
+
+        <ul class="hidable-menu main-sub-menu">
+            <li class="deep-dark-blue-button"><p>Upload a file</p></li>
+            <li class="deep-dark-blue-button"><p>Manage your content</p></li>
+        </ul>
+
+        <ul class="hidable-menu main-sub-menu">
+            <li class="deep-dark-blue-button"><p>About</p></li>
+            <li class="deep-dark-blue-button"><p>Help</p></li>
+        </ul>
+
+    </menu>
+
+    <menu id="toolbar" class="centered">
+        <div id="page-number"><p> << 1/1 >> </p></div>
+    </menu>
+
+    <section id="main-frame" class="centered">
+        <div id="item-create-frame">
+            <form>
+                Title: <input type="text" name="title" /><br />
+                From: <input type="text" name="fromTime" />, <input class="datepicker" type="text" name="fromDate" />
+                To: <input type="text" name="toTime" />, <input class="datepicker" type="text" name="toDate" /><br />
+                Location: <input type="text" name="location" /><br />
+                Calendar: <select>
+                    <option value="calendar1">Calendar1</option>
+                    <option value="calendar2">Calendar2</option>
+                </select><br />
+                Description: <textarea name="description" cols="20" rows="5"></textarea><br />
+                Documents:<ul>
+                    <li>Document 1</li>
+                    <li>Document 2</li>
+                </ul><br />
+            </form>
+        </div>
+    </section>
+
+    <footer id="main-footer">
+        <div class="centered">
+            <p id="copyright">© MC Tm</p>
+        </div>
+    </footer>
+</body>
+</html>

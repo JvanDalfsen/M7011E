@@ -142,6 +142,24 @@ body
 {
   background-color: white;
   height: 70%;
+  overflow:hidden;
+}
+
+#main-frame ul
+{
+    padding-left: 3em;
+}
+
+#main-frame-item textarea
+{
+    vertical-align: text-top;
+}
+
+#item-create-frame
+{
+    background-color: hsl(200, 79%, 50%);
+    margin: 5px;
+    padding: 10px;
 }
 
 #main-footer
