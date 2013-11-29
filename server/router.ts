@@ -4,6 +4,8 @@
 
 module MyCalendar {
     export class Router {
+        private static _apiRoot = '/api';
+
         public static setupRoutes(app: Express): void {
             this.setupCalendarsRoutes(app);
             this.setupEventsRoutes(app);
@@ -19,7 +21,7 @@ module MyCalendar {
              * @param {Array<mongoose.Schema.Types.ObjectId>} events A list of events id that will be linked to this calendar.
              * @return {Models.Calendar} The newly created calendar in JSON format. 
              */
-            app.post('/calendars', Controllers.Calendar.create);
+            app.post(this._apiRoot + '/calendars', Controllers.Calendar.create);
             
             /**
              * Finds some calendars according to a query.
@@ -30,7 +32,7 @@ module MyCalendar {
              * @param [Array<mongoose.Schema.Types.ObjectId>] events A list of events id that these calendar would be linked.
              * @return {Array<Models.Calendar>} The calendars that matches the query in JSON format.
              */
-            app.get('/calendars', Controllers.Calendar.find);
+            app.get(this._apiRoot + '/calendars', Controllers.Calendar.find);
 
             /**
              * Finds one calendar.
@@ -40,11 +42,11 @@ module MyCalendar {
              * @param {mongoose.Schema.Types.ObjectId} id The id of the calendar.
              * @return {Models.Calendar} The calendar in JSON format. 
              */
-            app.get('/calendars/:id', Controllers.Calendar.findById);
+            app.get(this._apiRoot + '/calendars/:id', Controllers.Calendar.findById);
 
             /**
-             * Updates one calendar.
-             * Request type: UPDATE
+             * Updates one calendar or creates it if the id isn't in the database.
+             * Request type: PUT
              * URI: /calendars/?:id
              * 
              * @param {mongoose.Schema.Types.ObjectId} id The id of the calendar.
@@ -52,7 +54,7 @@ module MyCalendar {
              * @param [Array<mongoose.Schema.Types.ObjectId>] events A list of events id that will be linked to this calendar.
              * @return {Models.Calendar} The calendar in JSON format.
              */
-            app.put('/calendars/?:id', Controllers.Calendar.update);
+            app.put(this._apiRoot + '/calendars/:id?', Controllers.Calendar.update);
 
             /**
              * Deletes one calendar.
@@ -62,7 +64,7 @@ module MyCalendar {
              * @param {mongoose.Schema.Types.ObjectId} id The id of the calendar.
              * @return {Models.Calendar} The calendar in JSON format. 
              */
-            app.del('/calendars/:id', Controllers.Calendar.delete);
+            app.del(this._apiRoot + '/calendars/:id', Controllers.Calendar.delete);
         }
 
         private static setupEventsRoutes(app: Express): void {
@@ -77,7 +79,7 @@ module MyCalendar {
              * @param {Date} end The end date of this new event.
              * @return {Models.Event} The newly created event in JSON format. 
              */
-            app.post('/events', Controllers.Event.create);
+            app.post(this._apiRoot + '/events', Controllers.Event.create);
 
             /**
              * Finds some events according to a query.
@@ -90,7 +92,7 @@ module MyCalendar {
              * @param [Date] end The end date of these events.
              * @return {Array<Models.Event>} The events that matches the query in JSON format.
              */
-            app.get('/events', Controllers.Event.find);
+            app.get(this._apiRoot + '/events', Controllers.Event.find);
 
             /**
              * Finds one event.
@@ -100,7 +102,7 @@ module MyCalendar {
              * @param {mongoose.Schema.Types.ObjectId} id The id of the event.
              * @return {Models.Event} The event in JSON format. 
              */
-            app.get('/events/:id', Controllers.Event.findById);
+            app.get(this._apiRoot + '/events/:id', Controllers.Event.findById);
 
             /**
              * Updates one event.
@@ -113,7 +115,7 @@ module MyCalendar {
              * @param [Date] end The end date of this new event.
              * @return {Models.Event} The event in JSON format.
              */
-            app.put('/events/?:id', Controllers.Event.update);
+            app.put(this._apiRoot + '/events/?:id', Controllers.Event.update);
 
             /**
              * Deletes one event.
@@ -123,7 +125,7 @@ module MyCalendar {
              * @param {mongoose.Schema.Types.ObjectId} id The id of the event.
              * @return {Models.Event} The event in JSON format. 
              */
-            app.del('/events/:id', Controllers.Event.delete);
+            app.del(this._apiRoot + '/events/:id', Controllers.Event.delete);
         }
     }
 }

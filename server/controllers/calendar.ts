@@ -4,6 +4,7 @@
 module MyCalendar.Controllers {
     export class Calendar {
         public static create(req: ExpressServerRequest, res: ExpressServerResponse, next: Function) {
+            console.log('yo');
             // Note: passing the body only works because of the validation feature.
             // Note: we delete the ids in order to force Mongoose to generate it by itself (and also to avoid stupid hackers messing up with the db...).
             delete req.body._id;
@@ -41,12 +42,22 @@ module MyCalendar.Controllers {
         public static update(req: ExpressServerRequest, res: ExpressServerResponse, next: Function) {
             delete req.body._id;
             delete req.body.id;
+            console.log(req.params.id);
+            console.log(req.body);
 
-            Models.Calendar.findByIdAndUpdate(req.params.id, req.body, (err: any, calendar: any): void => {
+            Models.Calendar.findById(req.params.id, (err: any, calendar: any): void => {
                 if (err || !calendar) {
-                    res.send(400, err);
+                    // If nothing found, creates it.
+                    Calendar.create(req, res, next);
                 } else {
-                    res.send(calendar);
+                    Models.Calendar.findByIdAndUpdate(req.params.id, req.body, (err: any, calendar: any): void => {
+                        if (err || !calendar) {
+                            res.send(400, err);
+                            console.log(err);
+                        } else {
+                            res.send(calendar);
+                        }
+                    });
                 }
             });
         }

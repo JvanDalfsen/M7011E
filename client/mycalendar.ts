@@ -1,4 +1,5 @@
 ﻿/// <reference path="./definitions/jquery.d.ts"/>
+/// <reference path="./repository.ts"/>
 
 // Start the script when the page is ready.
 $(() => {
@@ -19,5 +20,35 @@ $(() => {
                 userButton.removeAttr('selected');
             });
         }
+
+        console.log("type: ");
     });
+
+    MyCalendar.calendarsRepository.create({ name: 'test', events: [] }).done((myCalendar) =>
+    {
+        console.log(myCalendar.getRefId());
+        myCalendar.name = 'yo';
+        MyCalendar.calendarsRepository.save(myCalendar).done(() => {
+            MyCalendar.calendarsRepository.findById(myCalendar.getRefId()).done((myCalendar2) => {
+                console.log(myCalendar2.name);
+            });
+        });
+
+
+        MyCalendar.calendarsRepository.find({}).done((calendars: Array<any>) => {
+            calendars.map((value, index, array) => {
+                console.log(value.getRefId());
+                MyCalendar.calendarsRepository.delete(value);
+
+            });
+        });
+
+        MyCalendar.calendarsRepository.find({}).done((calendars: Array<any>) => {
+            calendars.map((value, index, array) => {
+                console.log(value.getRefId());
+            });
+        });
+    });
+
+ 
 });

@@ -1,13 +1,19 @@
-﻿/// <reference path="../repository.ts"/>
+﻿/// <reference path="./model.ts"/>
+/// <reference path="../repository.ts"/>
+/// <reference path="../definitions/jquery.d.ts"/>
 
 module MyCalendar.Models {
-    export class Ref<T> {
-        constructor(private refid) {
+    export class Ref<T extends Model> {
+        constructor(private _refid: string, private _repo: Repository<T>) {
 
         }
 
-        public deference(): T {
-            return <T>(Repository<T>.todo(this.refid));
+        public get id(): string {
+            return this._refid;
+        }
+
+        public deference(): JQueryPromise<T> {
+            return this._repo.findById(this._refid);
         }
     }
 }

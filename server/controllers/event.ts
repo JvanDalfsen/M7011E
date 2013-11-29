@@ -37,11 +37,17 @@ module MyCalendar.Controllers {
         }
 
         public static update(req: ExpressServerRequest, res: ExpressServerResponse, next: Function) {
-            Models.Event.findByIdAndUpdate(req.params.id, req.body, (err: any, event: any): void => {
+            Models.Event.findById(req.params.id, (err: any, event: any): void => {
                 if (err || !event) {
-                    res.send(400, err);
+                    Event.create(req, res, next);
                 } else {
-                    res.send(event);
+                    Models.Event.findByIdAndUpdate(req.params.id, req.body, (err: any, event: any): void => {
+                        if (err || !event) {
+                            res.send(400, err);
+                        } else {
+                            res.send(event);
+                        }
+                    });
                 }
             });
         }
