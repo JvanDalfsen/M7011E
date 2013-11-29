@@ -3,6 +3,7 @@
 
 module MyCalendar.Models {
     var mongoose = require('mongoose');
+    var async = require('async');
 
     var calendarSchema = new mongoose.Schema({
         name: { type: String, required: 'Name is required!' },
@@ -13,15 +14,19 @@ module MyCalendar.Models {
     /**
      * Check that the events' id are valids.
      */
-    calendarSchema.path('events').validate((value: any, respond: (boolean) => void): void => {
-        Event.findById(value, (err: any, event: any): void => {
-            if (err || !event) {
-                respond(false);
-            }
+    calendarSchema.path('events').validate((value: Array<any>, respond: (boolean) => void): void => {
+        async.reduce(value, true, (memo: any, item: any, callback: AsyncSingleResultCallback<any>): void => {
+            Event.findById(item, (err: any, event: any): void => {
+                if (err || !event) {
+                    callback(null, false && memo);
+                }
 
-            respond(true);
+                callback(null, true && memo);
+            }, 'Invalid ObjectId for the event');
+        }, (err: string, result: any): any => {
+            respond(result);
         });
-    }, 'Invalid ObjectId for the event');
+    });
 
     export var Calendar = mongoose.model('Calendar', calendarSchema);
 }

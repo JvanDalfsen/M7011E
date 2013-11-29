@@ -48,8 +48,8 @@ module MyCalendar {
              * URI: /calendars/?:id
              * 
              * @param {mongoose.Schema.Types.ObjectId} id The id of the calendar.
-             * @param {String} name The name of this new calendar.
-             * @param {Array<mongoose.Schema.Types.ObjectId>} events A list of events id that will be linked to this calendar.
+             * @param [String] name The name of this new calendar.
+             * @param [Array<mongoose.Schema.Types.ObjectId>] events A list of events id that will be linked to this calendar.
              * @return {Models.Calendar} The calendar in JSON format.
              */
             app.put('/calendars/?:id', Controllers.Calendar.update);
@@ -84,10 +84,10 @@ module MyCalendar {
              * Request type: GET
              * URI: /events
              * 
-             * @param {String} name The name of this event.
-             * @param {String} description The description of these events.
-             * @param {Date} begin The beginning date of these events.
-             * @param {Date} end The end date of these events.
+             * @param [String] name The name of this event.
+             * @param [String] description The description of these events.
+             * @param [Date] begin The beginning date of these events.
+             * @param [Date] end The end date of these events.
              * @return {Array<Models.Event>} The events that matches the query in JSON format.
              */
             app.get('/events', Controllers.Event.find);
@@ -107,10 +107,10 @@ module MyCalendar {
              * Request type: UPDATE
              * URI: /events/?:id
              * 
-             * @param {String} name The name of this new event.
-             * @param {String} description The description of this new event.
-             * @param {Date} begin The beginning date of this new event.
-             * @param {Date} end The end date of this new event.
+             * @param [String] name The name of this new event.
+             * @param [String] description The description of this new event.
+             * @param [Date] begin The beginning date of this new event.
+             * @param [Date] end The end date of this new event.
              * @return {Models.Event} The event in JSON format.
              */
             app.put('/events/?:id', Controllers.Event.update);
