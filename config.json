@@ -1,5 +1,6 @@
 {
 	"port": 8080,
 	"staticFolderPath": "client/static",
-	"compress": true
+	"compress": true,
+    "database": "mongodb://localhost/mycalendar"
 }
