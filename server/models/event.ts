@@ -6,6 +6,7 @@ module MyCalendar.Models {
     var eventSchema = new mongoose.Schema({
         name:        { type: String, required: true },
         description: String,
+        location: String,
         begin:       { type: Date, required: true },
         end:         { type: Date, required: true },
         // TODO: add an events.

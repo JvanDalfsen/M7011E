@@ -48,7 +48,5 @@ $(() => {
                 console.log(value.getRefId());
             });
         });
-    });
-
- 
+    }); 
 });
