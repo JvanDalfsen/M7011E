@@ -1,13 +1,12 @@
-﻿/// <reference path="../definitions/server.d.ts"/>
+/// <reference path="../definitions/server.d.ts"/>
 /// <reference path="../models/event.ts"/>
 
 module MyCalendar.Controllers {
     export class Event {
         public static create(req: ExpressServerRequest, res: ExpressServerResponse, next: Function) {
-            delete req.body._id;
-            delete req.body.id;
+            var newEvent = Event.buildModelFromReq(req);
 
-            Models.Event.create(req.body, (err: any, event: any): void => {
+            Models.Event.create(newEvent, (err: any, event: any): void => {
                 if (err || !event) {
                     res.send(400, err);
                 } else {
@@ -41,7 +40,9 @@ module MyCalendar.Controllers {
                 if (err || !event) {
                     Event.create(req, res, next);
                 } else {
-                    Models.Event.findByIdAndUpdate(req.params.id, req.body, (err: any, event: any): void => {
+                    var updatedEvent = Event.buildModelFromReq(req);
+
+                    Models.Event.findByIdAndUpdate(req.params.id, updatedEvent, (err: any, event: any): void => {
                         if (err || !event) {
                             res.send(400, err);
                         } else {
@@ -60,6 +61,32 @@ module MyCalendar.Controllers {
                     res.send(event);
                 }
             });
+        }
+
+        private static buildModelFromReq(req: ExpressServerRequest): any {
+            var event: any = {};
+
+            if (req.body.name) {
+                event.name = req.body.name;
+            }
+
+            if (req.body.description) {
+                event.description = req.body.description;
+            }
+
+            if (req.body.location) {
+                event.location = req.body.location;
+            }
+
+            if (req.body.begin) {
+                event.begin = req.body.begin;
+            }
+
+            if (req.body.end) {
+                event.end = req.body.end;
+            }
+
+            return event;
         }
     }
 }

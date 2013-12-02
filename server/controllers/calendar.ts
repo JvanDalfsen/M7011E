@@ -4,13 +4,11 @@
 module MyCalendar.Controllers {
     export class Calendar {
         public static create(req: ExpressServerRequest, res: ExpressServerResponse, next: Function) {
-            console.log('yo');
             // Note: passing the body only works because of the validation feature.
             // Note: we delete the ids in order to force Mongoose to generate it by itself (and also to avoid stupid hackers messing up with the db...).
-            delete req.body._id;
-            delete req.body.id;
-            
-            Models.Calendar.create(req.body, (err: any, calendar: any): void => {
+            var newCalendar = Calendar.buildModelFromReq(req);
+
+            Models.Calendar.create(newCalendar, (err: any, calendar: any): void => {
                 if (err || !calendar) {
                     res.send(400, err);
                 } else {
@@ -40,17 +38,14 @@ module MyCalendar.Controllers {
         }
 
         public static update(req: ExpressServerRequest, res: ExpressServerResponse, next: Function) {
-            delete req.body._id;
-            delete req.body.id;
-            console.log(req.params.id);
-            console.log(req.body);
-
             Models.Calendar.findById(req.params.id, (err: any, calendar: any): void => {
                 if (err || !calendar) {
                     // If nothing found, creates it.
                     Calendar.create(req, res, next);
                 } else {
-                    Models.Calendar.findByIdAndUpdate(req.params.id, req.body, (err: any, calendar: any): void => {
+                    var updatedCalendar = Calendar.buildModelFromReq(req);
+
+                    Models.Calendar.findByIdAndUpdate(req.params.id, updatedCalendar, (err: any, calendar: any): void => {
                         if (err || !calendar) {
                             res.send(400, err);
                             console.log(err);
@@ -70,6 +65,20 @@ module MyCalendar.Controllers {
                     res.send(calendar);
                 }
             });
+        }
+
+        private static buildModelFromReq(req: ExpressServerRequest): any {
+            var calendar: any = {};
+            
+            if (req.body.name) {
+                calendar.name = req.body.name;
+            } 
+
+            if (req.body.events) {
+                calendar.events = req.body.events;
+            }
+
+            return calendar;
         }
     }
 }
