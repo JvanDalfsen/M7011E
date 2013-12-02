@@ -47,13 +47,30 @@ $(() => {
             calendars.map((value, index, array) => {
                 console.log(value.getRefId());
                 MyCalendar.calendarsRepository.delete(value);
-
             });
         });
 
         MyCalendar.calendarsRepository.find({}).done((calendars: Array<any>) => {
             calendars.map((value, index, array) => {
                 console.log(value.getRefId());
+            });
+        });
+
+        var event = new MyCalendar.Models.Event();
+        event.name        = 'test';
+        event.description = 'test';
+        event.location    = 'test';
+        event.begin       = new Date(2014, 1, 1);
+        event.end         = new Date(2014, 1, 2);
+
+        MyCalendar.eventsRepository.save(event).done((event: MyCalendar.Models.Event) => {
+            var calendar = new MyCalendar.Models.Calendar();
+
+            calendar.name = 'test';
+            calendar.events = [new MyCalendar.Models.Ref<MyCalendar.Models.Event>(event.getRefId(), MyCalendar.eventsRepository)];
+
+            MyCalendar.calendarsRepository.save(calendar).done((calendar) => {
+                console.log('saved!');
             });
         });
     }); 

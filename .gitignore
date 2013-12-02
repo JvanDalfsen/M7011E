@@ -26,3 +26,5 @@ node_modules
 #Generated files
 bin/
 client/static/js
+*.js
+!build\build.js

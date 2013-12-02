@@ -54,14 +54,14 @@ module MyCalendar {
             }
 
             return this.callAPI('PUT', '/' + obj.getRefId(), obj).then((json: any): any => {
-                return this.buildModel(json).then((value: T) => {
-                    for (var prop in value) {
-                        // Update the _id of the object. 
-                        obj[prop] = value[prop];
-                    }
+                var value = this.buildModel(json);
 
-                    return obj;
-                });
+                for (var prop in value) {
+                    // Update the _id of the object. 
+                    obj[prop] = value[prop];
+                }
+
+                return obj;
             });
         }
 
