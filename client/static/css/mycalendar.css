@@ -26,6 +26,7 @@ body
   position: relative;
   height: 100%;
   min-height: 100%;
+  overflow: auto;
   font: normal 100% 'Open Sans', Helvetica, Sans-Serif;
   font-weight: bold;
 }
@@ -133,6 +134,21 @@ body
   color: white;
 }
 
+#toolbar img
+{
+    width: 50px;
+    height: 50px;
+    margin: 13px 13px;
+}
+
+.toolbar-button
+{   
+    position: relative;
+    height: 76px;
+    width: 76px;
+    float: right;
+}
+
 #page-number
 {
   position: absolute;
@@ -141,13 +157,49 @@ body
 
 #main-frame
 {
-  background-color: white;
-  height: 70%;
+    color: black;
+    background-color: white;
+    height: 100%;
+    margin-top: -160px;
+    padding-top: 165px;
+    margin-bottom: -80px;
+    padding-bottom: 85px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#main-frame ul
+{
+    padding-left: 3em;
+}
+
+#main-frame textarea
+{
+    vertical-align: text-top;
+    margin-top: 2px;
+}
+
+#item-create-frame
+{   
+    color: white;
+    background-color: hsl(200, 79%, 50%);
+    padding: 10px;
+    height: 100%;
+}
+
+#item-create-frame label
+{
+    display: inline-block;
+    width: 120px;
+}
+
+#calendar
+{
+    height: 100%;
 }
 
 #main-footer
 {
-  position: relative;
   height: 80px;
   background-color: hsl(200, 79%, 50%);
 }
@@ -268,7 +320,8 @@ body
   width: 300px;
   height: 200px;
   margin: 5px;
-  background-color: hsl(200, 79%, 50%);
+  background-color: hsl(200, 90%, 38%);
+  /*background-color: hsl(200, 79%, 50%);*/
   color:white;
   text-align: center;
 }
@@ -313,4 +366,17 @@ body
   width: 300px;
   height: 200px;
   z-index: 3;
+}
+
+.save-button
+{
+  position: relative;
+  display: table-cell;
+  width: 200px;
+  height: 75px;
+  margin: 5px;
+  background-color: hsl(200, 90%, 38%);
+  color:white;
+  text-align: center;
+  vertical-align: middle
 }

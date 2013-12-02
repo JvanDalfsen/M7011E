@@ -10,6 +10,7 @@
     "express": "x",
     "mongoose": "x",
     "uglify-js": "x",
-    "handlebars": "x"
+    "handlebars": "x",
+	"async": "x"      
   }
 }

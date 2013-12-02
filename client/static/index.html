@@ -7,22 +7,26 @@
   <title>My calendar</title>  
   <!-- <link rel="stylesheet" type="text/css" href=""/> -->  
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.min.js"></script>
   <script src="js/mycalendar.js"></script>
   <link rel="stylesheet" href="css/mycalendar.css" type="text/css"/>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.print.css" type="text/css" />
 </head>
 
 <body>
     <header id="main-header">
         <div class="centered">            
-            <nav>
-                <ul>
-                    <li><a class="dark-blue-button breadcrumb-button"> My Calendar </a></li>
-                    <li><a class="dark-blue-button breadcrumb-button"> LTU Calendar </a></li>
-                    <li><a class="dark-blue-button breadcrumb-button" selected>M7011E Meetings</a></li>
-                </ul>
-            </nav>
+            <div id="location-menu">
+                <nav>
+                    <ul>
+                        <li><a class="dark-blue-button breadcrumb-button" selected> My Calendar </a></li>
+                    </ul>
+                </nav>
+                <input type="button" value="add-menu" onclick="klickklick()">
+            </div>
             <div id="main-search-bar">
-                <input type="text" value="Search"/>
+                <input type="text" placeholder="Search"/>
             </div>
         </div>
     </header>
@@ -67,6 +71,12 @@
 
     <menu id="toolbar" class="centered">
         <div id="page-number"><p> << 1/1 >> </p></div>
+        <div id="add-button" class="dark-blue-button toolbar-button">
+            <img src="./icons/add-button.png" />
+        </div>
+        <div id="calendar-button" class="dark-blue-button toolbar-button">
+            <img src="./icons/calendar-button.png" />
+        </div>
     </menu>
 
     <section id="main-frame" class="centered">

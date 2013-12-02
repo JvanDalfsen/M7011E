@@ -3,7 +3,11 @@
 module MyCalendar {
 
     export class ServerConfig {
-        constructor(public port: number, public staticFolderPath: string, public compress: boolean) {
+        constructor(
+            public port: number,
+            public staticFolderPath: string,
+            public compress: boolean,
+            public database: string) {
             // Note: port and staticFolderPath... are automatically declared as members.
         }
 
@@ -23,8 +27,15 @@ module MyCalendar {
                 config.port             = typeof config.port == undefined ? 6666 : config.port;
                 config.staticFolderPath = typeof config.staticFolderPath == undefined ? 'static' : config.staticFolderPath;
                 config.compress         = typeof config.compress == undefined ? true : config.compress;
+                config.database         = typeof config.database == undefined ? 'mongodb://localhost/mycalendar' : config.database;
 
-                return new ServerConfig(<number>config.port, <string>config.staticFolderPath, <boolean>config.compress);
+                return new ServerConfig(
+                    <number>config.port,
+                    <string>config.staticFolderPath,
+                    <boolean>config.compress,
+                    <string>config.database
+                    );
+
             } catch (err) {
                 console.log(err);
                 return null;

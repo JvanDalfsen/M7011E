@@ -1,0 +1,92 @@
+﻿<!doctype html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>My calendar</title>
+    <!-- <link rel="stylesheet" type="text/css" href=""/> -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.min.js"></script>
+    <script src="js/mycalendar.js"></script>
+    <link rel="stylesheet" href="css/mycalendar.css" type="text/css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.css" type="text/css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.print.css" type="text/css" />
+</head>
+
+<body>
+    <header id="main-header">
+        <div class="centered">
+            <div id="location-menu">
+                <nav>
+                    <ul>
+                        <li><a class="dark-blue-button breadcrumb-button" selected> My Calendar </a></li>
+                    </ul>
+                </nav>
+                <input type="button" value="add-menu" onclick="klickklick()">
+            </div>
+            <div id="main-search-bar">
+                <input type="text" placeholder="Search" />
+            </div>
+        </div>
+    </header>
+
+    <menu id="main-menu">
+        <div id="user-settings-button" class="deep-dark-blue-button avatar">
+            <p>John Doe</p>
+            <img src="images/cartoon-avatar.png" alt="avatar" width="45" height="45" />
+        </div>
+        <div id="user-info" class="hidable-menu">
+            <p>JohnDoe@gmail.com</p>
+            <p>7 Calendars</p>
+            <p>Last seen: 19/11/2013</p>
+        </div>
+
+        <ul class="hidable-menu main-sub-menu">
+            <li class="deep-dark-blue-button">
+                <p>
+                    Disconnect
+                    <img src="icons/lock-button-small.png" alt="disconnect" width="19" height="19" />
+                </p>
+            </li>
+            <li class="deep-dark-blue-button">
+                <p>
+                    Delete this account
+                    <img src="icons/close-button-small.png" alt="disconnect" width="19" height="19" />
+                </p>
+            </li>
+        </ul>
+
+        <ul class="hidable-menu main-sub-menu">
+            <li class="deep-dark-blue-button"><p>Upload a file</p></li>
+            <li class="deep-dark-blue-button"><p>Manage your content</p></li>
+        </ul>
+
+        <ul class="hidable-menu main-sub-menu">
+            <li class="deep-dark-blue-button"><p>About</p></li>
+            <li class="deep-dark-blue-button"><p>Help</p></li>
+        </ul>
+
+    </menu>
+
+    <menu id="toolbar" class="centered">
+        <div id="page-number"><p> << 1/1 >> </p></div>
+        <div id="add-button" class="dark-blue-button toolbar-button">
+            <img src="./icons/add-button.png" />
+        </div>
+        <div id="itemview-button" class="dark-blue-button toolbar-button">
+            <img src="./icons/itemview-button.png" />
+        </div>
+    </menu>
+
+    <section id="main-frame" class="centered">
+        <div id="calendar"></div>
+    </section>
+
+    <footer id="main-footer">
+        <div class="centered">
+            <p id="copyright">© MC Tm</p>
+        </div>
+    </footer>
+</body>
+</html>
