@@ -13,6 +13,11 @@ var buildSteps = [
         command: 'node ./node_modules/typescript/bin/tsc client/mycalendar.ts \
                   --out client/static/js/mycalendar.js \
                   --target ES5 --sourcemap'
+    },
+    {
+        message: 'Compiling templates...',
+        command: 'node node_modules/handlebars/bin/handlebars client/templates \
+              --output client/static/js/genovesa.templates.js \ '
     }
 ];
 

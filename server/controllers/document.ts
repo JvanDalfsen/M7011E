@@ -42,6 +42,7 @@ module MyCalendar.Controllers {
                 if (err || !document) {
                     res.send(400, err);
                 } else {
+                    res.contentType(document.type);
                     res.send(document.data);
                 }
             });

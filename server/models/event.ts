@@ -1,14 +1,17 @@
 ﻿/// <reference path="../definitions/server.d.ts"/>
+/// <reference path="./document.ts"/>
 
 module MyCalendar.Models {
     var mongoose = require('mongoose');
+    var async    = require('async');
 
     var eventSchema = new mongoose.Schema({
         name:        { type: String, required: true },
         description: String,
-        location: String,
+        location:    String,
         begin:       { type: Date, required: true },
         end:         { type: Date, required: true },
+        documents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' /* validate: cf below */}]
         // TODO: add an events.
         // TODO: Ensure that this event is linked to at least one calendar otherwise destroy it.  
     });
@@ -25,6 +28,23 @@ module MyCalendar.Models {
     }
 
     eventSchema.pre('save', checkDate);
+
+    /**
+     * Check that the documents' id are valids.
+     */
+    eventSchema.path('documents').validate((value: Array<any>, respond: (boolean) => void): void => {
+        async.reduce(value, true, (memo: any, item: any, callback: AsyncSingleResultCallback<any>): void => {
+            Document.findById(item, (err: any, document: any): void => {
+                if (err || !document) {
+                    callback(null, false && memo);
+                }
+
+                callback(null, true && memo);
+            }, 'Invalid ObjectId for the document');
+        }, (err: string, result: any): any => {
+            respond(result);
+        });
+    });
 
     export var Event = mongoose.model('Event', eventSchema);
 }

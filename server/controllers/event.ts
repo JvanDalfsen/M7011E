@@ -86,6 +86,10 @@ module MyCalendar.Controllers {
                 event.end = req.body.end;
             }
 
+            if (req.body.documents) {
+                event.documents = req.body.documents;
+            }
+
             return event;
         }
     }

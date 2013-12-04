@@ -7,10 +7,10 @@
   <title>My calendar</title>  
   <!-- <link rel="stylesheet" type="text/css" href=""/> -->  
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.min.js"></script>  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.min.js"></script>
+  <script src="js/mycalendar.js"></script>
   <script src="js/handlebars.runtime-v1.1.2.js"></script>
   <script src="js/genovesa.templates.js"></script>
-  <script src="js/mycalendar.js"></script>
   <link rel="stylesheet" href="css/mycalendar.css" type="text/css"/>
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.css" type="text/css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.print.css" type="text/css" />
@@ -22,10 +22,10 @@
             <div id="location-menu">
                 <nav>
                     <ul>
+                        <li><a class="dark-blue-button breadcrumb-button"> My Calendar </a></li>
                         <li><a class="dark-blue-button breadcrumb-button" selected> My Calendar </a></li>
                     </ul>
                 </nav>
-                <input type="button" value="add-menu" onclick="klickklick()">
             </div>
             <div id="main-search-bar">
                 <input type="text" placeholder="Search"/>
@@ -82,35 +82,7 @@
     </menu>
 
     <section id="main-frame" class="centered">
-        <article class="event-item">
-            <div class="event-picture">
-                <img src="images/fika.jpg" width="300" height="200" />
-            </div>
-            <div class="event-content">
-                <h2>Fika with Maggie!</h2>
-            </div>
-            <div class="event-date">
-                <p>
-                    19/11/2013 at 6:30pm
-                </p>
-            </div>
-        </article>
-        <article class="event-item">
-            <div class="event-content">
-                <h2>Pitch during <br /> the course!</h2>
-            </div>
-            <div class="event-date">
-                <p>
-                    21/11/2013 at 6:30pm
-                </p>
-            </div>
-        </article>
-
-        <article class="event-item">
-            <div class="event-content">
-                <h2>Add</h2>
-            </div>
-        </article>
+        
     </section>
     
     <footer id="main-footer">
