@@ -4,8 +4,6 @@
 module MyCalendar.Controllers {
     export class Calendar {
         public static create(req: ExpressServerRequest, res: ExpressServerResponse, next: Function) {
-            // Note: passing the body only works because of the validation feature.
-            // Note: we delete the ids in order to force Mongoose to generate it by itself (and also to avoid stupid hackers messing up with the db...).
             var newCalendar = Calendar.buildModelFromReq(req);
 
             Models.Calendar.create(newCalendar, (err: any, calendar: any): void => {

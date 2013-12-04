@@ -1,6 +1,7 @@
 /// <reference path="./definitions/server.d.ts"/>
 /// <reference path="./controllers/calendar.ts"/>
 /// <reference path="./controllers/event.ts"/>
+/// <reference path="./controllers/document.ts"/>
 
 module MyCalendar {
     export class Router {
@@ -9,6 +10,7 @@ module MyCalendar {
         public static setupRoutes(app: Express): void {
             this.setupCalendarsRoutes(app);
             this.setupEventsRoutes(app);
+            this.setupDocumentsRoutes(app);
         }
 
         private static setupCalendarsRoutes(app: Express): void {
@@ -48,6 +50,8 @@ module MyCalendar {
              * Updates one calendar or creates it if the id isn't in the database.
              * Request type: PUT
              * URI: /calendars/?:id
+             *
+             * Notes: if the calendar doesn't exist, it will be created. 
              * 
              * @param {mongoose.Schema.Types.ObjectId} id The id of the calendar.
              * @param [String] name The name of this new calendar.
@@ -108,6 +112,8 @@ module MyCalendar {
              * Updates one event.
              * Request type: UPDATE
              * URI: /events/?:id
+             *
+             * Notes: if the event doesn't exist, it will be created. 
              * 
              * @param [String] name The name of this new event.
              * @param [String] description The description of this new event.
@@ -126,6 +132,72 @@ module MyCalendar {
              * @return {Models.Event} The event in JSON format. 
              */
             app.del(this._apiRoot + '/events/:id', Controllers.Event.delete);
+        }
+
+        private static setupDocumentsRoutes(app: Express): void {
+            /**
+             * Creates a new document.
+             * Request type: POST multipart
+             * URI: /documents
+             *
+             * @param {String} name The name of this new document.
+             * @param {File} The multipart upload. 
+             * @return {Models.Event} The newly created document name, id and type. 
+             */
+            app.post(this._apiRoot + '/documents', Controllers.Document.create);
+
+            /**
+             * Finds some events according to a query.
+             * Request type: GET
+             * URI: /documents
+             * 
+             * @param [String] name The name of this document.
+             * @return {Array<Models.Event>} The documents that matches the query in JSON format.
+             */
+            app.get(this._apiRoot + '/documents', Controllers.Document.find);
+
+            /**
+             * Finds one document.
+             * Request type: GET
+             * URI: /documents/:id
+             * 
+             * @param {mongoose.Schema.Types.ObjectId} id The id of the document.
+             * @return {Models.Event} The document in JSON format. 
+             */
+            app.get(this._apiRoot + '/documents/:id', Controllers.Document.findById);
+
+            /**
+             * Updates one event.
+             * Request type: UPDATE
+             * URI: /documents/?:id
+             *
+             * Notes: if the document doesn't exist, it will be created. 
+             *
+             * @param {mongoose.Schema.Types.ObjectId} id The id of the document.
+             * @param [String] name The new name of this document.
+             * @return {Models.Event} The document in JSON format.
+             */
+            app.put(this._apiRoot + '/documents/?:id', Controllers.Document.update);
+
+            /**
+             * Deletes one document.
+             * Request type: DELETE
+             * URI: /documents/:id
+             * 
+             * @param {mongoose.Schema.Types.ObjectId} id The id of the document.
+             * @return {Models.Event} The document in JSON format. 
+             */
+            app.del(this._apiRoot + '/documents/:id', Controllers.Document.delete);
+            
+            /**
+             * Download a document.
+             * Request type: GET
+             * URI: /documents/download/:id
+             * 
+             * @param[String] name The name of this document.
+             * @return { Array<Models.Event>} The document's data.
+             */
+            app.get(this._apiRoot + '/documents/download/:id', Controllers.Document.download);
         }
     }
 }
