@@ -5,7 +5,7 @@
 /// <reference path="LocationMenu.ts" />
 /// <reference path="Item.ts" />
 /// <reference path="ItemList.ts" />
-/// <reference path="./panels/upload.ts"/>
+/// <reference path="./ui/panels/document-manager.ts"/>
 
 // Start the script when the page is ready.
 $(() => {
@@ -80,7 +80,7 @@ $(() => {
     var mainFrame = $('#main-frame');
     mainFrame.empty();
 
-    var panelUpload = new MyCalendar.Panels.UploadPanel();
+    var panelUpload = new MyCalendar.UI.Panels.DocumentManagerPanel();
     mainFrame.append(panelUpload.view());
     panelUpload.onload();
 });

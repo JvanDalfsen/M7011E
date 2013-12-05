@@ -1,11 +1,11 @@
-﻿/// <reference path="../definitions/jquery.d.ts"/>
-/// <reference path="../definitions/handlebars.d.ts"/>
-/// <reference path="../repository.ts"/>
+﻿/// <reference path="../../definitions/jquery.d.ts"/>
+/// <reference path="../../definitions/handlebars.d.ts"/>
+/// <reference path="../../repository.ts"/>
 /// <reference path="./ipanel.ts"/>
 
 
-module MyCalendar.Panels {
-    export class UploadPanel implements IPanel {
+module MyCalendar.UI.Panels {
+    export class DocumentManagerPanel implements IPanel {
         private uploadArea: JQuery;
 
         public onload(): void {
@@ -31,6 +31,10 @@ module MyCalendar.Panels {
 
         private onFileDragLeave() {
             this.uploadArea.removeClass('drag-over');
+        }
+
+        public name(): string {
+            return 'Document Manager';
         }
     }
 }
