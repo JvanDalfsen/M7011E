@@ -6,13 +6,13 @@
 
 module MyCalendar.UI.Panels {
     export class DocumentManagerPanel implements IPanel {
-        private uploadArea: JQuery;
+        private _uploadArea: JQuery;
 
         public onload(): void {
-            this.uploadArea = $('upload-area');
+            this._uploadArea = $('upload-area');
 
-            this.uploadArea.on("dragover", this.onFileDragOver);
-            this.uploadArea.on("dragleave", this.onFileDragLeave);
+            this._uploadArea.on("dragover", this.onFileDragOver);
+            this._uploadArea.on("dragleave", this.onFileDragLeave);
             // uploadArea.on("drop", FileDragHover);
         }
 
@@ -26,15 +26,19 @@ module MyCalendar.UI.Panels {
 
         private onFileDragOver() {
             console.log('over');
-            this.uploadArea.addClass('drag-over');
+            this._uploadArea.addClass('drag-over');
         }
 
         private onFileDragLeave() {
-            this.uploadArea.removeClass('drag-over');
+            this._uploadArea.removeClass('drag-over');
         }
 
         public name(): string {
             return 'Document Manager';
+        }
+
+        public toolbar(): Toolbars.IToolbar {
+            return null;
         }
     }
 }

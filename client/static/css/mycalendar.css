@@ -155,7 +155,7 @@ body
   bottom: 5px;
 }
 
-#main-frame
+#panel-host
 {
     color: black;
     background-color: white;
@@ -168,12 +168,12 @@ body
     padding-right: 5px;
 }
 
-#main-frame ul
+#panel-host ul
 {
     padding-left: 3em;
 }
 
-#main-frame textarea
+#panel-host textarea
 {
     vertical-align: text-top;
     margin-top: 2px;
