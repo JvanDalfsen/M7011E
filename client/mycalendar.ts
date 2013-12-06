@@ -6,6 +6,7 @@
 /// <reference path="Item.ts" />
 /// <reference path="ItemList.ts" />
 /// <reference path="./ui/panels/document-manager.ts"/>
+/// <reference path="./ui/panel-host.ts"/>
 
 // Start the script when the page is ready.
 $(() => {
@@ -33,6 +34,7 @@ $(() => {
         console.log("type: ");
     });
 
+    // Database tests!
     MyCalendar.calendarsRepository.create({ name: 'test', events: [] }).done((myCalendar) =>
     {
         console.log(myCalendar.getRefId());
@@ -76,11 +78,6 @@ $(() => {
             });
         });
     });
-
-    var mainFrame = $('#panel-host');
-    mainFrame.empty();
-
-    var panelUpload = new MyCalendar.UI.Panels.DocumentManagerPanel();
-    mainFrame.append(panelUpload.view());
-    panelUpload.onload();
+    
+    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
 });

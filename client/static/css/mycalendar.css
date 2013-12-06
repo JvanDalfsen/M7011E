@@ -67,14 +67,14 @@ body
   margin: 2px;
 }
 
-#main-search-bar
+.search-bar
 {
   position: absolute;
   bottom: 5px;
   width: 20%;
 }
 
-#main-search-bar input
+.search-bar input
 {
   height: 25px;
   width: 100%;

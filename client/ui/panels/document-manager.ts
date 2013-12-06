@@ -2,7 +2,7 @@
 /// <reference path="../../definitions/handlebars.d.ts"/>
 /// <reference path="../../repository.ts"/>
 /// <reference path="./ipanel.ts"/>
-
+/// <reference path="../toolbars/document-manager-toolbar.ts"/>
 
 module MyCalendar.UI.Panels {
     export class DocumentManagerPanel implements IPanel {
@@ -21,7 +21,7 @@ module MyCalendar.UI.Panels {
         }
 
         public view(): JQuery {
-            return $(Handlebars.templates['upload-panel']());
+            return $(Handlebars.templates['document-manager-panel']());
         }
 
         private onFileDragOver() {
@@ -37,11 +37,11 @@ module MyCalendar.UI.Panels {
         }
 
         public toolbar(): Toolbars.IToolbar {
-            return null;
+            return new Toolbars.DocumentManagerToolbar();
         }
 
         public searchEnable(): boolean {
-            return true;
+            return false;
         }
 
         public onSearch(query: string): void {
