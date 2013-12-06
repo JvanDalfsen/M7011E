@@ -44,62 +44,93 @@ module MyCalendar.UI {
             return PanelHost._instance;
         }
 
-        public pushPanel(newPanel: Panels.IPanel): void {
+        public pushPanel(newPanel: Panels.IPanel, callback?: () => void ): void {
             if (this._panel.length > 1) {
                 this._panel[this._panel.length - 1].onremove();                
             }
-            this._div.empty();
 
-            this._panel.push(newPanel);
-            this._div.append(newPanel.view());
+            var showPannel = () => {
+                this._div.empty();
+                this._panel.push(newPanel);
 
-            this.setupToolbar(newPanel);
-            this.setupSearch(newPanel);
+                var view = newPanel.view();
 
-            Breacrumb.getInstance().addPanel(newPanel);
+                this._div.append(view);
+                Breacrumb.getInstance().addPanel(newPanel);
+                view.hide().fadeIn(400, () => {
+                    this.setupToolbar(newPanel);
+                    this.setupSearch(newPanel);
 
-            newPanel.onload();         
+                   
+                    newPanel.onload();
+                    if (callback) {
+                        callback();
+                    }
+                });
+            };
+
+            if (this._div.children().length > 1) {
+                this._div.children().fadeOut(400, showPannel());
+            } else {
+                showPannel();
+            }                   
         }
 
-        public popPanel(): Panels.IPanel {
+        public popPanel(callback?: (panel: Panels.IPanel) => void): void {
             if (this._panel.length < 1) {
                 return null;
             }
 
             this._panel[this._panel.length - 1].onremove();
-            this._div.empty();
+
             var result = this._panel.pop();
+            this._div.children().fadeOut(400, () => {
+                this._div.empty();
+                if (this._panel.length > 1) {
+                    var newPanel = this._panel[this._panel.length - 1];
 
-            if (this._panel.length > 1) {
-                var newPanel = this._panel[this._panel.length - 1];
-                this._div.append(newPanel.view());
+                    var view = newPanel.view();
 
-                this.setupToolbar(newPanel);
-                this.setupSearch(newPanel);
+                    this._div.append(view);
+                    view.hide().fadeIn(400, () => {
+                        this.setupToolbar(newPanel);
+                        this.setupSearch(newPanel);
 
-                this._panel[this._panel.length - 1].onload();
-            }
+                        this._panel[this._panel.length - 1].onload();
 
-            return result;
+                        if (callback) {
+                            callback(result);
+                        }
+                    });
+                }
+            });
         }
 
-        public changePanel(index: number): Panels.IPanel {
+        public changePanel(index: number, callback?: (panel: Panels.IPanel) => void): void {
             var result = this._panel[this._panel.length - 1];
 
             result.onremove();
-            this._div.empty();
 
-            this._panel = this._panel.slice(0, index + 1);
+            this._div.children().fadeOut(400, () => {
+                this._div.empty();
 
-            var newPanel = this._panel[index];
-            this._div.append(newPanel.view());
+                this._panel = this._panel.slice(0, index + 1);
 
-            this.setupToolbar(newPanel);
-            this.setupSearch(newPanel);
+                var newPanel = this._panel[index];
+                var view = newPanel.view();
+                this._div.append(view);
+                view.hide().fadeIn(400, () => {
 
-            newPanel.onload();
+                    this.setupToolbar(newPanel);
+                    this.setupSearch(newPanel);
 
-            return result;
+                    newPanel.onload();
+
+                    if (callback) {
+                        callback(result);
+                    }
+                });
+            });
         }
 
         private setupToolbar(panel: Panels.IPanel) {
