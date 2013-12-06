@@ -10,7 +10,7 @@ class Item {
 	documents: Array<String>;
 
 	constructor(title: String, fromDate: String, fromTime: String, toDate: String, toTime: String, location: String,
-		calendar: String, description: String, documents: Array) {
+		calendar: String, description: String, documents: any[]) {
         this.title = title;
 		this.fromDate = fromDate;
 		this.fromTime = fromTime;
