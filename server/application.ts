@@ -2,6 +2,9 @@
 /// <reference path="./server-config.ts"/>
 /// <reference path="./server.ts"/>
 
+import ServerModule = require('server');
+import ServerConfigModule = require('server-config');
+
 module MyCalendar {
 
     export class Application {
@@ -9,7 +12,7 @@ module MyCalendar {
         constructor(configPath: string) {
             console.log('Loading configuration...');
 
-            var config: ServerConfig = ServerConfig.createFromFile(configPath);
+            var config: ServerConfigModule.ServerConfig = ServerConfigModule.ServerConfig.createFromFile(configPath);
 
             if (config === null) {
                 console.log('Failed to parsed the configuration: ' + configPath);
@@ -17,7 +20,7 @@ module MyCalendar {
             }
 
             console.log('Starting server...');
-            var server: Server = new Server(config);
+            var server: ServerModule.Server = new ServerModule.Server(config);
             server.start();
             console.log('Server started');
         }

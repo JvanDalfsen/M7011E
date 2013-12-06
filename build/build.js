@@ -6,7 +6,7 @@ var buildSteps = [
         message: 'Compiling the server...',
         command: 'node ./node_modules/typescript/bin/tsc server/application.ts \
                   --out bin/server.js \
-                  --target ES5 --sourcemap'
+                  --target ES5 --sourcemap --module commonjs'
     },
     {
         message: 'Compiling the client...',

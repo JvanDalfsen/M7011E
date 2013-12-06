@@ -6,7 +6,7 @@
 
 module MyCalendar {
     export class Repository<T extends Models.Model> {
-        private _apiRoot = '/api';
+        public static ApiRoot = '/api';
 
         private _dummie: T;
 
@@ -140,7 +140,7 @@ module MyCalendar {
         private callAPI(type: string, url: string = '', data: any = {}): JQueryPromise<any> {
             return $.ajax({
                 type: type,
-                url: this._apiRoot + this.getRoute() + url,
+                url: Repository.ApiRoot + this.getRoute() + url,
                 data: data,
                 dataType: 'json',
                 success: (json, textStatus, jqXHR) => {

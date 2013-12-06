@@ -42,15 +42,23 @@ module MyCalendar.UI.Panels {
             event.stopPropagation();
             this._uploadArea.removeClass('drag-over');
 
-            var files = (<any>event.target).files;
+            var files = (<any>event.originalEvent.target).files || (<any>event.originalEvent).dataTransfer.files;
 
             if (!files) {
                 return;
             }
 
-            for (var i = 0; i < files.length; ++i) {
-                if (files[i].size < DocumentManagerPanel.DOCUMENT_MAX_SIZE) {
-                    documentsRepository.create({ name: files[i].name, document: files[i] });
+            var xhr = new XMLHttpRequest();
+
+            if (xhr.upload) {
+                for (var i = 0; i < files.length; ++i) {
+                    if (files[i].size < DocumentManagerPanel.DOCUMENT_MAX_SIZE) {
+                        xhr.open('POST', Repository.ApiRoot + '/documents', true);
+                        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                        xhr.setRequestHeader('X-File-Name', encodeURIComponent(files[i].name));
+                        xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+                        xhr.send(files[i]);
+                    }
                 }
             }
         }
