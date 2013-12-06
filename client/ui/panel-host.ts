@@ -1,6 +1,7 @@
 ﻿/// <reference path="../definitions/jquery.d.ts"/>
 /// <reference path="./panels/ipanel.ts"/>
 /// <reference path="./toolbars/itoolbar.ts"/>
+/// <reference path="./breadcrumb.ts"/>
 
 module MyCalendar.UI {
     export class PanelHost {
@@ -45,15 +46,17 @@ module MyCalendar.UI {
 
         public pushPanel(newPanel: Panels.IPanel): void {
             if (this._panel.length > 1) {
-                this._panel[this._panel.length - 1].onremove();
-                this._div.empty();
+                this._panel[this._panel.length - 1].onremove();                
             }
+            this._div.empty();
 
             this._panel.push(newPanel);
             this._div.append(newPanel.view());
 
             this.setupToolbar(newPanel);
             this.setupSearch(newPanel);
+
+            Breacrumb.getInstance().addPanel(newPanel);
 
             newPanel.onload();         
         }
@@ -76,6 +79,25 @@ module MyCalendar.UI {
 
                 this._panel[this._panel.length - 1].onload();
             }
+
+            return result;
+        }
+
+        public changePanel(index: number): Panels.IPanel {
+            var result = this._panel[this._panel.length - 1];
+
+            result.onremove();
+            this._div.empty();
+
+            this._panel = this._panel.slice(0, index + 1);
+
+            var newPanel = this._panel[index];
+            this._div.append(newPanel.view());
+
+            this.setupToolbar(newPanel);
+            this.setupSearch(newPanel);
+
+            newPanel.onload();
 
             return result;
         }
