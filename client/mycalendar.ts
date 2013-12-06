@@ -5,6 +5,7 @@
 /// <reference path="LocationMenu.ts" />
 /// <reference path="Item.ts" />
 /// <reference path="ItemList.ts" />
+/// <reference path="repository.ts" />
 
 // Start the script when the page is ready.
 $(() => {
@@ -73,12 +74,21 @@ $(() => {
                 console.log('saved!');
             });
         });
-    }); 
+    });
 
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
+    var shown_events = [];
+    var userCalendarIDs = [];
+    for (var i = 0; i < userCalendarIDs.length; i++) {
+        MyCalendar.calendarsRepository.findById(userCalendarIDs[i]).done((calendar) => {
+            var eventRefs = calendar.events;
+            for (var j = 0; j < eventRefs.length; j++) {
+                eventRefs[0].deference().done((event) => {
+                    shown_events[shown_events.length] = event;
+                });
+            }
+        });
+    }         
+
 
     // initiate fullcalendar
     $('#calendar').fullCalendar({
@@ -88,60 +98,7 @@ $(() => {
             right: 'month,agendaWeek,agendaDay'
         },
         editable: true,
-        events: [
-            {
-                title: 'All Day Event',
-                start: new Date(y, m, 1),
-                backgroundColor: 'blue'
-            },
-            {
-                title: 'Long Event',
-                start: new Date(y, m, d - 5),
-                end: new Date(y, m, d - 2),
-                backgroundColor: 'yellow'
-            },
-            {
-                id: 999,
-                title: 'Repeating Event',
-                start: new Date(y, m, d - 3, 16, 0),
-                allDay: false,
-                backgroundColor: 'red'
-            },
-            {
-                id: 999,
-                title: 'Repeating Event',
-                start: new Date(y, m, d + 4, 16, 0),
-                allDay: false,
-                backgroundColor: 'green'
-            },
-            {
-                title: 'Meeting',
-                start: new Date(y, m, d, 10, 30),
-                allDay: false,
-                backgroundColor: 'grey'
-            },
-            {
-                title: 'Lunch',
-                start: new Date(y, m, d, 12, 0),
-                end: new Date(y, m, d, 14, 0),
-                allDay: false,
-                backgroundColor: 'orange'
-            },
-            {
-                title: 'Birthday Party',
-                start: new Date(y, m, d + 1, 19, 0),
-                end: new Date(y, m, d + 1, 22, 30),
-                allDay: false,
-                backgroundColor: 'hsl(200, 90%, 38%)'
-            },
-            {
-                title: 'Click for Google',
-                start: new Date(y, m, 28),
-                end: new Date(y, m, 29),
-                url: 'http://google.com/',
-                backgroundColor: 'hsl(200, 90%, 38%)'
-            }
-        ]
+        events: shown_events
     });
 
 
@@ -160,7 +117,17 @@ $(() => {
 
     // click function for the 'Save' button
     $(".save-button").click(function () {
-        //TODO: save event to server
+        var event = new MyCalendar.Models.Event();
+        event.name = $('title').val();
+        event.description = $('description').val();
+        event.location = $('location').val();
+        event.begin = $('fromDate').datepicker('getDate');
+        event.end = $('toDate').datepicker('getDate');
+
+        var calendarName = $('calendar').val();
+        
+        var calendar = //something with calendarName;
+
         window.location.assign("./index.html");
     });
 
