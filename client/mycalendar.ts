@@ -77,7 +77,7 @@ $(() => {
         });
     });
 
-    var mainFrame = $('#main-frame');
+    var mainFrame = $('#panel-host');
     mainFrame.empty();
 
     var panelUpload = new MyCalendar.UI.Panels.DocumentManagerPanel();

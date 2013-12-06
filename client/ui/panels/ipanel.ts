@@ -16,6 +16,16 @@ module MyCalendar.UI.Panels {
          * The toolbar linked with this panel (can be null).
          */
         toolbar(): Toolbars.IToolbar;
+
+        /**
+         * Return true if the search is enabled on this panel; false otherwise.
+         */
+        searchEnable(): boolean;
+
+        /**
+         * Event called when someone enter a query in the search box.
+         */
+        onSearch(query: string): void;
     }
 }
 

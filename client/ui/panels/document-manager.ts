@@ -25,7 +25,6 @@ module MyCalendar.UI.Panels {
         }
 
         private onFileDragOver() {
-            console.log('over');
             this._uploadArea.addClass('drag-over');
         }
 
@@ -39,6 +38,14 @@ module MyCalendar.UI.Panels {
 
         public toolbar(): Toolbars.IToolbar {
             return null;
+        }
+
+        public searchEnable(): boolean {
+            return true;
+        }
+
+        public onSearch(query: string): void {
+            // TODO!
         }
     }
 }
