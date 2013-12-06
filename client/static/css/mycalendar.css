@@ -406,7 +406,7 @@ body
 
 .file-title input
 {
-  background-color: transparent;
+  background-color: hsla(0, 0%, 90%, 0.5);
   color: white;
   position: absolute;
   top: 25%;
@@ -434,7 +434,7 @@ body
   margin: 5px;
 }
 
-.drag-over
+#upload-area.drag-over
 {
   border: 2px dashed red;
 }

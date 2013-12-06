@@ -57,6 +57,7 @@ module MyCalendar.UI {
 
                 this._div.append(view);
                 Breacrumb.getInstance().addPanel(newPanel);
+
                 view.hide().fadeIn(400, () => {
                     this.setupToolbar(newPanel);
                     this.setupSearch(newPanel);
