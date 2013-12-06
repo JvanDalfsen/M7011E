@@ -11,6 +11,7 @@
     "mongoose": "x",
     "uglify-js": "x",
     "handlebars": "x",
-	"async": "x"
+	"async": "x",
+	"everyauth": "x"
   }
 }
