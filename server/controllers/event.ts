@@ -57,7 +57,7 @@ export class Event {
     }
 
     public static delete(req: express.Request, res: express.Response, next: Function) {
-        Models.Event.findOneAndRemove(req.params.id, (err: any, event: any): void => {
+        Models.Event.findByIdAndRemove(req.params.id, (err: any, event: any): void => {
             if (err) {
                 res.send(400, err);
             } else {

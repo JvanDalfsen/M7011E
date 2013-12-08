@@ -1,0 +1,14 @@
+﻿<article class="file-item uploaded-file">  
+  {{#if picture_path}}
+  <div class="file-picture">
+    <div style="width: 300px; height: 200px; background-image:url('{{picture_path}}'); background-repeat:no-repeat; background-size:contain;" />
+  </div>
+  {{/if}}
+  
+  <div class="file-title">
+    <input type="text" value="{{name}}"/>
+	</div>
+
+  <i class="dark-blue-button delete-document"> </i>
+  <a href="{{ picture_path }}" class="dark-blue-button download-document"/>
+</article>

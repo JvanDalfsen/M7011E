@@ -58,7 +58,7 @@ export class Calendar {
     }
 
     public static delete(req: express.Request, res: express.Response, next: Function) {
-        Models.Calendar.findOneAndRemove(req.params.id, (err: any, calendar: any): void => {
+        Models.Calendar.findByIdAndRemove(req.params.id, (err: any, calendar: any): void => {
             if (err || !calendar) {
                 res.send(400, err);
             } else {

@@ -370,6 +370,29 @@ body
   vertical-align: middle
 }
 
+.file-uploading-item
+{
+  position: relative;
+  top: 0px;
+  left: 0px;
+  display: inline-block;
+  width: 300px;
+  height: 200px;
+  margin: 5px;
+  background-color: hsl(35, 100%, 51%);
+  text-align: center;
+}
+
+.uploading-progress
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0px;
+  height: 200px;
+  background-color: hsl(200, 90%, 38%);
+}
+
 .file-item
 {
   position: relative;
@@ -417,6 +440,18 @@ body
   display: inline-block;
 }
 
+.file-type
+{
+  color: white;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  text-align: center;
+  font-size: 1.4em;
+  display: inline-block;
+}
+
 .file-picture
 {
   padding: 0px;
@@ -437,4 +472,24 @@ body
 #upload-area.drag-over
 {
   border: 2px dashed red;
+}
+
+.delete-document
+{
+  background: url('../icons/trash-bin-button-small.png');
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 25px;
+  height: 25px;
+}
+
+.download-document
+{
+  background: url('../icons/download-button-small.png');
+  position: absolute;
+  top: 0;
+  right: 30px;
+  width: 25px;
+  height: 25px;
 }

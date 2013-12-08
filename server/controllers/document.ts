@@ -39,14 +39,7 @@ export class Document {
                     });
                 });               
             }
-        }
-
-        console.log(JSON.stringify(req.files));
-        if (!req.files.document) {
-            res.send(400, 'The document file is empty');
-
-            return;
-        }       
+        }  
     }
 
     public static download(req: express.Request, res: express.Response, next: Function) {
@@ -101,7 +94,7 @@ export class Document {
     }
 
     public static delete(req: express.Request, res: express.Response, next: Function) {
-        Models.Document.findOneAndRemove(req.params.id, (err: any, document: any): void => {
+        Models.Document.findByIdAndRemove(req.params.id, (err: any, document: any): void => {
             if (err || !document) {
                 res.send(400, err);
             } else {
