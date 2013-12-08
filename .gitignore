@@ -28,4 +28,4 @@ bin/
 client/static/js
 *.js
 !build/build.js
-!client/static/handlebars.runtime-v1.1.2.js
+!client/static/js/handlebars.runtime-v1.1.2.js

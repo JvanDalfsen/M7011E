@@ -1,8 +1,8 @@
 ﻿/// <reference path="./definitions/server.d.ts"/>
 
 import express = require('express');
-import RouterModule = require('router');
-import ServerConfigModule = require('server-config');
+import RouterModule = require('./router');
+import ServerConfigModule = require('./server-config');
 
 export class Server {
     /** @var {Express} ExpressJS app. */
