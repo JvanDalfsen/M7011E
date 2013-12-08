@@ -13,27 +13,25 @@ module MyCalendar.UI.Panels {
 			// click function for the 'Save' button
 			$(".save-button").click(function () {
 				var event = new MyCalendar.Models.Event();
-				event.name = $('title').val();
-				event.description = $('description').val();
-				event.location = $('location').val();
-				event.begin = $('fromDate').datepicker('getDate');
-				event.end = $('toDate').datepicker('getDate');
+				event.name = $('#title').val();
+				event.description = $('#description').val();
+				event.location = $('#location').val();
+				//var begin = $("#fromDate").datepicker("getDate").getDate();
+                //event.begin = begin;
+                //var end = $("#toDate").datepicker("getDate");
+                //event.end = end;
 
 				var calendarName = $('calendar').val();
 				var calendar = 9;//something with calendarName;
 
 				//show previous panel
-			});
+                MyCalendar.UI.PanelHost.getInstance().popPanel;
+            });
 
 
 			//click function for the 'calendar' button
 			$("#calendar-button").click(function () {
-				//show calendar panel
-			});
-
-			//click function for the 'itemview' button
-			$("#itemview-button").click(function () {
-				//show itemview panel
+                MyCalendar.UI.PanelHost.getInstance().popPanel;
 			});
 
 			//click function for datepicker

@@ -3,6 +3,7 @@
 /// <reference path="./definitions/jqueryui.d.ts"/>
 /// <reference path="./definitions/fullCalendar.d.ts"/>
 /// <reference path="./ui/panels/document-manager.ts"/>
+/// <reference path="./ui/panels/calendar-manager.ts"/>
 /// <reference path="./ui/panel-host.ts"/>
 
 // Start the script when the page is ready.
@@ -75,12 +76,12 @@ $(() => {
             });
         });
     });
-    
-    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), () => {
-        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), () => {
-            MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
-        });
-    });
-    
+
+    //MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), () => {
+    //    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), () => {
+    //        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
+    //    });
+    //});
+    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.CalendarManagerPanel());
     
 });

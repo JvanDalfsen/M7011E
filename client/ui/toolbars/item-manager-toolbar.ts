@@ -8,7 +8,9 @@ module MyCalendar.UI.Toolbars {
      */
     export class ItemManagerToolbar implements IToolbar {
         public onload(): void {
-            // Empty now.
+            $("#calendar-button").click(function () {
+                MyCalendar.UI.PanelHost.getInstance().popPanel();
+            });
         }
 
         public onremove(): void {

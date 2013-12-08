@@ -4,6 +4,7 @@
 /// <reference path="../../repository.ts"/>
 /// <reference path="./ipanel.ts"/>
 /// <reference path="../toolbars/calendar-manager-toolbar.ts"/>
+/// <reference path="./item-manager.ts"/>
 
 module MyCalendar.UI.Panels {
     export class CalendarManagerPanel implements IPanel {
@@ -33,7 +34,11 @@ module MyCalendar.UI.Panels {
 				},
 				editable: true,
 				events: calendarEvents
-			});
+            });
+
+            $("#add-button").click(function () {
+                MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.ItemManagerPanel());
+            });
 		}
 
         public onremove(): void {
