@@ -34,7 +34,6 @@ export class Server {
         this._app.use(express.methodOverride());
         this._app.use(express.cookieParser('secret'));
         this._app.use(express.session());
-        this._app.use(express.bodyParser({ keepExtensions: true, uploadDir: './client/uploads' }));
 
         // TODO: Test why this.config() doesn't works.
         if (this._config.compress) {

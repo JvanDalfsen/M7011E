@@ -56,6 +56,8 @@ module MyCalendar.UI.Panels {
                         xhr.open('POST', Repository.ApiRoot + '/documents', true);
                         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                         xhr.setRequestHeader('X-File-Name', encodeURIComponent(files[i].name));
+                        xhr.setRequestHeader('X-File-Size', encodeURIComponent(files[i].size));
+                        xhr.setRequestHeader('X-File-Type', encodeURIComponent(files[i].type));
                         xhr.setRequestHeader('Content-Type', 'application/octet-stream');
                         xhr.send(files[i]);
                     }

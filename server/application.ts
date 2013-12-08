@@ -2,8 +2,8 @@
 /// <reference path="./server-config.ts"/>
 /// <reference path="./server.ts"/>
 
-import ServerModule = require('server');
-import ServerConfigModule = require('server-config');
+import ServerModule = require('./server');
+import ServerConfigModule = require('./server-config');
 
 module MyCalendar {
 

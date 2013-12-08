@@ -12,34 +12,41 @@ export class Document {
     private static DOCUMENT_MAX_SIZE = 20971520;
 
     public static create(req: express.Request, res: express.Response, next: Function) {
+        if (req.xhr) {
+            // If no name provided then we use the one from the file !
+            var newDocument: any = {};
+            newDocument.name = req.header('X-File-Name');
+            newDocument.type = req.header('X-File-Type');
+            var documentSize = parseInt(req.header('X-File-Size'));
+
+            if (documentSize >= Document.DOCUMENT_MAX_SIZE) {
+                res.send(400, 'The upload limit for documents is 20Mo');
+            } else {
+                var data = [];
+
+                (<any>req).on('data', (chunk) => {
+                    data.push(chunk);
+                }).on('end',  () => {
+                    var buffer = Buffer.concat(data);
+                    newDocument.data = buffer;
+
+                    Models.Document.create(newDocument, (err: any, document: any): void => {
+                        if (err || !document) {
+                            res.send(400, err);
+                        } else {
+                            res.send({ _id: document._id, name: document.name, type: document.type });
+                        }
+                    });
+                });               
+            }
+        }
 
         console.log(JSON.stringify(req.files));
         if (!req.files.document) {
             res.send(400, 'The document file is empty');
 
             return;
-        }
-
-        if (req.files.document.size > Document.DOCUMENT_MAX_SIZE) {
-            res.send(400, 'The upload limit for documents is ' + Document.DOCUMENT_MAX_SIZE);
-
-            return;
-        }
-
-        var newDocument = Document.buildModelFromReq(req);
-
-        // If no name provided then we use the one from the file !
-        newDocument.name = newDocument.name || req.files.document;
-        newDocument.data = fs.readFileSync(req.files.document.path);
-        newDocument.type = req.files.document.type;
-
-        Models.Document.create(newDocument, (err: any, document: any): void => {
-            if (err || !document) {
-                res.send(400, err);
-            } else {
-                res.send({ _id: document._id, name: document.name, type: document.type });
-            }
-        });
+        }       
     }
 
     public static download(req: express.Request, res: express.Response, next: Function) {
