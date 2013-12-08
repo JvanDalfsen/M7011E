@@ -36,8 +36,11 @@ module MyCalendar.UI.Panels {
                     var params: any = document;
 
                     if (document.type == 'image%2Fjpeg' || document.type == 'image%2Fpng') {
-                        params.picture_path = '/api/documents/download/' + document.getRefId();
+                        params.picture_path  = '/api/documents/download/' + document.getRefId();
+                        
                     }
+
+                    params.document_path = '/api/documents/download/' + document.getRefId();
 
                     var documentItem = $(Handlebars.templates['document-item'](params));
                     this._panel.append(documentItem);
