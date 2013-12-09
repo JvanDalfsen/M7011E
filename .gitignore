@@ -26,6 +26,6 @@ node_modules
 #Generated files
 bin/
 client/static/js
-*.js
+client/*.js
 !build/build.js
 !client/static/js/handlebars.runtime-v1.1.2.js
