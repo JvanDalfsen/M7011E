@@ -1,1 +1,1 @@
-﻿web: node build/build.js && node server/application.js
+﻿web: node build/build.js ; node server/application.js
