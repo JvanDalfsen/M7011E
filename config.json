@@ -1,6 +1,6 @@
 {
-	"port": 8080,
+	"port": 80,
 	"staticFolderPath": "client/static",
-  "database": "mongodb://mycalendar:mycalendar@ds053808.mongolab.com:53808/heroku_app20209388",
+    "database": "mongodb://mycalendar:mycalendar@ds053808.mongolab.com:53808/heroku_app20209388",
 	"compress": true
 }
