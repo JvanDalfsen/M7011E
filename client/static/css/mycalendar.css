@@ -67,14 +67,14 @@ body
   margin: 2px;
 }
 
-#main-search-bar
+.search-bar
 {
   position: absolute;
   bottom: 5px;
   width: 20%;
 }
 
-#main-search-bar input
+.search-bar input
 {
   height: 25px;
   width: 100%;
@@ -155,7 +155,7 @@ body
   bottom: 5px;
 }
 
-#main-frame
+#panel-host
 {
     color: black;
     background-color: white;
@@ -168,12 +168,12 @@ body
     padding-right: 5px;
 }
 
-#main-frame ul
+#panel-host ul
 {
     padding-left: 3em;
 }
 
-#main-frame textarea
+#panel-host textarea
 {
     vertical-align: text-top;
     margin-top: 2px;
@@ -357,17 +357,6 @@ body
   left:0;
 }
 
-.event-picture img:after
-{
-  position: absolute;
-  top:0;
-  left:0;
-  background-color: hsl(0, 0%, 50%);
-  width: 300px;
-  height: 200px;
-  z-index: 3;
-}
-
 .save-button
 {
   position: relative;
@@ -379,4 +368,128 @@ body
   color:white;
   text-align: center;
   vertical-align: middle
+}
+
+.file-uploading-item
+{
+  position: relative;
+  top: 0px;
+  left: 0px;
+  display: inline-block;
+  width: 300px;
+  height: 200px;
+  margin: 5px;
+  background-color: hsl(35, 100%, 51%);
+  text-align: center;
+}
+
+.uploading-progress
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0px;
+  height: 200px;
+  background-color: hsl(200, 90%, 38%);
+}
+
+.file-item
+{
+  position: relative;
+  top: 0px;
+  left: 0px;
+  display: inline-block;
+  width: 300px;
+  height: 200px;
+  margin: 5px;
+  background-color: hsl(200, 90%, 38%);
+  /*background-color: hsl(200, 79%, 50%);*/
+  color:white;
+  text-align: center;
+}
+
+.file-item:hover
+{
+  box-shadow: 0px 3px 5px hsl(200, 90%, 25%);
+  background-color: hsl(200, 90%, 40%);
+}
+
+.file-title
+{
+  background-color: transparent;
+  color: white;
+  position: absolute;
+  top: 25%;
+  right: 0;
+  left: 0;
+  text-align: center;
+  font-size: 1.4em;
+  display: inline-block;
+}
+
+.file-title input
+{
+  background-color: hsla(0, 0%, 90%, 0.5);
+  color: white;
+  position: absolute;
+  top: 25%;
+  right: 0;
+  left: 0;
+  text-align: center;
+  font-size: 1.4em;
+  display: inline-block;
+}
+
+.file-type
+{
+  color: white;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  text-align: center;
+  font-size: 1.4em;
+  display: inline-block;
+}
+
+.file-picture
+{
+  padding: 0px;
+  margin: 0px;
+  position: absolute;
+  top:0;
+  left:0;
+}
+
+#upload-area
+{
+  text-align: center;
+  border-radius: 7px;
+  border: 2px dashed white;
+  margin: 5px;
+}
+
+#upload-area.drag-over
+{
+  border: 2px dashed red;
+}
+
+.delete-document
+{
+  background: url('../icons/trash-bin-button-small.png');
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 25px;
+  height: 25px;
+}
+
+.download-document
+{
+  background: url('../icons/download-button-small.png');
+  position: absolute;
+  top: 0;
+  right: 30px;
+  width: 25px;
+  height: 25px;
 }

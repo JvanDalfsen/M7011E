@@ -1,30 +1,50 @@
 ﻿/// <reference path="../definitions/server.d.ts"/>
+/// <reference path="./document.ts"/>
 
-module MyCalendar.Models {
-    var mongoose = require('mongoose');
+import Models = require('./document');
 
-    var eventSchema = new mongoose.Schema({
-        name:        { type: String, required: true },
-        description: String,
-        location: String,
-        begin:       { type: Date, required: true },
-        end:         { type: Date, required: true },
-        // TODO: add an events.
-        // TODO: Ensure that this event is linked to at least one calendar otherwise destroy it.  
-    });
+var mongoose = require('mongoose');
+var async    = require('async');
 
-    function checkDate(next: (err?: string) => void) {
-        if (this.begin < this.end) {
-            next();
-        }
+var eventSchema = new mongoose.Schema({
+    name:        { type: String, required: true },
+    description: String,
+    location:    String,
+    begin:       { type: Date, required: true },
+    end:         { type: Date, required: true },
+    documents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' /* validate: cf below */}]
+    // TODO: add an events.
+    // TODO: Ensure that this event is linked to at least one calendar otherwise destroy it.  
+});
 
-        var error = new mongoose.Error.ValidationError(this);
-        error['date'] = 'The begin\'s date should be before the end\'s date';
-
-        next(error);
+function checkDate(next: (err?: string) => void) {
+    if (this.begin < this.end) {
+        next();
     }
 
-    eventSchema.pre('save', checkDate);
+    var error = new mongoose.Error.ValidationError(this);
+    error['date'] = 'The begin\'s date should be before the end\'s date';
 
-    export var Event = mongoose.model('Event', eventSchema);
+    next(error);
 }
+
+eventSchema.pre('save', checkDate);
+
+/**
+    * Check that the documents' id are valids.
+    */
+eventSchema.path('documents').validate((value: Array<any>, respond: (boolean) => void): void => {
+    async.reduce(value, true, (memo: any, item: any, callback: AsyncSingleResultCallback<any>): void => {
+        Models.Document.findById(item, (err: any, document: any): void => {
+            if (err || !document) {
+                callback(null, false && memo);
+            }
+
+            callback(null, true && memo);
+        }, 'Invalid ObjectId for the document');
+    }, (err: string, result: any): any => {
+        respond(result);
+    });
+});
+
+export var Event = mongoose.model('Event', eventSchema);

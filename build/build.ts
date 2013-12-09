@@ -7,7 +7,7 @@ var buildSteps: { message: string; command: string }[] = [
         message: 'Compiling the server...', 
         command: 'node ./node_modules/typescript/bin/tsc server/application.ts \
                   --out bin/server.js \
-                  --target ES5 --sourcemap'
+                  --target ES5 --sourcemap --module commonjs'
     },
 
     {
@@ -15,7 +15,15 @@ var buildSteps: { message: string; command: string }[] = [
         command: 'node ./node_modules/typescript/bin/tsc client/mycalendar.ts \
                   --out client/static/js/mycalendar.js \
                   --target ES5 --sourcemap'
+    },
+
+    {
+        message: 'Compiling templates...',
+        command: 'node node_modules/handlebars/bin/handlebars client/templates \
+              --output client/static/js/genovesa.templates.js \ '
+        //--namespace "Genovesa.Templates"'
     }
+
 ];
 
 

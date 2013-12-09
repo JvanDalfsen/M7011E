@@ -6,7 +6,7 @@
 
 module MyCalendar {
     export class Repository<T extends Models.Model> {
-        private _apiRoot = '/api';
+        public static ApiRoot = '/api';
 
         private _dummie: T;
 
@@ -48,20 +48,23 @@ module MyCalendar {
         public save(obj: T): JQueryPromise<T> {
             if (this.isCalendar()) {
                 // Transform the ref into strings.
-                (<any>obj).events = (<Models.Calendar><any>obj).events.map((value: Models.Ref<Models.Event>, index: number, array: Array<Models.Ref<Models.Event>>): string => {
-                    return value.id;
-                });                
+                (<any>obj).events = (<Models.Calendar><any>obj).events.map(this.extractRef);                
+            }
+
+            if (this.isEvent()) {
+                // Transform the ref into strings.
+                (<any>obj).documents = (<Models.Event><any>obj).documents.map(this.extractRef);
             }
 
             return this.callAPI('PUT', '/' + obj.getRefId(), obj).then((json: any): any => {
-                return this.buildModel(json).then((value: T) => {
-                    for (var prop in value) {
-                        // Update the _id of the object. 
-                        obj[prop] = value[prop];
-                    }
+                var value = this.buildModel(json);
 
-                    return obj;
-                });
+                for (var prop in value) {
+                    // Update the _id of the object. 
+                    obj[prop] = value[prop];
+                }
+
+                return obj;
             });
         }
 
@@ -90,13 +93,29 @@ module MyCalendar {
 
                 return <T><any>calendar;
 
-            } else if (this.isEvent()) {
-                var event: Models.Event = new Models.Event();
-
+            } else if (this.isDocument()) {
+                var document: Models.Document = new Models.Document(); 
+                
                 // Raw copy of the json.
                 for (var prop in json) {
-                    event[prop] = json[prop];
+                    document[prop] = json[prop];
                 }
+
+                return <T><any>document;
+            } else if (this.isEvent()) {
+                var event: Models.Event = new Models.Event();
+                event._id         = json._id;
+                event.begin       = json.being;
+                event.end         = json.end;
+                event.name        = json.name;
+                event.description = json.description;
+
+                // Copy the references.
+                var documents: Array<string> = <Array<string>>json.documents;
+
+                event.documents = documents.map((value: string, index: number, array: Array<string>): Models.Ref<Models.Document> => {
+                    return new Models.Ref<Models.Document>(value, documentsRepository);
+                });
 
                return <T><any>event;
             }
@@ -109,6 +128,8 @@ module MyCalendar {
                 return '/calendars';
             } else if (this.isEvent()) {
                 return '/events';
+            } else if (this.isDocument()) {
+                return '/documents';
             }
 
             throw 'no route avaiblable for this type';
@@ -119,7 +140,7 @@ module MyCalendar {
         private callAPI(type: string, url: string = '', data: any = {}): JQueryPromise<any> {
             return $.ajax({
                 type: type,
-                url: this._apiRoot + this.getRoute() + url,
+                url: Repository.ApiRoot + this.getRoute() + url,
                 data: data,
                 dataType: 'json',
                 success: (json, textStatus, jqXHR) => {
@@ -135,8 +156,17 @@ module MyCalendar {
         private isEvent(): boolean {
             return this._dummie instanceof Models.Event;
         }
+
+        private isDocument(): Boolean {
+            return this._dummie instanceof Models.Document;
+        }
+
+        private extractRef<T extends Models.Model>(value: Models.Ref<T>, index: number, array: Array<Models.Ref<T>>): string {
+            return value.id;
+        }
     }
 
     export var eventsRepository    = new Repository<Models.Event>(Models.Event);
     export var calendarsRepository = new Repository<Models.Calendar>(Models.Calendar);
+    export var documentsRepository = new Repository<Models.Document>(Models.Document);
 }

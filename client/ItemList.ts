@@ -2,7 +2,7 @@ class ItemList {
     
 	items: Array<Item>;
 
-	constructor(items: Array) {
+	constructor(items: any[]) {
         this.items = items;
 	}
 
