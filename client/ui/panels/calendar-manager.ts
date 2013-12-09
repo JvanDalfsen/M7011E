@@ -12,7 +12,7 @@ module MyCalendar.UI.Panels {
         public onload(): void {
 
 			// get calendar ID's from user? 
-			var calendarIDs = [];
+            var calendarIDs = ["52a5fb7da68758c018000001"];
 			var calendarEvents = [];
 
 			for(var i = 0; i < calendarIDs.length; i++){
