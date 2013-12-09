@@ -54,7 +54,9 @@ export class Server {
         // Pin-point the source-map to the right file.
         this._app.use(express.static(process.cwd() + '/client'));
 
-        this._app.listen(this._config.port, () => {
+        
+
+        this._app.listen(process.env.PORT || this._config.port, () => {
             console.log('Server started to listen on port: ' + this._config.port);
         });
     }
