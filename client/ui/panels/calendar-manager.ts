@@ -18,8 +18,10 @@ module MyCalendar.UI.Panels {
 			for(var i = 0; i < calendarIDs.length; i++){
 				MyCalendar.calendarsRepository.findById(calendarIDs[i]).done((calendar) => {
 					var eventRefs = calendar.events;
-					for(var j = 0; j < eventRefs.length; j++){
-						var dbEvent = eventRefs[j].deference();
+                    console.log(eventRefs);
+                    for (var j = 0; j < eventRefs.length; j++){
+                        var dbEvent = eventRefs[j].deference();
+                        console.log("event: "+dbEvent);
 						var calendarEvent = {title: dbEvent.name, start: dbEvent.begin, end: dbEvent.end, description: dbEvent.description, location: dbEvent.location, documents: dbEvent.documents}
 						calendarEvents[calendarEvents.length] = calendarEvent;
 					}

@@ -87,7 +87,7 @@ module MyCalendar.UI {
             var result = this._panel.pop();
             this._div.children().fadeOut(400, () => {
                 this._div.empty();
-                if (this._panel.length > 1) {
+                if (this._panel.length > 0) {
                     var newPanel = this._panel[this._panel.length - 1];
 
                     var view = newPanel.view();
