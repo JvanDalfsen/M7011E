@@ -42,6 +42,10 @@ module MyCalendar.UI {
             this.redraw();
         }
 
+        public popPanel(): void {
+            this.selectedButton(this._buttons.length - 2);
+        }
+
         private selectedButton(index: number): void {
             this._buttons = this._buttons.slice(0, index + 1);
 
