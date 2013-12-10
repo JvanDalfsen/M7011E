@@ -33,7 +33,7 @@ $(() => {
     });
 
     // Database tests!
-    MyCalendar.calendarsRepository.create({ name: 'test', events: [] }).done((myCalendar) =>
+    /*MyCalendar.calendarsRepository.create({ name: 'test', events: [] }).done((myCalendar) =>
     {
         console.log(myCalendar.getRefId());
         myCalendar.name = 'yo';
@@ -75,7 +75,23 @@ $(() => {
                 console.log('saved!');
             });
         });
+    });*/
+
+    //create calendar
+    /*MyCalendar.calendarsRepository.create({ name: 'universal_calendar', events: [] }).done((myCalendar2) => {
+        console.log(myCalendar2.getRefId());
+    });*/
+
+    //delete all calendars except universal_calendar
+    /*MyCalendar.calendarsRepository.find({}).done((calendars: Array<any>) => {
+        calendars.map((value, index, array) => {
+            if (value.getRefId() != "52a5fb7da68758c018000001") {
+                console.log(value.getRefId());
+                MyCalendar.calendarsRepository.delete(value);
+            }
+        });
     });
+    */
 
     MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), () => {
         MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), () => {

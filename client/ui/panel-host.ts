@@ -85,9 +85,11 @@ module MyCalendar.UI {
             this._panel[this._panel.length - 1].onremove();
 
             var result = this._panel.pop();
+            MyCalendar.UI.Breacrumb.getInstance().popPanel();
+
             this._div.children().fadeOut(400, () => {
                 this._div.empty();
-                if (this._panel.length > 1) {
+                if (this._panel.length > 0) {
                     var newPanel = this._panel[this._panel.length - 1];
 
                     var view = newPanel.view();
