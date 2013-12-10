@@ -534,7 +534,7 @@ var MyCalendar;
                 }
                 ItemManagerPanel.prototype.onload = function () {
                     // click function for the 'Save' button
-                    $(".save-button").click(function () {
+                    $("#save-button").click(function () {
                         /*var newEvent = new MyCalendar.Models.Event();
                         newEvent.name = $('#title').val();
                         console.log(newEvent.name);
@@ -582,6 +582,10 @@ var MyCalendar;
                     //click function for the 'calendar' button
                     $("#calendar-button").click(function () {
                         MyCalendar.UI.PanelHost.getInstance().popPanel();
+                    });
+
+                    $("#documents-button").click(function () {
+                        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
                     });
 
                     //click function for datepicker
@@ -683,7 +687,10 @@ var MyCalendar;
                                     center: 'title',
                                     right: 'month,agendaWeek,agendaDay'
                                 },
-                                editable: true,
+                                editable: false,
+                                eventClick: function (calEvent, jsEvent, view) {
+                                    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.ItemManagerPanel());
+                                },
                                 events: [
                                     {
                                         title: 'All Day Event',

@@ -44,7 +44,7 @@ module MyCalendar.UI {
             return PanelHost._instance;
         }
 
-        public pushPanel2(newPanel: Panels.IPanel, callback?: () => void ): void {
+        public pushPanel(newPanel: Panels.IPanel, callback?: () => void ): void {
             if (this._panel.length > 1) {
                 this._panel[this._panel.length - 1].onremove();                
             }
@@ -62,7 +62,8 @@ module MyCalendar.UI {
                     this.setupToolbar(newPanel);
                     this.setupSearch(newPanel);
 
-                    newPanel.onload();       
+                   
+                    newPanel.onload();
                     if (callback) {
                         callback();
                     }

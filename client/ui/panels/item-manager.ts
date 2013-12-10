@@ -11,7 +11,7 @@ module MyCalendar.UI.Panels {
 
         public onload(): void {
 			// click function for the 'Save' button
-			$(".save-button").click(function () {
+			$("#save-button").click(function () {
                 /*var newEvent = new MyCalendar.Models.Event();
                 newEvent.name = $('#title').val();
                 console.log(newEvent.name);
@@ -61,7 +61,11 @@ module MyCalendar.UI.Panels {
 			//click function for the 'calendar' button
 			$("#calendar-button").click(function () {
                 MyCalendar.UI.PanelHost.getInstance().popPanel();
-			});
+            });
+
+            $("#documents-button").click(function () {
+                MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
+            });
 
             //click function for datepicker
             $('.datepicker').datepicker({ dateFormat: 'dd-mm-yy' });//{
