@@ -95,10 +95,29 @@ var MyCalendar;
     })(MyCalendar.Models || (MyCalendar.Models = {}));
     var Models = MyCalendar.Models;
 })(MyCalendar || (MyCalendar = {}));
+/// <reference path="./ref.ts"/>
+/// <reference path="./calendar.ts"/>
+var MyCalendar;
+(function (MyCalendar) {
+    (function (Models) {
+        var User = (function (_super) {
+            __extends(User, _super);
+            function User() {
+                _super.apply(this, arguments);
+            }
+            return User;
+        })(MyCalendar.Models.Model);
+        Models.User = User;
+
+        Models.currentUser = null;
+    })(MyCalendar.Models || (MyCalendar.Models = {}));
+    var Models = MyCalendar.Models;
+})(MyCalendar || (MyCalendar = {}));
 /// <reference path="./definitions/jquery.d.ts"/>
 /// <reference path="./models/model.ts"/>
 /// <reference path="./models/calendar.ts"/>
 /// <reference path="./models/event.ts"/>
+/// <reference path="./models/user.ts"/>
 var MyCalendar;
 (function (MyCalendar) {
     var Repository = (function () {
@@ -119,9 +138,13 @@ var MyCalendar;
         Repository.prototype.find = function (query) {
             var _this = this;
             return this.callAPI('GET', '', query).then(function (json) {
-                return json.map(function (result, index, array) {
-                    return _this.buildModel(result);
-                });
+                if (_this.isUser()) {
+                    return _this.buildModel(json);
+                } else {
+                    return json.map(function (result, index, array) {
+                        return _this.buildModel(result);
+                    });
+                }
             });
         };
 
@@ -149,6 +172,11 @@ var MyCalendar;
             if (this.isEvent()) {
                 // Transform the ref into strings.
                 obj.documents = obj.documents.map(this.extractRef);
+            }
+
+            if (this.isUser()) {
+                // Transform the ref into strings.
+                obj.calendars = obj.calendars.map(this.extractRef);
             }
 
             return this.callAPI('PUT', '/' + obj.getRefId(), obj).then(function (json) {
@@ -212,6 +240,23 @@ var MyCalendar;
                 });
 
                 return event;
+            } else if (this.isUser()) {
+                var user = new MyCalendar.Models.User();
+                user._id = json._id;
+                user.displayName = json.displayName;
+                user.firstname = json.firstname;
+                user.lastname = json.lastname;
+                user.email = json.email;
+                user.lastConnection = json.lastConnection;
+
+                // Copy the references.
+                var calendars = json.calendars;
+
+                user.calendars = calendars.map(function (value, index, array) {
+                    return new MyCalendar.Models.Ref(value, MyCalendar.calendarsRepository);
+                });
+
+                return user;
             }
 
             return null;
@@ -224,6 +269,8 @@ var MyCalendar;
                 return '/events';
             } else if (this.isDocument()) {
                 return '/documents';
+            } else if (this.isUser()) {
+                return '/auth';
             }
 
             throw 'no route avaiblable for this type';
@@ -257,6 +304,10 @@ var MyCalendar;
             return this._dummie instanceof MyCalendar.Models.Document;
         };
 
+        Repository.prototype.isUser = function () {
+            return this._dummie instanceof MyCalendar.Models.User;
+        };
+
         Repository.prototype.extractRef = function (value, index, array) {
             return value.id;
         };
@@ -268,6 +319,7 @@ var MyCalendar;
     MyCalendar.eventsRepository = new Repository(MyCalendar.Models.Event);
     MyCalendar.calendarsRepository = new Repository(MyCalendar.Models.Calendar);
     MyCalendar.documentsRepository = new Repository(MyCalendar.Models.Document);
+    MyCalendar.usersRepository = new Repository(MyCalendar.Models.User);
 })(MyCalendar || (MyCalendar = {}));
 /// <reference path="../definitions/jquery.d.ts"/>
 /// <reference path="../../definitions/jquery.d.ts"/>
@@ -538,40 +590,47 @@ var MyCalendar;
                         event.name = $('#title').val();
                         event.description = $('#description').val();
                         event.location = $('#location').val();
+                        event.begin = $("#fromDate").datepicker("getDate");
+                        event.end = $("#toDate").datepicker("getDate");
 
-                        //var begin = $("#fromDate").datepicker("getDate").getDate();
-                        //event.begin = begin;
-                        //var end = $("#toDate").datepicker("getDate");
-                        //event.end = end;
-                        var calendarName = $('calendar').val();
-                        var calendar = 9;
+                        MyCalendar.calendarsRepository.findById("52a5fb7da68758c018000001").done(function (calendar) {
+                            calendar.events[calendar.events.length] = event;
+                            console.log(calendar.events);
+                            MyCalendar.calendarsRepository.save(calendar).done(function (calendar2) {
+                                MyCalendar.calendarsRepository.findById("52a5fb7da68758c018000001").done(function (calendar3) {
+                                    console.log(calendar3.events);
+                                });
+                            });
+                        });
 
                         //show previous panel
-                        MyCalendar.UI.PanelHost.getInstance().popPanel;
+                        MyCalendar.UI.PanelHost.getInstance().popPanel();
                     });
 
                     //click function for the 'calendar' button
                     $("#calendar-button").click(function () {
-                        MyCalendar.UI.PanelHost.getInstance().popPanel;
+                        MyCalendar.UI.PanelHost.getInstance().popPanel();
                     });
 
                     //click function for datepicker
-                    $('.datepicker').datepicker({
-                        beforeShow: function (input, inst) {
-                            // Handle calendar position before showing it.
-                            // It's not supported by Datepicker itself (for now) so we need to use its internal variables.
-                            var calendar = inst.dpDiv;
-
-                            // Dirty hack, but we can't do anything without it (for now, in jQuery UI 1.8.20)
-                            setTimeout(function () {
-                                calendar.position({
-                                    my: 'left top',
-                                    at: 'right top',
-                                    collision: 'none'
-                                });
-                            }, 1);
-                        }
+                    $('.datepicker').datepicker({ dateFormat: 'dd-mm-yy' }); //{
+                    //clickInput: true
+                    //doesnt work:
+                    /*beforeShow: function (input, inst) {
+                    // Handle calendar position before showing it.
+                    // It's not supported by Datepicker itself (for now) so we need to use its internal variables.
+                    var calendar = inst.dpDiv;
+                    
+                    // Dirty hack, but we can't do anything without it (for now, in jQuery UI 1.8.20)
+                    setTimeout(function () {
+                    calendar.position({
+                    my: 'left top',
+                    at: 'left bottom',
+                    collision: 'none'
                     });
+                    }, 1);
+                    }*/
+                    //});
                 };
 
                 ItemManagerPanel.prototype.onremove = function () {
@@ -620,14 +679,16 @@ var MyCalendar;
                 }
                 CalendarManagerPanel.prototype.onload = function () {
                     // get calendar ID's from user?
-                    var calendarIDs = [];
+                    var calendarIDs = ["52a5fb7da68758c018000001"];
                     var calendarEvents = [];
 
                     for (var i = 0; i < calendarIDs.length; i++) {
                         MyCalendar.calendarsRepository.findById(calendarIDs[i]).done(function (calendar) {
                             var eventRefs = calendar.events;
+                            console.log(eventRefs);
                             for (var j = 0; j < eventRefs.length; j++) {
                                 var dbEvent = eventRefs[j].deference();
+                                console.log("event: " + dbEvent);
                                 var calendarEvent = { title: dbEvent.name, start: dbEvent.begin, end: dbEvent.end, description: dbEvent.description, location: dbEvent.location, documents: dbEvent.documents };
                                 calendarEvents[calendarEvents.length] = calendarEvent;
                             }
@@ -749,6 +810,10 @@ var MyCalendar;
                 this.redraw();
             };
 
+            Breacrumb.prototype.popPanel = function () {
+                this.selectedButton(this._buttons.length - 2);
+            };
+
             Breacrumb.prototype.selectedButton = function (index) {
                 this._buttons = this._buttons.slice(0, index + 1);
 
@@ -857,9 +922,11 @@ var MyCalendar;
                 this._panel[this._panel.length - 1].onremove();
 
                 var result = this._panel.pop();
+                MyCalendar.UI.Breacrumb.getInstance().popPanel();
+
                 this._div.children().fadeOut(400, function () {
                     _this._div.empty();
-                    if (_this._panel.length > 1) {
+                    if (_this._panel.length > 0) {
                         var newPanel = _this._panel[_this._panel.length - 1];
 
                         var view = newPanel.view();
@@ -934,6 +1001,96 @@ var MyCalendar;
     })(MyCalendar.UI || (MyCalendar.UI = {}));
     var UI = MyCalendar.UI;
 })(MyCalendar || (MyCalendar = {}));
+/// <reference path="../definitions/jquery.d.ts"/>
+/// <reference path="../models/user.ts"/>
+/// <reference path="../definitions/handlebars.d.ts"/>
+var MyCalendar;
+(function (MyCalendar) {
+    (function (UI) {
+        var UserMenu = (function () {
+            function UserMenu() {
+                if (UserMenu._instance) {
+                    throw 'This class is a singleton and should be accessed by the getInstance method';
+                }
+
+                this._mainMenu = $('#user-menu');
+                this._userInfo = $('#user-infos');
+                this._userConnection = $('#user-connection');
+
+                this.logoutState();
+            }
+            /**
+            * Get the instance of this PanelHost.
+            *
+            * @Return the instance of this PanelHost.
+            */
+            UserMenu.getInstance = function () {
+                if (UserMenu._instance === null) {
+                    UserMenu._instance = new UserMenu();
+                }
+
+                return UserMenu._instance;
+            };
+
+            UserMenu.prototype.attachEvent = function () {
+                var _this = this;
+                this._userButton = $('#user-settings-button');
+
+                // open and close the account-menu
+                this._userButton.click(function (event) {
+                    var state = _this._userButton.attr('selected');
+
+                    if (typeof state === 'undefined' || (state) === false) {
+                        _this.open();
+                    } else {
+                        _this.close();
+                    }
+                });
+            };
+
+            UserMenu.prototype.logoutState = function () {
+                this._userInfo.empty();
+                this._userInfo.append($(Handlebars.templates['offline-user-infos']()));
+
+                this._userConnection.empty();
+                this._userConnection.append($(Handlebars.templates['offline-user-connection']()));
+
+                this.attachEvent();
+            };
+
+            UserMenu.prototype.loginState = function (user) {
+                this._userInfo.empty();
+                this._userInfo.append($(Handlebars.templates['user-infos'](user)));
+
+                this._userConnection.empty();
+                this._userConnection.append($(Handlebars.templates['user-connection']()));
+
+                this.attachEvent();
+            };
+
+            UserMenu.prototype.open = function () {
+                this._userButton.attr('selected', true);
+                this._mainMenu.animate({ width: 240 }, 200, function () {
+                    $('.hidable-menu').show();
+                });
+                $('body').width($('body').width() - 100);
+            };
+
+            UserMenu.prototype.close = function () {
+                var _this = this;
+                $('.hidable-menu').hide();
+                this._mainMenu.animate({ width: 80 }, 200, function () {
+                    _this._userButton.removeAttr('selected');
+                });
+                $('body').width($('body').width() + 100);
+            };
+            UserMenu._instance = null;
+            return UserMenu;
+        })();
+        UI.UserMenu = UserMenu;
+    })(MyCalendar.UI || (MyCalendar.UI = {}));
+    var UI = MyCalendar.UI;
+})(MyCalendar || (MyCalendar = {}));
 /// <reference path="./definitions/jquery.d.ts"/>
 /// <reference path="./repository.ts"/>
 /// <reference path="./definitions/jqueryui.d.ts"/>
@@ -941,75 +1098,76 @@ var MyCalendar;
 /// <reference path="./ui/panels/document-manager.ts"/>
 /// <reference path="./ui/panels/calendar-manager.ts"/>
 /// <reference path="./ui/panel-host.ts"/>
+/// <reference path="./ui/user-menu.ts"/>
 // Start the script when the page is ready.
 $(function () {
-    var userButton = $('#user-settings-button');
-    var mainMenu = $('#main-menu');
+    // Just to trigger the attachEvent function.
+    MyCalendar.UI.UserMenu.getInstance();
 
-    // open and close the account-menu
-    userButton.click(function (event) {
-        var state = userButton.attr('selected');
-
-        if (typeof state === 'undefined' || (state) === false) {
-            userButton.attr('selected', true);
-            mainMenu.show().animate({ width: 240 }, 200, function () {
-                mainMenu.children('.hidable-menu').show();
-            });
-            $('body').width($('body').width() - 100);
-        } else {
-            mainMenu.children('.hidable-menu').hide();
-            mainMenu.show().animate({ width: 80 }, 200, function () {
-                userButton.removeAttr('selected');
-            });
-            $('body').width($('body').width() + 100);
-        }
-
-        console.log("type: ");
+    MyCalendar.usersRepository.find({}).done(function (user) {
+        MyCalendar.Models.currentUser = user;
+        MyCalendar.UI.UserMenu.getInstance().loginState(user);
+        MyCalendar.UI.UserMenu.getInstance().open();
     });
 
     // Database tests!
-    MyCalendar.calendarsRepository.create({ name: 'test', events: [] }).done(function (myCalendar) {
-        console.log(myCalendar.getRefId());
-        myCalendar.name = 'yo';
-        MyCalendar.calendarsRepository.save(myCalendar).done(function () {
-            MyCalendar.calendarsRepository.findById(myCalendar.getRefId()).done(function (myCalendar2) {
-                console.log(myCalendar2.name);
-            });
-        });
-
-        MyCalendar.calendarsRepository.find({}).done(function (calendars) {
-            calendars.map(function (value, index, array) {
-                console.log(value.getRefId());
-                MyCalendar.calendarsRepository.delete(value);
-            });
-        });
-
-        MyCalendar.calendarsRepository.find({}).done(function (calendars) {
-            calendars.map(function (value, index, array) {
-                console.log(value.getRefId());
-            });
-        });
-
-        var event = new MyCalendar.Models.Event();
-        event.name = 'test';
-        event.description = 'test';
-        event.location = 'test';
-        event.begin = new Date(2014, 1, 1);
-        event.end = new Date(2014, 1, 2);
-        event.documents = [];
-
-        MyCalendar.eventsRepository.save(event).done(function (event) {
-            var calendar = new MyCalendar.Models.Calendar();
-
-            calendar.name = 'test';
-            calendar.events = [new MyCalendar.Models.Ref(event.getRefId(), MyCalendar.eventsRepository)];
-
-            MyCalendar.calendarsRepository.save(calendar).done(function (calendar) {
-                console.log('saved!');
-            });
-        });
+    /*MyCalendar.calendarsRepository.create({ name: 'test', events: [] }).done((myCalendar) =>
+    {
+    console.log(myCalendar.getRefId());
+    myCalendar.name = 'yo';
+    MyCalendar.calendarsRepository.save(myCalendar).done(() => {
+    MyCalendar.calendarsRepository.findById(myCalendar.getRefId()).done((myCalendar2) => {
+    console.log(myCalendar2.name);
     });
-
+    });
+    
+    
+    MyCalendar.calendarsRepository.find({}).done((calendars: Array<any>) => {
+    calendars.map((value, index, array) => {
+    console.log(value.getRefId());
+    MyCalendar.calendarsRepository.delete(value);
+    });
+    });
+    
+    MyCalendar.calendarsRepository.find({}).done((calendars: Array<any>) => {
+    calendars.map((value, index, array) => {
+    console.log(value.getRefId());
+    });
+    });
+    
+    var event = new MyCalendar.Models.Event();
+    event.name        = 'test';
+    event.description = 'test';
+    event.location    = 'test';
+    event.begin       = new Date(2014, 1, 1);
+    event.end = new Date(2014, 1, 2);
+    event.documents = [];
+    
+    MyCalendar.eventsRepository.save(event).done((event: MyCalendar.Models.Event) => {
+    var calendar = new MyCalendar.Models.Calendar();
+    
+    calendar.name = 'test';
+    calendar.events = [new MyCalendar.Models.Ref<MyCalendar.Models.Event>(event.getRefId(), MyCalendar.eventsRepository)];
+    
+    MyCalendar.calendarsRepository.save(calendar).done((calendar) => {
+    console.log('saved!');
+    });
+    });
+    });*/
+    //create calendar
+    /*MyCalendar.calendarsRepository.create({ name: 'universal_calendar', events: [] }).done((myCalendar2) => {
+    console.log(myCalendar2.getRefId());
+    });*/
+    //delete all calendars except universal_calendar
+    /*MyCalendar.calendarsRepository.find({}).done((calendars: Array<any>) => {
+    calendars.map((value, index, array) => {
+    if (value.getRefId() != "52a5fb7da68758c018000001") {
+    console.log(value.getRefId());
+    MyCalendar.calendarsRepository.delete(value);
+    }
+    });
+    });
+    */
     MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), function () {
         MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), function () {
             MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());

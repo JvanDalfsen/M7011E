@@ -104,4 +104,53 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
   return "<div>\r\n<!-- Note: use this div for the transistions -->\r\n<!-- this div needed here? -->\r\n	<div id=\"item-create-frame\">\r\n		<form>\r\n			<label>Title:</label> <input type=\"text\" name=\"title\" size=\"23\" /><br />\r\n			<label>From:</label> <input type=\"text\" name=\"fromTime\" value=\"12:00\" size=\"6\"/>, <input class=\"datepicker\" type=\"text\" name=\"fromDate\" value=\"01/01/2014\" size=\"11\"/><br />\r\n			<label>To:</label> <input type=\"text\" name=\"toTime\" value=\"13:00\" size=\"6\"/>, <input class=\"datepicker\" type=\"text\" name=\"toDate\" value=\"01/01/2014\" size=\"11\"/><br />\r\n			<label>Location:</label> <input type=\"text\" name=\"location\" size=\"23\" /><br />\r\n			<label>Calendar:</label> <select id=\"available-calendars\">\r\n				<!--remove these options after calendars can be added dynamically-->\r\n				<option value=\"calendar1\">Calendar1</option>\r\n				<option value=\"calendar2\">Calendar2</option>\r\n			</select><br />\r\n			<label>Description:</label> <textarea name=\"description\" cols=\"18\" rows=\"6\"></textarea><br />\r\n			<label>Documents:</label><ul id=\"added-documents\">\r\n				<!--remove these list-items after documents can be added dynamically-->\r\n				<li>Document 1</li>\r\n				<li>Document 2</li>\r\n			</ul><br />\r\n		</form>\r\n		<div class=\"dark-blue-button save-button\">\r\n			<h2>Save</h2>\r\n		</div>\r\n	</div>\r\n</div>";
   });
+templates['offline-user-connection'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "﻿<li class=\"deep-dark-blue-button\">\r\n  <a href=\"/api/auth/google\">\r\n    Connection\r\n    <img src=\"icons/google-plus-small.png\" alt=\"disconnect\" width=\"19\" height=\"19\"/>\r\n  </a>\r\n</li>";
+  });
+templates['offline-user-infos'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "﻿<div id=\"user-settings-button\" class=\"deep-dark-blue-button avatar\">\r\n    <p>Offline</p>\r\n    <img src=\"images/cartoon-avatar.png\" alt=\"avatar\" width=\"45\" height=\"45\"/>\r\n</div>\r\n<div id=\"user-details\" class=\"hidable-menu\">\r\n  <p>No data</p>\r\n</div>";
+  });
+templates['user-connection'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "﻿<li class=\"deep-dark-blue-button\">\r\n  <a href=\"/api/auth/logout\">\r\n    Disconnect\r\n    <img src=\"icons/lock-button-small.png\" alt=\"disconnect\" width=\"19\" height=\"19\"/>\r\n  </a>\r\n</li>\r\n<li class=\"deep-dark-blue-button\">\r\n  <p>\r\n    Delete this account\r\n    <img src=\"icons/close-button-small.png\" alt=\"disconnect\" width=\"19\" height=\"19\"/>\r\n  </p>\r\n</li>\r\n";
+  });
+templates['user-infos'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "﻿<div id=\"user-settings-button\" class=\"deep-dark-blue-button avatar\">\r\n    <p>";
+  if (stack1 = helpers.displayName) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = (depth0 && depth0.displayName); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</p>\r\n    <img src=\"images/cartoon-avatar.png\" alt=\"avatar\" width=\"45\" height=\"45\"/>\r\n</div>\r\n<div id=\"user-details\" class=\"hidable-menu\">\r\n    <p>Firstname: ";
+  if (stack1 = helpers.firstname) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = (depth0 && depth0.firstname); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</p>\r\n    <p>Lastname: ";
+  if (stack1 = helpers.lastname) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = (depth0 && depth0.lastname); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</p>\r\n    <p>Last seen: ";
+  if (stack1 = helpers.lastConnection) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = (depth0 && depth0.lastConnection); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</p>\r\n</div>";
+  return buffer;
+  });
 })();

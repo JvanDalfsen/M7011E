@@ -2,6 +2,7 @@
 /// <reference path="./models/model.ts"/>
 /// <reference path="./models/calendar.ts"/>
 /// <reference path="./models/event.ts"/>
+/// <reference path="./models/user.ts"/>
 var MyCalendar;
 (function (MyCalendar) {
     var Repository = (function () {
@@ -22,9 +23,13 @@ var MyCalendar;
         Repository.prototype.find = function (query) {
             var _this = this;
             return this.callAPI('GET', '', query).then(function (json) {
-                return json.map(function (result, index, array) {
-                    return _this.buildModel(result);
-                });
+                if (_this.isUser()) {
+                    return _this.buildModel(json);
+                } else {
+                    return json.map(function (result, index, array) {
+                        return _this.buildModel(result);
+                    });
+                }
             });
         };
 
@@ -52,6 +57,11 @@ var MyCalendar;
             if (this.isEvent()) {
                 // Transform the ref into strings.
                 (obj).documents = (obj).documents.map(this.extractRef);
+            }
+
+            if (this.isUser()) {
+                // Transform the ref into strings.
+                (obj).calendars = (obj).calendars.map(this.extractRef);
             }
 
             return this.callAPI('PUT', '/' + obj.getRefId(), obj).then(function (json) {
@@ -115,6 +125,23 @@ var MyCalendar;
                 });
 
                 return event;
+            } else if (this.isUser()) {
+                var user = new MyCalendar.Models.User();
+                user._id = json._id;
+                user.displayName = json.displayName;
+                user.firstname = json.firstname;
+                user.lastname = json.lastname;
+                user.email = json.email;
+                user.lastConnection = json.lastConnection;
+
+                // Copy the references.
+                var calendars = json.calendars;
+
+                user.calendars = calendars.map(function (value, index, array) {
+                    return new MyCalendar.Models.Ref(value, MyCalendar.calendarsRepository);
+                });
+
+                return user;
             }
 
             return null;
@@ -127,6 +154,8 @@ var MyCalendar;
                 return '/events';
             } else if (this.isDocument()) {
                 return '/documents';
+            } else if (this.isUser()) {
+                return '/auth';
             }
 
             throw 'no route avaiblable for this type';
@@ -160,6 +189,10 @@ var MyCalendar;
             return this._dummie instanceof MyCalendar.Models.Document;
         };
 
+        Repository.prototype.isUser = function () {
+            return this._dummie instanceof MyCalendar.Models.User;
+        };
+
         Repository.prototype.extractRef = function (value, index, array) {
             return value.id;
         };
@@ -171,4 +204,5 @@ var MyCalendar;
     MyCalendar.eventsRepository = new Repository(MyCalendar.Models.Event);
     MyCalendar.calendarsRepository = new Repository(MyCalendar.Models.Calendar);
     MyCalendar.documentsRepository = new Repository(MyCalendar.Models.Document);
+    MyCalendar.usersRepository = new Repository(MyCalendar.Models.User);
 })(MyCalendar || (MyCalendar = {}));

@@ -3,6 +3,7 @@
 /// <reference path="./models/model.ts"/>
 /// <reference path="./models/calendar.ts"/>
 /// <reference path="./models/event.ts"/>
+/// <reference path="./models/user.ts"/>
 
 module MyCalendar {
     export class Repository<T extends Models.Model> {
@@ -26,9 +27,13 @@ module MyCalendar {
 
         public find(query: any): JQueryPromise<T> {
             return this.callAPI('GET', '', query).then((json: Array<any>): any => {
-                return json.map((result, index, array): any => {
-                    return this.buildModel(result);
-                });
+                if (this.isUser()) {
+                    return this.buildModel(json);
+                } else {
+                    return json.map((result, index, array): any => {
+                        return this.buildModel(result);
+                    });
+                }
             });
         }
 
@@ -56,6 +61,11 @@ module MyCalendar {
                 (<any>obj).documents = (<Models.Event><any>obj).documents.map(this.extractRef);
             }
 
+            if (this.isUser()) {
+                // Transform the ref into strings.
+                (<any>obj).calendars = (<Models.User><any>obj).calendars.map(this.extractRef);
+            }
+
             return this.callAPI('PUT', '/' + obj.getRefId(), obj).then((json: any): any => {
                 var value = this.buildModel(json);
 
@@ -81,7 +91,7 @@ module MyCalendar {
         private buildModel(json: any): any {
             if (this.isCalendar()) {
                 var calendar: Models.Calendar = new Models.Calendar();
-                calendar._id  = json._id;
+                calendar._id = json._id;
                 calendar.name = json.name;
 
                 // Copy the references.
@@ -94,8 +104,8 @@ module MyCalendar {
                 return <T><any>calendar;
 
             } else if (this.isDocument()) {
-                var document: Models.Document = new Models.Document(); 
-                
+                var document: Models.Document = new Models.Document();
+
                 // Raw copy of the json.
                 for (var prop in json) {
                     document[prop] = json[prop];
@@ -104,10 +114,10 @@ module MyCalendar {
                 return <T><any>document;
             } else if (this.isEvent()) {
                 var event: Models.Event = new Models.Event();
-                event._id         = json._id;
-                event.begin       = json.being;
-                event.end         = json.end;
-                event.name        = json.name;
+                event._id = json._id;
+                event.begin = json.being;
+                event.end = json.end;
+                event.name = json.name;
                 event.description = json.description;
 
                 // Copy the references.
@@ -117,7 +127,24 @@ module MyCalendar {
                     return new Models.Ref<Models.Document>(value, documentsRepository);
                 });
 
-               return <T><any>event;
+                return <T><any>event;
+            } else if (this.isUser()) {
+                var user: Models.User = new Models.User();
+                user._id         = json._id;
+                user.displayName = json.displayName;
+                user.firstname   = json.firstname;
+                user.lastname    = json.lastname;
+                user.email       = json.email;
+                user.lastConnection = json.lastConnection;
+                
+                // Copy the references.
+                var calendars: Array<string> = <Array<string>>json.calendars;
+
+                user.calendars = calendars.map((value: string, index: number, array: Array<string>): Models.Ref<Models.Calendar> => {
+                    return new Models.Ref<Models.Calendar>(value, calendarsRepository);
+                });
+
+                return <T><any>user;
             }
 
             return null;
@@ -130,6 +157,8 @@ module MyCalendar {
                 return '/events';
             } else if (this.isDocument()) {
                 return '/documents';
+            } else if (this.isUser()) {
+                return '/auth';
             }
 
             throw 'no route avaiblable for this type';
@@ -161,6 +190,10 @@ module MyCalendar {
             return this._dummie instanceof Models.Document;
         }
 
+        private isUser(): Boolean {
+            return this._dummie instanceof Models.User;
+        }
+
         private extractRef<T extends Models.Model>(value: Models.Ref<T>, index: number, array: Array<Models.Ref<T>>): string {
             return value.id;
         }
@@ -169,4 +202,5 @@ module MyCalendar {
     export var eventsRepository    = new Repository<Models.Event>(Models.Event);
     export var calendarsRepository = new Repository<Models.Calendar>(Models.Calendar);
     export var documentsRepository = new Repository<Models.Document>(Models.Document);
+    export var usersRepository     = new Repository<Models.User>(Models.User);
 }
