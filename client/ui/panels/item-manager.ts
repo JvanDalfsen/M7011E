@@ -12,19 +12,43 @@ module MyCalendar.UI.Panels {
         public onload(): void {
 			// click function for the 'Save' button
 			$(".save-button").click(function () {
-				var event = new MyCalendar.Models.Event();
-				event.name = $('#title').val();
-				event.description = $('#description').val();
-				event.location = $('#location').val();
-				event.begin = $("#fromDate").datepicker("getDate");
-                event.end = $("#toDate").datepicker("getDate");
-                
-                MyCalendar.calendarsRepository.findById("52a5fb7da68758c018000001").done((calendar) => {
-                    calendar.events[calendar.events.length] = event;
-                    console.log(calendar.events);
-                    MyCalendar.calendarsRepository.save(calendar).done((calendar2) => {
-                        MyCalendar.calendarsRepository.findById("52a5fb7da68758c018000001").done((calendar3) => {
-                            console.log(calendar3.events);
+                /*var newEvent = new MyCalendar.Models.Event();
+                newEvent.name = $('#title').val();
+                console.log(newEvent.name);
+                newEvent.description = $('#description').val();
+                console.log(newEvent.description);
+                newEvent.location = $('#location').val();
+                console.log(newEvent.location);
+                newEvent.begin = $("#fromDate").datepicker("getDate");
+                console.log(newEvent.begin);
+                newEvent.end = $("#toDate").datepicker("getDate");
+                console.log(newEvent.end);
+                newEvent.documents = [];*/
+                var newEvent = {
+                    name: $('#title').val(),
+                    description: $('#description').val(),
+                    location: $('#location').val(),
+                    begin: $("#fromDate").datepicker("getDate"),
+                    end: $("#toDate").datepicker("getDate"),
+                    documents: []
+                };
+                console.log(newEvent);
+                MyCalendar.eventsRepository.create(newEvent).done((event: MyCalendar.Models.Event) => {
+
+                    MyCalendar.calendarsRepository.findById("52a78ff5b0a242501b000002").done((calendar) => {
+                        if (!calendar.events) {
+                            calendar.events = [];
+                        }
+                        var eventrefid = event.getRefId();
+                        console.log(event);
+                        var new_ref = new MyCalendar.Models.Ref<MyCalendar.Models.Event>(event.getRefId(), MyCalendar.eventsRepository);
+                        console.log(new_ref);
+                        calendar.events.push(new_ref);
+                        console.log(calendar.events);
+                        MyCalendar.calendarsRepository.save(calendar).done((calendar2) => {
+                            MyCalendar.calendarsRepository.findById("52a78ff5b0a242501b000002").done((calendar3) => {
+                                console.log(calendar3.events);
+                            });
                         });
                     });
                 });

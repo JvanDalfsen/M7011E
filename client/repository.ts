@@ -105,8 +105,9 @@ module MyCalendar {
             } else if (this.isEvent()) {
                 var event: Models.Event = new Models.Event();
                 event._id         = json._id;
-                event.begin       = json.being;
+                event.begin       = json.begin;
                 event.end         = json.end;
+                event.location    = json.location;
                 event.name        = json.name;
                 event.description = json.description;
 

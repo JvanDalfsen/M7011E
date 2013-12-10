@@ -3,16 +3,16 @@
 <!-- this div needed here? -->
 	<div id="item-create-frame">
 		<form>
-			<label>Title:</label> <input type="text" name="title" size="23" /><br />
-			<label>From:</label> <input type="text" name="fromTime" value="12:00" size="6"/>, <input class="datepicker" type="text" name="fromDate" value="01/01/2014" size="11"/><br />
-			<label>To:</label> <input type="text" name="toTime" value="13:00" size="6"/>, <input class="datepicker" type="text" name="toDate" value="01/01/2014" size="11"/><br />
-			<label>Location:</label> <input type="text" name="location" size="23" /><br />
+			<label>Title:</label> <input type="text" id="title" size="23" /><br />
+			<label>From:</label> <input type="text" id="fromTime" value="12:00" size="6"/>, <input class="datepicker" type="text" id="fromDate" value="01/01/2014" size="11"/><br />
+			<label>To:</label> <input type="text" id="toTime" value="13:00" size="6"/>, <input class="datepicker" type="text" id="toDate" value="01/01/2014" size="11"/><br />
+			<label>Location:</label> <input type="text" id="location" size="23" /><br />
 			<label>Calendar:</label> <select id="available-calendars">
 				<!--remove these options after calendars can be added dynamically-->
 				<option value="calendar1">Calendar1</option>
 				<option value="calendar2">Calendar2</option>
 			</select><br />
-			<label>Description:</label> <textarea name="description" cols="18" rows="6"></textarea><br />
+			<label>Description:</label> <textarea id="description" cols="18" rows="6"></textarea><br />
 			<label>Documents:</label><ul id="added-documents">
 				<!--remove these list-items after documents can be added dynamically-->
 				<li>Document 1</li>
