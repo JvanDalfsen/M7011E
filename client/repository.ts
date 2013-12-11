@@ -114,10 +114,11 @@ module MyCalendar {
                 return <T><any>document;
             } else if (this.isEvent()) {
                 var event: Models.Event = new Models.Event();
-                event._id = json._id;
-                event.begin = json.being;
-                event.end = json.end;
-                event.name = json.name;
+                event._id         = json._id;
+                event.begin       = json.begin;
+                event.end         = json.end;
+                event.location    = json.location;
+                event.name        = json.name;
                 event.description = json.description;
 
                 // Copy the references.
