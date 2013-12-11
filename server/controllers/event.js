@@ -7,6 +7,11 @@ var Event = (function () {
     function Event() {
     }
     Event.create = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         var newEvent = Event.buildModelFromReq(req);
 
         Models.Event.create(newEvent, function (err, event) {
@@ -19,6 +24,12 @@ var Event = (function () {
     };
 
     Event.find = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+        req.body.owner = req.user._id;
+
         Models.Event.find(req.body, function (err, events) {
             if (err) {
                 res.send(400, err);
@@ -39,6 +50,11 @@ var Event = (function () {
     };
 
     Event.update = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Event.findById(req.params.id, function (err, event) {
             if (err || !event) {
                 Event.create(req, res, next);
@@ -57,6 +73,11 @@ var Event = (function () {
     };
 
     Event.delete = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Event.findByIdAndRemove(req.params.id, function (err, event) {
             if (err) {
                 res.send(400, err);
@@ -92,6 +113,8 @@ var Event = (function () {
         if (req.body.documents) {
             event.documents = req.body.documents;
         }
+
+        event.owner = req.user._id;
 
         return event;
     };

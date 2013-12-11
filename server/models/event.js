@@ -11,7 +11,8 @@ var eventSchema = new mongoose.Schema({
     location: String,
     begin: { type: Date, required: true },
     end: { type: Date, required: true },
-    documents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' /* validate: cf below */  }]
+    documents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' /* validate: cf below */  }],
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 function checkDate(next) {

@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 var documentSchema = new mongoose.Schema({
     name: { type: String, required: 'Name is required!' },
     data: { type: Buffer, required: 'A document can\'t be empty' },
-    type: { type: String }
+    type: { type: String },
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 documentSchema.path('name').validate(function (name, respond) {

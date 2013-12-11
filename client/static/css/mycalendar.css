@@ -114,6 +114,17 @@ body
   clear: both;
   margin: 90px 2px 90px 2px;
   list-style: none;
+  cursor: pointer;
+}
+
+.main-sub-menu p
+{
+  cursor: pointer;
+}
+
+.main-sub-menu a
+{
+  cursor: pointer;
 }
 
 .main-sub-menu li

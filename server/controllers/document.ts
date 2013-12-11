@@ -12,12 +12,18 @@ export class Document {
     private static DOCUMENT_MAX_SIZE = 20971520;
 
     public static create(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         if (req.xhr) {
             // If no name provided then we use the one from the file !
             var newDocument: any = {};
             newDocument.name = req.header('X-File-Name');
             newDocument.type = req.header('X-File-Type');
             var documentSize = parseInt(req.header('X-File-Size'));
+            newDocument.owner = req.user._id;
 
             if (documentSize >= Document.DOCUMENT_MAX_SIZE) {
                 res.send(400, 'The upload limit for documents is 20Mo');
@@ -54,6 +60,12 @@ export class Document {
     }
 
     public static find(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+        req.body.owner = req.user._id;
+
         Models.Document.find(req.body, 'name type', (err: any, documents: any): void => {
             if (err) {
                 res.send(400, err);
@@ -74,6 +86,11 @@ export class Document {
     }
 
     public static update(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Document.findById(req.params.id, (err: any, document: any): void => {
             if (err || !document) {
                 // If nothing found, creates it.
@@ -94,6 +111,11 @@ export class Document {
     }
 
     public static delete(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Document.findByIdAndRemove(req.params.id, (err: any, document: any): void => {
             if (err || !document) {
                 res.send(400, err);

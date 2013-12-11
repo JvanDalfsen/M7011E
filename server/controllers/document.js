@@ -7,12 +7,18 @@ var Document = (function () {
     function Document() {
     }
     Document.create = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         if (req.xhr) {
             // If no name provided then we use the one from the file !
             var newDocument = {};
             newDocument.name = req.header('X-File-Name');
             newDocument.type = req.header('X-File-Type');
             var documentSize = parseInt(req.header('X-File-Size'));
+            newDocument.owner = req.user._id;
 
             if (documentSize >= Document.DOCUMENT_MAX_SIZE) {
                 res.send(400, 'The upload limit for documents is 20Mo');
@@ -49,6 +55,12 @@ var Document = (function () {
     };
 
     Document.find = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+        req.body.owner = req.user._id;
+
         Models.Document.find(req.body, 'name type', function (err, documents) {
             if (err) {
                 res.send(400, err);
@@ -69,6 +81,11 @@ var Document = (function () {
     };
 
     Document.update = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Document.findById(req.params.id, function (err, document) {
             if (err || !document) {
                 // If nothing found, creates it.
@@ -89,6 +106,11 @@ var Document = (function () {
     };
 
     Document.delete = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Document.findByIdAndRemove(req.params.id, function (err, document) {
             if (err || !document) {
                 res.send(400, err);

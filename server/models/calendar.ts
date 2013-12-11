@@ -8,8 +8,8 @@ var async = require('async');
 
 var calendarSchema = new mongoose.Schema({
     name: { type: String, required: 'Name is required!' },
-    events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' /* validate: cf below */}]
-    // TODO: add an owner.
+    events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' /* validate: cf below */}],
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 /**

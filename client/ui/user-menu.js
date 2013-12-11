@@ -3,6 +3,8 @@
     /// <reference path="../definitions/jquery.d.ts"/>
     /// <reference path="../models/user.ts"/>
     /// <reference path="../definitions/handlebars.d.ts"/>
+    /// <reference  path="panels/document-manager.ts"/>
+    /// <reference  path="./panel-host.ts"/>
     (function (UI) {
         var UserMenu = (function () {
             function UserMenu() {
@@ -13,6 +15,7 @@
                 this._mainMenu = $('#user-menu');
                 this._userInfo = $('#user-infos');
                 this._userConnection = $('#user-connection');
+                this._contentManagerButton = $('#content-manager-button');
 
                 this.logoutState();
             }
@@ -43,6 +46,10 @@
                         _this.close();
                     }
                 });
+
+                this._contentManagerButton.click(function () {
+                    UI.PanelHost.getInstance().pushPanel(new UI.Panels.DocumentManagerPanel());
+                });
             };
 
             UserMenu.prototype.logoutState = function () {
@@ -60,7 +67,7 @@
                 this._userInfo.append($(Handlebars.templates['user-infos'](user)));
 
                 this._userConnection.empty();
-                this._userConnection.append($(Handlebars.templates['offline-user-connection']()));
+                this._userConnection.append($(Handlebars.templates['user-connection']()));
 
                 this.attachEvent();
             };

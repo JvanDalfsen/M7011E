@@ -7,6 +7,12 @@ import Models = require('../models/event');
 
 export class Event {
     public static create(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
+
         var newEvent = Event.buildModelFromReq(req);
 
         Models.Event.create(newEvent, (err: any, event: any): void => {
@@ -19,6 +25,12 @@ export class Event {
     }
 
     public static find(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+        req.body.owner = req.user._id;
+
         Models.Event.find(req.body, (err: any, events: any): void => {
             if (err) {
                 res.send(400, err);
@@ -39,6 +51,11 @@ export class Event {
     }
 
     public static update(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Event.findById(req.params.id, (err: any, event: any): void => {
             if (err || !event) {
                 Event.create(req, res, next);
@@ -57,6 +74,11 @@ export class Event {
     }
 
     public static delete(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Event.findByIdAndRemove(req.params.id, (err: any, event: any): void => {
             if (err) {
                 res.send(400, err);
@@ -92,6 +114,8 @@ export class Event {
         if (req.body.documents) {
             event.documents = req.body.documents;
         }
+
+        event.owner = req.user._id;
 
         return event;
     }

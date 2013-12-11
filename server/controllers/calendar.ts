@@ -6,6 +6,11 @@ import Models = require('../models/calendar');
 
 export class Calendar {
     public static create(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         var newCalendar = Calendar.buildModelFromReq(req);
 
         Models.Calendar.create(newCalendar, (err: any, calendar: any): void => {
@@ -18,6 +23,12 @@ export class Calendar {
     }
 
     public static find(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+        req.body.owner = req.user._id;
+
         Models.Calendar.find(req.body, (err: any, calendars: any): void => {
             if (err) {
                 res.send(400, err);
@@ -38,6 +49,11 @@ export class Calendar {
     }
 
     public static update(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Calendar.findById(req.params.id, (err: any, calendar: any): void => {
             if (err || !calendar) {
                 // If nothing found, creates it.
@@ -58,6 +74,11 @@ export class Calendar {
     }
 
     public static delete(req: express.Request, res: express.Response, next: Function) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Calendar.findByIdAndRemove(req.params.id, (err: any, calendar: any): void => {
             if (err || !calendar) {
                 res.send(400, err);
@@ -77,6 +98,8 @@ export class Calendar {
         if (req.body.events) {
             calendar.events = req.body.events;
         }
+
+        calendar.owner = req.user._id;
 
         return calendar;
     }

@@ -12,9 +12,8 @@ var eventSchema = new mongoose.Schema({
     location:    String,
     begin:       { type: Date, required: true },
     end:         { type: Date, required: true },
-    documents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' /* validate: cf below */}]
-    // TODO: add an events.
-    // TODO: Ensure that this event is linked to at least one calendar otherwise destroy it.  
+    documents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' /* validate: cf below */}],
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 function checkDate(next: (err?: string) => void) {

@@ -7,6 +7,11 @@ var Calendar = (function () {
     function Calendar() {
     }
     Calendar.create = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         var newCalendar = Calendar.buildModelFromReq(req);
 
         Models.Calendar.create(newCalendar, function (err, calendar) {
@@ -19,6 +24,12 @@ var Calendar = (function () {
     };
 
     Calendar.find = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+        req.body.owner = req.user._id;
+
         Models.Calendar.find(req.body, function (err, calendars) {
             if (err) {
                 res.send(400, err);
@@ -39,6 +50,11 @@ var Calendar = (function () {
     };
 
     Calendar.update = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Calendar.findById(req.params.id, function (err, calendar) {
             if (err || !calendar) {
                 // If nothing found, creates it.
@@ -59,6 +75,11 @@ var Calendar = (function () {
     };
 
     Calendar.delete = function (req, res, next) {
+        if (!req.user) {
+            res.send(400, 'The user must be logged');
+            return;
+        }
+
         Models.Calendar.findByIdAndRemove(req.params.id, function (err, calendar) {
             if (err || !calendar) {
                 res.send(400, err);
@@ -78,6 +99,8 @@ var Calendar = (function () {
         if (req.body.events) {
             calendar.events = req.body.events;
         }
+
+        calendar.owner = req.user._id;
 
         return calendar;
     };

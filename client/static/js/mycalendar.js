@@ -1013,6 +1013,8 @@ var MyCalendar;
 /// <reference path="../definitions/jquery.d.ts"/>
 /// <reference path="../models/user.ts"/>
 /// <reference path="../definitions/handlebars.d.ts"/>
+/// <reference  path="panels/document-manager.ts"/>
+/// <reference  path="./panel-host.ts"/>
 var MyCalendar;
 (function (MyCalendar) {
     (function (UI) {
@@ -1025,6 +1027,7 @@ var MyCalendar;
                 this._mainMenu = $('#user-menu');
                 this._userInfo = $('#user-infos');
                 this._userConnection = $('#user-connection');
+                this._contentManagerButton = $('#content-manager-button');
 
                 this.logoutState();
             }
@@ -1054,6 +1057,10 @@ var MyCalendar;
                     } else {
                         _this.close();
                     }
+                });
+
+                this._contentManagerButton.click(function () {
+                    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
                 });
             };
 
