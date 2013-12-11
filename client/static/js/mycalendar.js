@@ -899,15 +899,17 @@ var MyCalendar;
     (function (UI) {
         (function (Panels) {
             var ItemManagerPanel = (function () {
-                function ItemManagerPanel(id) {
-                    if (typeof id === "undefined") { id = null; }
-                    this.currentEventId = id;
+                function ItemManagerPanel(eventId, calendarId) {
+                    if (typeof eventId === "undefined") { eventId = null; }
+                    if (typeof calendarId === "undefined") { calendarId = null; }
+                    this.currentEventId = eventId;
+                    this.calendarId = calendarId;
                 }
                 ItemManagerPanel.prototype.onload = function () {
                     var _this = this;
                     // click function for the 'Save' button
                     if (this.currentEventId) {
-                        this.loadEvent(this.currentEventId);
+                        this.loadEvent(this.currentEventId, this.calendarId);
                     }
 
                     $('.datepicker').datepicker({ dateFormat: 'dd-mm-yy' });
@@ -983,11 +985,23 @@ var MyCalendar;
                     });
 
                     $("#delete-button").click(function () {
-                        if ($("#new-event").val() != "1") {
+                        if ($("#new-event").val() == "1") {
                             MyCalendar.UI.PanelHost.getInstance().popPanel();
                         } else {
                             console.log($("#new-event").val());
                             MyCalendar.eventsRepository.deleteById($("#new-event").val());
+                            MyCalendar.calendarsRepository.findById($("#calendar-id").val()).done(function (cal) {
+                                var index;
+                                for (var i = 0; i < cal.events.length; i++) {
+                                    cal.events[i].deference().done(function (ev) {
+                                        if (ev.getRefId() == $("#new-event").val()) {
+                                            index = i;
+                                        }
+                                    });
+                                }
+                                cal.events.splice(index, 1);
+                                MyCalendar.calendarsRepository.save(cal);
+                            });
                             MyCalendar.UI.PanelHost.getInstance().popPanel();
                         }
                     });
@@ -1012,23 +1026,28 @@ var MyCalendar;
                     //});
                 };
 
-                ItemManagerPanel.prototype.loadEvent = function (refId) {
+                ItemManagerPanel.prototype.loadEvent = function (refId, calendarId) {
                     MyCalendar.eventsRepository.findById(refId).done(function (event) {
                         $('#title').val(event.name);
                         $('#description').val(event.description);
                         $('#location').val(event.location);
-                        $('#fromTime').val(event.begin.getMinutes + ":" + event.begin.getHours());
-                        $('#toTime').val(event.end.getMinutes + ":" + event.end.getHours());
+
+                        //$('#fromTime').val(event.begin.getMinutes + ":" + event.begin.getHours());
+                        //$('#toTime').val(event.end.getMinutes + ":" + event.end.getHours());
                         console.log(event.begin);
                         console.log(event.end);
                         $(".datepicker").datepicker({ dateFormat: 'dd-mm-yy' });
                         console.log(event.begin);
                         console.log(event.end);
-                        var beginn = "" + event.begin.getDate() + "-" + event.begin.getMonth() + "-" + event.begin.getFullYear();
-                        var eindd = "" + event.end.getDate() + "-" + event.end.getMonth() + "-" + event.end.getFullYear();
-                        $("#fromDate").datepicker("setDate", beginn);
-                        $("#toDate").datepicker("setDate", eindd);
+
+                        //var beginn = "" + (<Date>event.begin).getDate() + "-" + (<Date>event.begin).getMonth() + "-" + (<Date>event.begin).getFullYear();
+                        //var eindd = "" + (<Date>event.end).getDate() + "-" + (<Date>event.end).getMonth() + "-" + (<Date>event.end).getFullYear();
+                        //$("#fromDate").datepicker("setDate", beginn);
+                        //$("#toDate").datepicker("setDate", eindd);
                         $("#new-event").val(refId);
+                        $("#calendar-id").val(calendarId);
+                        console.log(refId);
+                        console.log(calendarId);
                     });
                 };
 
@@ -1084,42 +1103,65 @@ var MyCalendar;
                     var calendarEvents = [];
                     for (var i = 0; i < calendarIDs.length; i++) {
                         MyCalendar.calendarsRepository.findById(calendarIDs[i]).done(function (calendar) {
-                            var eventRefs = calendar.events;
-                            console.log(eventRefs);
-
-                            for (var j = 0; j < eventRefs.length; j++) {
-                                var def = eventRefs[j].deference().then(function (dbEvent) {
-                                    //console.log(dbEvent);
-                                    var calendarEvent = { title: dbEvent.name, start: dbEvent.begin, end: dbEvent.end, description: dbEvent.description, location: dbEvent.location, documents: dbEvent.documents, id: dbEvent.getRefId() };
-
-                                    //console.log(calendarEvent);
-                                    calendarEvents.push(calendarEvent);
-                                    //console.log(calendarEvents);
-                                });
-
-                                defArray.push(def);
-                            }
-
-                            console.log(calendarEvents);
-                        }).done(function () {
-                            $.when.apply($, defArray).done(function () {
-                                console.log(calendarEvents);
-                                $('#calendar').fullCalendar({
-                                    header: {
-                                        left: 'prev,next today',
-                                        center: 'title',
-                                        right: 'month,agendaWeek,agendaDay'
-                                    },
-                                    editable: false,
-                                    eventClick: function (calEvent, jsEvent, view) {
-                                        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.ItemManagerPanel(calEvent.id));
-                                    },
-                                    events: calendarEvents
-                                });
-                            });
+                            calendar.events = [];
+                            MyCalendar.calendarsRepository.save(calendar);
                         });
                     }
 
+                    /*for (var i = 0; i < calendarIDs.length; i++) {
+                    MyCalendar.calendarsRepository.findById(calendarIDs[i]).done((calendar) => {
+                    var eventRefs = calendar.events;
+                    console.log(eventRefs);
+                    
+                    for (var j = 0; j < eventRefs.length; j++) {
+                    var def = eventRefs[j].deference().then((dbEvent) => {
+                    //console.log(dbEvent);
+                    var calendarEvent = { title: dbEvent.name, start: dbEvent.begin, end: dbEvent.end, description: dbEvent.description, location: dbEvent.location, documents: dbEvent.documents, id: dbEvent.getRefId() };
+                    //console.log(calendarEvent);
+                    calendarEvents.push(calendarEvent);
+                    //console.log(calendarEvents);
+                    });
+                    
+                    defArray.push(def);
+                    
+                    
+                    }
+                    
+                    console.log(calendarEvents);
+                    }).done(() => {
+                    
+                    
+                    $.when.apply($, defArray).done(() => {
+                    console.log(calendarEvents);
+                    $('#calendar').fullCalendar({
+                    header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                    },
+                    editable: false,
+                    eventClick: function (calEvent, jsEvent, view) {
+                    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.ItemManagerPanel(calEvent.id));
+                    },
+                    events: calendarEvents
+                    /*: [
+                    {
+                    title: 'All Day Event',
+                    start: new Date(2013, 12, 1),
+                    id: "52a791baa31d03a416000014"
+                    },
+                    {
+                    title: 'Long Event',
+                    start: new Date(2013, 12, 2),
+                    end: new Date(2013, 12, 5),
+                    id: "52a7907fa31d03a416000004"
+                    }]
+                    });
+                    
+                    
+                    });
+                    });
+                    }*/
                     $("#add-button").click(function () {
                         MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.ItemManagerPanel());
                     });

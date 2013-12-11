@@ -11,16 +11,18 @@
 module MyCalendar.UI.Panels {
     export class ItemManagerPanel implements IPanel {
         private currentEventId: string;
+        private calendarId: string;
 
-        constructor(id: string = null) {
-            this.currentEventId = id;
+        constructor(eventId: string = null, calendarId:string = null) {
+            this.currentEventId = eventId;
+            this.calendarId = calendarId;
         }
 
         public onload(): void {
             // click function for the 'Save' button
 
             if (this.currentEventId) {
-                this.loadEvent(this.currentEventId);
+                this.loadEvent(this.currentEventId, this.calendarId);
             }
 
             $('.datepicker').datepicker({ dateFormat: 'dd-mm-yy' });
@@ -98,11 +100,23 @@ module MyCalendar.UI.Panels {
             });
 
             $("#delete-button").click(function () {
-                if ($("#new-event").val() != "1") {
+                if ($("#new-event").val() == "1") {
                     MyCalendar.UI.PanelHost.getInstance().popPanel();
                 } else {
                     console.log($("#new-event").val());
                     MyCalendar.eventsRepository.deleteById($("#new-event").val());
+                    MyCalendar.calendarsRepository.findById($("#calendar-id").val()).done((cal) => {
+                        var index;
+                        for (var i = 0; i < cal.events.length; i++) {
+                            cal.events[i].deference().done((ev) => {
+                                if (ev.getRefId() == $("#new-event").val()) {
+                                    index = i;
+                                }
+                            });
+                        }
+                        cal.events.splice(index, 1);
+                        MyCalendar.calendarsRepository.save(cal);
+                    });
                     MyCalendar.UI.PanelHost.getInstance().popPanel();
                 }
             });
@@ -128,23 +142,26 @@ module MyCalendar.UI.Panels {
 			//});
         }
 
-        public loadEvent(refId: string): void {
+        public loadEvent(refId: string, calendarId: string): void {
             MyCalendar.eventsRepository.findById(refId).done((event:MyCalendar.Models.Event) => {           
                 $('#title').val(event.name);
                 $('#description').val(event.description);
                 $('#location').val(event.location);
-                $('#fromTime').val(event.begin.getMinutes + ":" + event.begin.getHours());
-                $('#toTime').val(event.end.getMinutes + ":" + event.end.getHours());
+                //$('#fromTime').val(event.begin.getMinutes + ":" + event.begin.getHours());
+                //$('#toTime').val(event.end.getMinutes + ":" + event.end.getHours());
                 console.log(event.begin);
                 console.log(event.end);
                 $(".datepicker").datepicker({ dateFormat: 'dd-mm-yy' });
                 console.log(event.begin);
                 console.log(event.end);
-                var beginn = "" + (<Date>event.begin).getDate() + "-" + (<Date>event.begin).getMonth() + "-" + (<Date>event.begin).getFullYear();
-                var eindd = "" + (<Date>event.end).getDate() + "-" + (<Date>event.end).getMonth() + "-" + (<Date>event.end).getFullYear();
-                $("#fromDate").datepicker("setDate", beginn);
-                $("#toDate").datepicker("setDate", eindd);
+                //var beginn = "" + (<Date>event.begin).getDate() + "-" + (<Date>event.begin).getMonth() + "-" + (<Date>event.begin).getFullYear();
+                //var eindd = "" + (<Date>event.end).getDate() + "-" + (<Date>event.end).getMonth() + "-" + (<Date>event.end).getFullYear();
+                //$("#fromDate").datepicker("setDate", beginn);
+                //$("#toDate").datepicker("setDate", eindd);
                 $("#new-event").val(refId);
+                $("#calendar-id").val(calendarId);
+                console.log(refId);
+                console.log(calendarId);
             });
         }
 

@@ -16,6 +16,7 @@ module MyCalendar.UI.Panels {
             var defArray = [];
 
             var calendarEvents = [];
+            
             for (var i = 0; i < calendarIDs.length; i++) {
                 MyCalendar.calendarsRepository.findById(calendarIDs[i]).done((calendar) => {
                     var eventRefs = calendar.events;
