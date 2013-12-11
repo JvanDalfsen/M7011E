@@ -382,20 +382,37 @@ var MyCalendar;
     (function (UI) {
         (function (Panels) {
             var DocumentManagerPanel = (function () {
-                function DocumentManagerPanel() {
+                function DocumentManagerPanel(eventId) {
+                    if (typeof eventId === "undefined") { eventId = null; }
+                    DocumentManagerPanel.currentEventId = eventId;
+                    DocumentManagerPanel.pickedDocumentIds = null;
                 }
                 DocumentManagerPanel.prototype.onload = function () {
+                    var _this = this;
                     this._uploadArea = $('#upload-area');
                     this._panel = $('#document-manager-panel');
 
                     this._uploadArea.on("dragover", this.onFileDragOver.bind(this));
                     this._uploadArea.on("dragleave", this.onFileDragLeave.bind(this));
                     this._uploadArea.on("drop", this.onFileDrop.bind(this));
-                    this.updateDocumentList();
+
+                    if (DocumentManagerPanel.currentEventId) {
+                        MyCalendar.eventsRepository.findById(DocumentManagerPanel.currentEventId).done(function (event) {
+                            DocumentManagerPanel.pickedDocumentIds = event.documents.map(function (value) {
+                                return value.id;
+                            });
+
+                            _this.updateDocumentList();
+                        });
+                    } else {
+                        this.updateDocumentList();
+                    }
 
                     $("#save-button").click(function () {
+                        MyCalendar.UI.PanelHost.getInstance().popPanel();
                     });
                 };
+
                 DocumentManagerPanel.prototype.onremove = function () {
                 };
 
@@ -403,13 +420,10 @@ var MyCalendar;
                     return $(Handlebars.templates['document-manager-panel']());
                 };
 
-                DocumentManagerPanel.prototype.loadEvent = function (eventId) {
-                    this.currentEventId = eventId;
-                };
-
                 DocumentManagerPanel.prototype.updateDocumentList = function (query) {
                     var _this = this;
                     this._panel.find('.uploaded-file').remove();
+
                     MyCalendar.documentsRepository.find({}).done(function (documents) {
                         _this._panel.find('.uploaded-file').remove();
                         documents.forEach(function (document) {
@@ -428,18 +442,51 @@ var MyCalendar;
 
                             params.document_path = '/api/documents/download/' + document.getRefId();
 
+                            if (DocumentManagerPanel.currentEventId) {
+                                if (DocumentManagerPanel.pickedDocumentIds.indexOf(document.getRefId()) != -1) {
+                                    params.selected = true;
+                                }
+                            }
+
                             var documentItem = $(Handlebars.templates['document-item'](params));
                             _this._panel.append(documentItem);
 
-                            documentItem.find('.delete-document').click(function () {
+                            documentItem.find('.delete-document').click(function (ev) {
+                                ev.stopPropagation();
                                 MyCalendar.documentsRepository.deleteById(document.getRefId()).done(function () {
+                                    if (DocumentManagerPanel.currentEventId) {
+                                        var index = DocumentManagerPanel.pickedDocumentIds.indexOf(document.getRefId());
+
+                                        if (index > -1) {
+                                            DocumentManagerPanel.pickedDocumentIds.splice(index, 1);
+                                        }
+                                    }
                                     _this.updateDocumentList();
                                 });
                             });
 
-                            documentItem.find('.file-title').children().on('input', function () {
+                            documentItem.find('.file-title').children().on('input', function (ev) {
+                                ev.stopPropagation();
                                 MyCalendar.documentsRepository.update(document.getRefId(), { name: documentItem.find('.file-title').children().first().val() });
                             });
+
+                            documentItem.find('.file-title').click(function (ev) {
+                                ev.stopPropagation();
+                            });
+
+                            if (DocumentManagerPanel.currentEventId) {
+                                documentItem.click(function () {
+                                    var index = DocumentManagerPanel.pickedDocumentIds.indexOf(document.getRefId());
+
+                                    if (index > -1) {
+                                        DocumentManagerPanel.pickedDocumentIds.splice(index, 1);
+                                    } else {
+                                        DocumentManagerPanel.pickedDocumentIds.push(document.getRefId());
+                                    }
+
+                                    _this.updateDocumentList();
+                                });
+                            }
                         });
                     });
                 };
@@ -899,7 +946,7 @@ var MyCalendar;
                     });
 
                     $("#documents-button").click(function () {
-                        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
+                        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(ItemManagerPanel._currentEventId));
                     });
 
                     if (ItemManagerPanel._currentEventId) {
@@ -952,6 +999,11 @@ var MyCalendar;
                         newEvent.end = endDate;
                         newEvent.documents = [];
 
+                        if (MyCalendar.UI.Panels.DocumentManagerPanel.pickedDocumentIds != null) {
+                            newEvent.documents = MyCalendar.UI.Panels.DocumentManagerPanel.pickedDocumentIds;
+                            MyCalendar.UI.Panels.DocumentManagerPanel.pickedDocumentIds = null;
+                        }
+
                         MyCalendar.eventsRepository.create(newEvent).done(function (event) {
                             if (!ItemManagerPanel._currentCalendar.events) {
                                 ItemManagerPanel._currentCalendar.events = [];
@@ -978,15 +1030,21 @@ var MyCalendar;
                         endDate.setHours(endTime.substring(0, endTime.indexOf(":")));
                         endDate.setHours(endTime.substring(endTime.indexOf(":") + 1, endTime.length));
 
-                        MyCalendar.eventsRepository.update(ItemManagerPanel._currentEventId, {
-                            name: $('#title').val(),
-                            description: $('#description').val(),
-                            location: $('#location').val(),
-                            begin: beginDate,
-                            end: endDate
-                        });
+                        var update = {};
+                        update.name = $('#title').val();
+                        update.description = $('#description').val();
+                        update.location = $('#location').val();
+                        update.begin = beginDate;
+                        update.end = endDate;
 
-                        MyCalendar.UI.PanelHost.getInstance().popPanel();
+                        if (MyCalendar.UI.Panels.DocumentManagerPanel.pickedDocumentIds != null) {
+                            update.documents = MyCalendar.UI.Panels.DocumentManagerPanel.pickedDocumentIds;
+                            MyCalendar.UI.Panels.DocumentManagerPanel.pickedDocumentIds = null;
+                        }
+
+                        MyCalendar.eventsRepository.update(ItemManagerPanel._currentEventId, update).done(function () {
+                            MyCalendar.UI.PanelHost.getInstance().popPanel();
+                        });
                     }
                 };
 

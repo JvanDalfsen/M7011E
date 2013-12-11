@@ -1,4 +1,11 @@
-﻿<article class="file-item uploaded-file">  
+﻿
+{{#if selected}}
+<article class="file-item uploaded-file selected-file-item">
+{{else}}
+<article class="file-item uploaded-file">
+{{/if}}
+
+
   {{#if picture_path}}
   <div class="file-picture">
     <div style="width: 300px; height: 200px; background-image:url('{{picture_path}}'); background-repeat:no-repeat; background-size:contain;" />

@@ -1,4 +1,4 @@
-﻿var MyCalendar;
+var MyCalendar;
 (function (MyCalendar) {
     (function (UI) {
         /// <reference path="../../definitions/jquery.d.ts"/>
@@ -8,20 +8,37 @@
         /// <reference path="../toolbars/document-manager-toolbar.ts"/>
         (function (Panels) {
             var DocumentManagerPanel = (function () {
-                function DocumentManagerPanel() {
+                function DocumentManagerPanel(eventId) {
+                    if (typeof eventId === "undefined") { eventId = null; }
+                    DocumentManagerPanel.currentEventId = eventId;
+                    DocumentManagerPanel.pickedDocumentIds = [];
                 }
                 DocumentManagerPanel.prototype.onload = function () {
+                    var _this = this;
                     this._uploadArea = $('#upload-area');
                     this._panel = $('#document-manager-panel');
 
                     this._uploadArea.on("dragover", this.onFileDragOver.bind(this));
                     this._uploadArea.on("dragleave", this.onFileDragLeave.bind(this));
                     this._uploadArea.on("drop", this.onFileDrop.bind(this));
-                    this.updateDocumentList();
+
+                    if (DocumentManagerPanel.currentEventId) {
+                        MyCalendar.eventsRepository.findById(DocumentManagerPanel.currentEventId).done(function (event) {
+                            DocumentManagerPanel.pickedDocumentIds = event.documents.map(function (value) {
+                                return value.id;
+                            });
+
+                            _this.updateDocumentList();
+                        });
+                    } else {
+                        this.updateDocumentList();
+                    }
 
                     $("#save-button").click(function () {
+                        MyCalendar.UI.PanelHost.getInstance().popPanel();
                     });
                 };
+
                 DocumentManagerPanel.prototype.onremove = function () {
                 };
 
@@ -29,13 +46,10 @@
                     return $(Handlebars.templates['document-manager-panel']());
                 };
 
-                DocumentManagerPanel.prototype.loadEvent = function (eventId) {
-                    this.currentEventId = eventId;
-                };
-
                 DocumentManagerPanel.prototype.updateDocumentList = function (query) {
                     var _this = this;
                     this._panel.find('.uploaded-file').remove();
+
                     MyCalendar.documentsRepository.find({}).done(function (documents) {
                         _this._panel.find('.uploaded-file').remove();
                         documents.forEach(function (document) {
@@ -53,18 +67,51 @@
 
                             params.document_path = '/api/documents/download/' + document.getRefId();
 
+                            if (DocumentManagerPanel.currentEventId) {
+                                if (DocumentManagerPanel.pickedDocumentIds.indexOf(document.getRefId()) != -1) {
+                                    params.selected = true;
+                                }
+                            }
+
                             var documentItem = $(Handlebars.templates['document-item'](params));
                             _this._panel.append(documentItem);
 
-                            documentItem.find('.delete-document').click(function () {
+                            documentItem.find('.delete-document').click(function (ev) {
+                                ev.stopPropagation();
                                 MyCalendar.documentsRepository.deleteById(document.getRefId()).done(function () {
+                                    if (DocumentManagerPanel.currentEventId) {
+                                        var index = DocumentManagerPanel.pickedDocumentIds.indexOf(document.getRefId());
+
+                                        if (index > -1) {
+                                            DocumentManagerPanel.pickedDocumentIds.splice(index, 1);
+                                        }
+                                    }
                                     _this.updateDocumentList();
                                 });
                             });
 
-                            documentItem.find('.file-title').children().on('input', function () {
+                            documentItem.find('.file-title').children().on('input', function (ev) {
+                                ev.stopPropagation();
                                 MyCalendar.documentsRepository.update(document.getRefId(), { name: documentItem.find('.file-title').children().first().val() });
                             });
+
+                            documentItem.find('.file-title').click(function (ev) {
+                                ev.stopPropagation();
+                            });
+
+                            if (DocumentManagerPanel.currentEventId) {
+                                documentItem.click(function () {
+                                    var index = DocumentManagerPanel.pickedDocumentIds.indexOf(document.getRefId());
+
+                                    if (index > -1) {
+                                        DocumentManagerPanel.pickedDocumentIds.splice(index, 1);
+                                    } else {
+                                        DocumentManagerPanel.pickedDocumentIds.push(document.getRefId());
+                                    }
+
+                                    _this.updateDocumentList();
+                                });
+                            }
                         });
                     });
                 };

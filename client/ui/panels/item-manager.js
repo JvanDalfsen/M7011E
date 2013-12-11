@@ -37,7 +37,7 @@ var MyCalendar;
                     });
 
                     $("#documents-button").click(function () {
-                        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
+                        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(ItemManagerPanel._currentEventId));
                     });
 
                     if (ItemManagerPanel._currentEventId) {
@@ -90,6 +90,15 @@ var MyCalendar;
                         newEvent.end = endDate;
                         newEvent.documents = [];
 
+                        if (Panels.DocumentManagerPanel.pickedDocumentIds != null) {
+                            var newDocumentsRefs = Panels.DocumentManagerPanel.pickedDocumentIds.map(function (value) {
+                                return new MyCalendar.Models.Ref(value, MyCalendar.documentsRepository);
+                            });
+
+                            newEvent.documents = Panels.DocumentManagerPanel.pickedDocumentIds;
+                            Panels.DocumentManagerPanel.pickedDocumentIds = null;
+                        }
+
                         MyCalendar.eventsRepository.create(newEvent).done(function (event) {
                             if (!ItemManagerPanel._currentCalendar.events) {
                                 ItemManagerPanel._currentCalendar.events = [];
@@ -116,15 +125,21 @@ var MyCalendar;
                         endDate.setHours(endTime.substring(0, endTime.indexOf(":")));
                         endDate.setHours(endTime.substring(endTime.indexOf(":") + 1, endTime.length));
 
-                        MyCalendar.eventsRepository.update(ItemManagerPanel._currentEventId, {
-                            name: $('#title').val(),
-                            description: $('#description').val(),
-                            location: $('#location').val(),
-                            begin: beginDate,
-                            end: endDate
-                        });
+                        var update = {};
+                        update.name = $('#title').val();
+                        update.description = $('#description').val();
+                        update.location = $('#location').val();
+                        update.begin = beginDate;
+                        update.end = endDate;
 
-                        MyCalendar.UI.PanelHost.getInstance().popPanel();
+                        if (Panels.DocumentManagerPanel.pickedDocumentIds != null) {
+                            update.documents = Panels.DocumentManagerPanel.pickedDocumentIds;
+                            Panels.DocumentManagerPanel.pickedDocumentIds = null;
+                        }
+
+                        MyCalendar.eventsRepository.update(ItemManagerPanel._currentEventId, update).done(function () {
+                            MyCalendar.UI.PanelHost.getInstance().popPanel();
+                        });
                     }
                 };
 

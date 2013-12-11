@@ -9,7 +9,14 @@ module MyCalendar.UI.Panels {
         private static DOCUMENT_MAX_SIZE = 20971520;
         private _uploadArea: JQuery;
         private _panel: JQuery;
-        private currentEventId: string;
+        private static currentEventId: string;
+        public static pickedDocumentIds: Array<string>;
+
+
+        constructor(eventId: string = null) {
+            DocumentManagerPanel.currentEventId    = eventId;
+            DocumentManagerPanel.pickedDocumentIds = null;
+        }
 
 
         public onload(): void {
@@ -19,12 +26,24 @@ module MyCalendar.UI.Panels {
             this._uploadArea.on("dragover", this.onFileDragOver.bind(this));
             this._uploadArea.on("dragleave", this.onFileDragLeave.bind(this));
             this._uploadArea.on("drop", this.onFileDrop.bind(this));
-            this.updateDocumentList();
 
-            $("#save-button").click(function () {
+            if (DocumentManagerPanel.currentEventId) {
+                eventsRepository.findById(DocumentManagerPanel.currentEventId).done((event: Models.Event) => {
+                    DocumentManagerPanel.pickedDocumentIds = event.documents.map((value: Models.Ref<Models.Document>) => {
+                        return value.id;
+                    });
 
+                    this.updateDocumentList();
+                });                
+            } else {
+                this.updateDocumentList();
+            }
+
+            $("#save-button").click(() => {
+                MyCalendar.UI.PanelHost.getInstance().popPanel();
             });
         }
+
         public onremove(): void {
 
         }
@@ -33,12 +52,9 @@ module MyCalendar.UI.Panels {
             return $(Handlebars.templates['document-manager-panel']());
         }
 
-        public loadEvent(eventId: string) {
-            this.currentEventId = eventId;
-        }
-
         private updateDocumentList(query?: string): void {
             this._panel.find('.uploaded-file').remove();
+
             documentsRepository.find({}).done((documents: Array<Models.Document>): void => {
                 this._panel.find('.uploaded-file').remove();
                 documents.forEach((document: Models.Document) => {
@@ -59,18 +75,51 @@ module MyCalendar.UI.Panels {
 
                     params.document_path = '/api/documents/download/' + document.getRefId();
 
+                    if (DocumentManagerPanel.currentEventId) {
+                        if (DocumentManagerPanel.pickedDocumentIds.indexOf(document.getRefId()) != -1) {
+                            params.selected = true;
+                        }
+                    }
+
                     var documentItem = $(Handlebars.templates['document-item'](params));
                     this._panel.append(documentItem);
 
-                    documentItem.find('.delete-document').click(() => {
+                    documentItem.find('.delete-document').click((ev: JQueryEventObject) => {
+                        ev.stopPropagation();
                         documentsRepository.deleteById(document.getRefId()).done(() => {
+                            if (DocumentManagerPanel.currentEventId) {
+                                var index = DocumentManagerPanel.pickedDocumentIds.indexOf(document.getRefId());
+
+                                if (index > -1) {
+                                    DocumentManagerPanel.pickedDocumentIds.splice(index, 1);
+                                }
+                            }
                             this.updateDocumentList();
                         });
                     });
 
-                    documentItem.find('.file-title').children().on('input', () => {
+                    documentItem.find('.file-title').children().on('input', (ev: JQueryEventObject) => {
+                        ev.stopPropagation();
                         documentsRepository.update(document.getRefId(), { name: documentItem.find('.file-title').children().first().val() });
-                    });                    
+                    });
+
+                    documentItem.find('.file-title').click((ev: JQueryEventObject) => {
+                        ev.stopPropagation();
+                    });
+
+                    if (DocumentManagerPanel.currentEventId) {
+                        documentItem.click(() => {
+                            var index = DocumentManagerPanel.pickedDocumentIds.indexOf(document.getRefId());
+
+                            if (index > -1) {
+                                DocumentManagerPanel.pickedDocumentIds.splice(index, 1);
+                            } else {
+                                DocumentManagerPanel.pickedDocumentIds.push(document.getRefId());
+                            }
+
+                            this.updateDocumentList();
+                        });
+                    }
                 });
             });
         }

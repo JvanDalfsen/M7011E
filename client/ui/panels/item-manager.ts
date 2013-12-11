@@ -45,7 +45,7 @@ module MyCalendar.UI.Panels {
             });
 
             $("#documents-button").click(() => {
-                MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
+                MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(ItemManagerPanel._currentEventId));
             });
 
             if (ItemManagerPanel._currentEventId) {
@@ -99,6 +99,12 @@ module MyCalendar.UI.Panels {
                 newEvent.end = endDate;
                 newEvent.documents = [];
 
+                if (DocumentManagerPanel.pickedDocumentIds != null) {
+                    newEvent.documents = DocumentManagerPanel.pickedDocumentIds;
+                    DocumentManagerPanel.pickedDocumentIds = null;
+                }
+
+
                 MyCalendar.eventsRepository.create(newEvent).done((event: MyCalendar.Models.Event) => {
                     if (!ItemManagerPanel._currentCalendar.events) {
                         ItemManagerPanel._currentCalendar.events = [];
@@ -126,15 +132,23 @@ module MyCalendar.UI.Panels {
                 endDate.setHours(endTime.substring(0, endTime.indexOf(":")));
                 endDate.setHours(endTime.substring(endTime.indexOf(":") + 1, endTime.length));
 
-                MyCalendar.eventsRepository.update(ItemManagerPanel._currentEventId, {
-                    name: $('#title').val(),
-                    description: $('#description').val(),
-                    location: $('#location').val(),
-                    begin: beginDate,
-                    end: endDate
-                });
+                var update: any = {};
+                update.name = $('#title').val();
+                update.description = $('#description').val();
+                update.location = $('#location').val();
+                update.begin = beginDate;
+                update.end   = endDate;
 
-                MyCalendar.UI.PanelHost.getInstance().popPanel();
+
+                if (DocumentManagerPanel.pickedDocumentIds != null) {
+                    update.documents = DocumentManagerPanel.pickedDocumentIds;
+                    DocumentManagerPanel.pickedDocumentIds = null;
+                }
+
+
+                MyCalendar.eventsRepository.update(ItemManagerPanel._currentEventId, update).done(() => {
+                    MyCalendar.UI.PanelHost.getInstance().popPanel();
+                });
             }
         }
 
