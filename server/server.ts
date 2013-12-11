@@ -82,7 +82,7 @@ export class Server {
             returnURL: returnURL,
             realm: realm
         }, (identifier, profile, done): void => {
-                Models.User.findOne({ userid: 'google/' + profile.id }, (err, user) => {
+                Models.User.findOne({ userid: identifier }, (err, user) => {
                     if (err) {
                         done(err, user);
                         return;
@@ -99,7 +99,7 @@ export class Server {
                     }
 
                     var user: any = {};
-                    user.userid   = 'google/' + profile.id;
+                    user.userid   = identifier;
 
                     if (profile.displayName) {
                         user.displayName = profile.displayName;
@@ -113,12 +113,12 @@ export class Server {
                         user.lastname = profile.name.familyName;
                     }
 
-                    if (profile.emails && profile.emails.length > 1) {
-                        user.email = profile.emails[0].value;
+                    if (profile.emails) {
+                        user.emails = profile.emails;
                     }
 
-                    if (profile.photos && profile.photos.length > 1) {
-                        user.avatar = profile.photos[0].value;
+                    if (profile.photos) {
+                        user.avatars = profile.photos;
                     }
 
                     user.lastConnection = Date.now();

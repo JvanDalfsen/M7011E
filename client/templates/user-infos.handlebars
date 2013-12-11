@@ -5,5 +5,13 @@
 <div id="user-details" class="hidable-menu">
     <p>Firstname: {{ firstname }}</p>
     <p>Lastname: {{ lastname }}</p>
+    {{#each emails}}
+    {{#if this.type}}
+        <p>{{this.type}}: {{this.value}}</p>
+    {{else}}
+        <p>{{this.value}}</p>
+    {{/if}}
+    {{/each}}
+
     <p>Last seen: {{lastConnection}}</p>
 </div>

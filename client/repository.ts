@@ -134,7 +134,8 @@ module MyCalendar {
                 user.displayName = json.displayName;
                 user.firstname   = json.firstname;
                 user.lastname    = json.lastname;
-                user.email       = json.email;
+                user.emails       = json.emails;
+                user.avatars      = json.avatars;
                 user.lastConnection = json.lastConnection;
                 
                 // Copy the references.

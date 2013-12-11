@@ -77,7 +77,7 @@ var Server = (function () {
             returnURL: returnURL,
             realm: realm
         }, function (identifier, profile, done) {
-            Models.User.findOne({ userid: 'google/' + profile.id }, function (err, user) {
+            Models.User.findOne({ userid: identifier }, function (err, user) {
                 if (err) {
                     done(err, user);
                     return;
@@ -94,7 +94,7 @@ var Server = (function () {
                 }
 
                 var user = {};
-                user.userid = 'google/' + profile.id;
+                user.userid = identifier;
 
                 if (profile.displayName) {
                     user.displayName = profile.displayName;
@@ -108,12 +108,12 @@ var Server = (function () {
                     user.lastname = profile.name.familyName;
                 }
 
-                if (profile.emails && profile.emails.length > 1) {
-                    user.email = profile.emails[0].value;
+                if (profile.emails) {
+                    user.emails = profile.emails;
                 }
 
-                if (profile.photos && profile.photos.length > 1) {
-                    user.avatar = profile.photos[0].value;
+                if (profile.photos) {
+                    user.avatars = profile.photos;
                 }
 
                 user.lastConnection = Date.now();

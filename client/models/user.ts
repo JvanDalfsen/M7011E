@@ -6,8 +6,8 @@ module MyCalendar.Models {
         public displayName: string;
         public firstname: string;
         public lastname: string;
-        public email: string;
-        public avatar: string;
+        public emails: Array<{ value: string; type: string}>;
+        public avatars: Array<string>;
         public lastConnection: Date;
         public calendars: Array<Ref<Calendar>>;
     }

@@ -1,4 +1,4 @@
-/// <reference path="./definitions/jquery.d.ts"/>
+﻿/// <reference path="./definitions/jquery.d.ts"/>
 /// <reference path="./models/model.ts"/>
 /// <reference path="./models/calendar.ts"/>
 /// <reference path="./models/event.ts"/>
@@ -131,7 +131,8 @@ var MyCalendar;
                 user.displayName = json.displayName;
                 user.firstname = json.firstname;
                 user.lastname = json.lastname;
-                user.email = json.email;
+                user.emails = json.emails;
+                user.avatars = json.avatars;
                 user.lastConnection = json.lastConnection;
 
                 // Copy the references.

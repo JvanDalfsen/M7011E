@@ -18,7 +18,7 @@ var Event = (function () {
                 if (err || !user) {
                     res.send(400, err);
                 } else {
-                    res.send(200, req.user);
+                    res.send(200, user);
                 }
             });
         }
