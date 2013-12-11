@@ -336,34 +336,65 @@ var MyCalendar;
                     return $(Handlebars.templates['document-manager-panel']());
                 };
 
+                DocumentManagerPanel.prototype.loadEvent = function (eventId) {
+                    this.currentEventId = eventId;
+                };
+
                 DocumentManagerPanel.prototype.updateDocumentList = function () {
                     var _this = this;
                     this._panel.find('.uploaded-file').remove();
 
-                    MyCalendar.documentsRepository.find({}).done(function (documents) {
-                        documents.forEach(function (document) {
-                            var params = document;
+                    MyCalendar.eventsRepository.findById(this.currentEventId).done(function (event) {
+                        event.documents.forEach(function (refDocument) {
+                            refDocument.deference().done(function (document) {
+                                var params = document;
 
-                            if (document.type == 'image%2Fjpeg' || document.type == 'image%2Fpng') {
-                                params.picture_path = '/api/documents/download/' + document.getRefId();
-                            }
+                                if (document.type == 'image%2Fjpeg' || document.type == 'image%2Fpng') {
+                                    params.picture_path = '/api/documents/download/' + document.getRefId();
+                                }
 
-                            params.document_path = '/api/documents/download/' + document.getRefId();
+                                params.document_path = '/api/documents/download/' + document.getRefId();
 
-                            var documentItem = $(Handlebars.templates['document-item'](params));
-                            _this._panel.append(documentItem);
+                                var documentItem = $(Handlebars.templates['document-item'](params));
+                                _this._panel.append(documentItem);
 
-                            documentItem.find('.delete-document').click(function () {
-                                MyCalendar.documentsRepository.deleteById(document.getRefId()).done(function () {
-                                    _this.updateDocumentList();
+                                documentItem.find('.delete-document').click(function () {
+                                    MyCalendar.documentsRepository.deleteById(document.getRefId()).done(function () {
+                                        _this.updateDocumentList();
+                                    });
                                 });
-                            });
 
-                            documentItem.find('.file-title').children().on('input', function () {
-                                MyCalendar.documentsRepository.update(document.getRefId(), { name: documentItem.find('.file-title').children().first().val() });
+                                documentItem.find('.file-title').children().on('input', function () {
+                                    MyCalendar.documentsRepository.update(document.getRefId(), { name: documentItem.find('.file-title').children().first().val() });
+                                });
                             });
                         });
                     });
+                    /*documentsRepository.find({}).done((documents :Array<Models.Document>): void => {
+                    documents.forEach((document: Models.Document) => {
+                    var params: any = document;
+                    
+                    if (document.type == 'image%2Fjpeg' || document.type == 'image%2Fpng') {
+                    params.picture_path = '/api/documents/download/' + document.getRefId();
+                    
+                    }
+                    
+                    params.document_path = '/api/documents/download/' + document.getRefId();
+                    
+                    var documentItem = $(Handlebars.templates['document-item'](params));
+                    this._panel.append(documentItem);
+                    
+                    documentItem.find('.delete-document').click(() => {
+                    documentsRepository.deleteById(document.getRefId()).done(() => {
+                    this.updateDocumentList();
+                    });
+                    });
+                    
+                    documentItem.find('.file-title').children().on('input', () => {
+                    documentsRepository.update(document.getRefId(), { name: documentItem.find('.file-title').children().first().val() });
+                    });
+                    });
+                    });*/
                 };
 
                 DocumentManagerPanel.prototype.onFileDragOver = function (event) {
@@ -482,261 +513,6 @@ var MyCalendar;
             Toolbars.CalendarManagerToolbar = CalendarManagerToolbar;
         })(UI.Toolbars || (UI.Toolbars = {}));
         var Toolbars = UI.Toolbars;
-    })(MyCalendar.UI || (MyCalendar.UI = {}));
-    var UI = MyCalendar.UI;
-})(MyCalendar || (MyCalendar = {}));
-/// <reference path="../../definitions/jquery.d.ts"/>
-/// <reference path="../../definitions/handlebars.d.ts"/>
-/// <reference path="./itoolbar.ts"/>
-var MyCalendar;
-(function (MyCalendar) {
-    (function (UI) {
-        (function (Toolbars) {
-            /**
-            * Interface that every toolbar should implements.
-            */
-            var ItemManagerToolbar = (function () {
-                function ItemManagerToolbar() {
-                }
-                ItemManagerToolbar.prototype.onload = function () {
-                    $("#calendar-button").click(function () {
-                        MyCalendar.UI.PanelHost.getInstance().popPanel();
-                    });
-                };
-
-                ItemManagerToolbar.prototype.onremove = function () {
-                };
-
-                ItemManagerToolbar.prototype.view = function () {
-                    return $(Handlebars.templates['item-manager-panel-toolbar']());
-                };
-                return ItemManagerToolbar;
-            })();
-            Toolbars.ItemManagerToolbar = ItemManagerToolbar;
-        })(UI.Toolbars || (UI.Toolbars = {}));
-        var Toolbars = UI.Toolbars;
-    })(MyCalendar.UI || (MyCalendar.UI = {}));
-    var UI = MyCalendar.UI;
-})(MyCalendar || (MyCalendar = {}));
-/// <reference path="../../definitions/jquery.d.ts"/>
-/// <reference path="../../definitions/jqueryui.d.ts"/>
-/// <reference path="../../definitions/fullCalendar.d.ts"/>
-/// <reference path="../../definitions/handlebars.d.ts"/>
-/// <reference path="../../repository.ts"/>
-/// <reference path="./ipanel.ts"/>
-/// <reference path="../toolbars/item-manager-toolbar.ts"/>
-var MyCalendar;
-(function (MyCalendar) {
-    (function (UI) {
-        (function (Panels) {
-            var ItemManagerPanel = (function () {
-                function ItemManagerPanel() {
-                }
-                ItemManagerPanel.prototype.onload = function () {
-                    // click function for the 'Save' button
-                    $("#save-button").click(function () {
-                        /*var newEvent = new MyCalendar.Models.Event();
-                        newEvent.name = $('#title').val();
-                        console.log(newEvent.name);
-                        newEvent.description = $('#description').val();
-                        console.log(newEvent.description);
-                        newEvent.location = $('#location').val();
-                        console.log(newEvent.location);
-                        newEvent.begin = $("#fromDate").datepicker("getDate");
-                        console.log(newEvent.begin);
-                        newEvent.end = $("#toDate").datepicker("getDate");
-                        console.log(newEvent.end);
-                        newEvent.documents = [];*/
-                        var newEvent = {
-                            name: $('#title').val(),
-                            description: $('#description').val(),
-                            location: $('#location').val(),
-                            begin: $("#fromDate").datepicker("getDate"),
-                            end: $("#toDate").datepicker("getDate"),
-                            documents: []
-                        };
-                        console.log(newEvent);
-                        MyCalendar.eventsRepository.create(newEvent).done(function (event) {
-                            MyCalendar.calendarsRepository.findById("52a78ff5b0a242501b000002").done(function (calendar) {
-                                if (!calendar.events) {
-                                    calendar.events = [];
-                                }
-                                var eventrefid = event.getRefId();
-                                console.log(event);
-                                var new_ref = new MyCalendar.Models.Ref(event.getRefId(), MyCalendar.eventsRepository);
-                                console.log(new_ref);
-                                calendar.events.push(new_ref);
-                                console.log(calendar.events);
-                                MyCalendar.calendarsRepository.save(calendar).done(function (calendar2) {
-                                    MyCalendar.calendarsRepository.findById("52a78ff5b0a242501b000002").done(function (calendar3) {
-                                        console.log(calendar3.events);
-                                    });
-                                });
-                            });
-                        });
-
-                        //show previous panel
-                        MyCalendar.UI.PanelHost.getInstance().popPanel();
-                    });
-
-                    //click function for the 'calendar' button
-                    $("#calendar-button").click(function () {
-                        MyCalendar.UI.PanelHost.getInstance().popPanel();
-                    });
-
-                    $("#documents-button").click(function () {
-                        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
-                    });
-
-                    //click function for datepicker
-                    $('.datepicker').datepicker({ dateFormat: 'dd-mm-yy' }); //{
-                    //clickInput: true
-                    //doesnt work:
-                    /*beforeShow: function (input, inst) {
-                    // Handle calendar position before showing it.
-                    // It's not supported by Datepicker itself (for now) so we need to use its internal variables.
-                    var calendar = inst.dpDiv;
-                    
-                    // Dirty hack, but we can't do anything without it (for now, in jQuery UI 1.8.20)
-                    setTimeout(function () {
-                    calendar.position({
-                    my: 'left top',
-                    at: 'left bottom',
-                    collision: 'none'
-                    });
-                    }, 1);
-                    }*/
-                    //});
-                };
-
-                ItemManagerPanel.prototype.onremove = function () {
-                };
-
-                ItemManagerPanel.prototype.view = function () {
-                    return $(Handlebars.templates['item-manager-panel']());
-                };
-
-                ItemManagerPanel.prototype.name = function () {
-                    return 'Item Manager';
-                };
-
-                ItemManagerPanel.prototype.toolbar = function () {
-                    return new MyCalendar.UI.Toolbars.ItemManagerToolbar();
-                };
-
-                ItemManagerPanel.prototype.searchEnable = function () {
-                    return false;
-                };
-
-                ItemManagerPanel.prototype.onSearch = function (query) {
-                    // TODO!
-                };
-                return ItemManagerPanel;
-            })();
-            Panels.ItemManagerPanel = ItemManagerPanel;
-        })(UI.Panels || (UI.Panels = {}));
-        var Panels = UI.Panels;
-    })(MyCalendar.UI || (MyCalendar.UI = {}));
-    var UI = MyCalendar.UI;
-})(MyCalendar || (MyCalendar = {}));
-/// <reference path="../../definitions/jquery.d.ts"/>
-/// <reference path="../../definitions/fullCalendar.d.ts"/>
-/// <reference path="../../definitions/handlebars.d.ts"/>
-/// <reference path="../../repository.ts"/>
-/// <reference path="./ipanel.ts"/>
-/// <reference path="../toolbars/calendar-manager-toolbar.ts"/>
-/// <reference path="./item-manager.ts"/>
-var MyCalendar;
-(function (MyCalendar) {
-    (function (UI) {
-        (function (Panels) {
-            var CalendarManagerPanel = (function () {
-                function CalendarManagerPanel() {
-                }
-                CalendarManagerPanel.prototype.onload = function () {
-                    // get calendar ID's from user?
-                    var calendarIDs = ["52a78ff5b0a242501b000002"];
-
-                    var calendarEvents = [];
-                    if (calendarIDs.length > 0) {
-                        MyCalendar.calendarsRepository.findById(calendarIDs[0]).done(function (temp) {
-                            for (var i = 0; i < calendarIDs.length; i++) {
-                                MyCalendar.calendarsRepository.findById(calendarIDs[i]).done(function (calendar) {
-                                    var eventRefs = calendar.events;
-                                    console.log(eventRefs);
-
-                                    for (var j = 0; j < eventRefs.length; j++) {
-                                        eventRefs[j].deference().done(function (dbEvent) {
-                                            console.log(dbEvent);
-                                            var calendarEvent = { title: dbEvent.name, start: dbEvent.begin, end: dbEvent.end, description: dbEvent.description, location: dbEvent.location, documents: dbEvent.documents };
-                                            console.log(calendarEvent);
-                                            calendarEvents.push(calendarEvent);
-                                            console.log(calendarEvents);
-                                        });
-                                    }
-
-                                    console.log(calendarEvents);
-                                });
-                            }
-                            console.log(calendarEvents);
-                        }).done(function (temp2) {
-                            console.log(calendarEvents);
-                            $('#calendar').fullCalendar({
-                                header: {
-                                    left: 'prev,next today',
-                                    center: 'title',
-                                    right: 'month,agendaWeek,agendaDay'
-                                },
-                                editable: false,
-                                eventClick: function (calEvent, jsEvent, view) {
-                                    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.ItemManagerPanel());
-                                },
-                                events: [
-                                    {
-                                        title: 'All Day Event',
-                                        start: new Date(2013, 12, 1)
-                                    },
-                                    {
-                                        title: 'Long Event',
-                                        start: new Date(2013, 12, 2),
-                                        end: new Date(2013, 12, 5)
-                                    }]
-                            });
-                        });
-                    }
-
-                    $("#add-button").click(function () {
-                        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.ItemManagerPanel());
-                    });
-                };
-
-                CalendarManagerPanel.prototype.onremove = function () {
-                };
-
-                CalendarManagerPanel.prototype.view = function () {
-                    return $(Handlebars.templates['calendar-manager-panel']());
-                };
-
-                CalendarManagerPanel.prototype.name = function () {
-                    return 'Calendar Manager';
-                };
-
-                CalendarManagerPanel.prototype.toolbar = function () {
-                    return new MyCalendar.UI.Toolbars.CalendarManagerToolbar();
-                };
-
-                CalendarManagerPanel.prototype.searchEnable = function () {
-                    return false;
-                };
-
-                CalendarManagerPanel.prototype.onSearch = function (query) {
-                    // TODO!
-                };
-                return CalendarManagerPanel;
-            })();
-            Panels.CalendarManagerPanel = CalendarManagerPanel;
-        })(UI.Panels || (UI.Panels = {}));
-        var Panels = UI.Panels;
     })(MyCalendar.UI || (MyCalendar.UI = {}));
     var UI = MyCalendar.UI;
 })(MyCalendar || (MyCalendar = {}));
@@ -998,6 +774,297 @@ var MyCalendar;
             return PanelHost;
         })();
         UI.PanelHost = PanelHost;
+    })(MyCalendar.UI || (MyCalendar.UI = {}));
+    var UI = MyCalendar.UI;
+})(MyCalendar || (MyCalendar = {}));
+/// <reference path="../../definitions/jquery.d.ts"/>
+/// <reference path="../../definitions/handlebars.d.ts"/>
+/// <reference path="./itoolbar.ts"/>
+var MyCalendar;
+(function (MyCalendar) {
+    (function (UI) {
+        (function (Toolbars) {
+            /**
+            * Interface that every toolbar should implements.
+            */
+            var ItemManagerToolbar = (function () {
+                function ItemManagerToolbar() {
+                }
+                ItemManagerToolbar.prototype.onload = function () {
+                    $("#calendar-button").click(function () {
+                        MyCalendar.UI.PanelHost.getInstance().popPanel();
+                    });
+                };
+
+                ItemManagerToolbar.prototype.onremove = function () {
+                };
+
+                ItemManagerToolbar.prototype.view = function () {
+                    return $(Handlebars.templates['item-manager-panel-toolbar']());
+                };
+                return ItemManagerToolbar;
+            })();
+            Toolbars.ItemManagerToolbar = ItemManagerToolbar;
+        })(UI.Toolbars || (UI.Toolbars = {}));
+        var Toolbars = UI.Toolbars;
+    })(MyCalendar.UI || (MyCalendar.UI = {}));
+    var UI = MyCalendar.UI;
+})(MyCalendar || (MyCalendar = {}));
+/// <reference path="../../definitions/jquery.d.ts"/>
+/// <reference path="../../definitions/jqueryui.d.ts"/>
+/// <reference path="../../definitions/fullCalendar.d.ts"/>
+/// <reference path="../../definitions/handlebars.d.ts"/>
+/// <reference path="../../repository.ts"/>
+/// <reference path="./ipanel.ts"/>
+/// <reference path="./document-manager.ts"/>
+/// <reference path="../panel-host.ts"/>
+/// <reference path="../toolbars/item-manager-toolbar.ts"/>
+var MyCalendar;
+(function (MyCalendar) {
+    (function (UI) {
+        (function (Panels) {
+            var ItemManagerPanel = (function () {
+                function ItemManagerPanel() {
+                }
+                ItemManagerPanel.prototype.onload = function () {
+                    // click function for the 'Save' button
+                    $("#save-button").click(function () {
+                        /*var newEvent = new MyCalendar.Models.Event();
+                        newEvent.name = $('#title').val();
+                        console.log(newEvent.name);
+                        newEvent.description = $('#description').val();
+                        console.log(newEvent.description);
+                        newEvent.location = $('#location').val();
+                        console.log(newEvent.location);
+                        newEvent.begin = $("#fromDate").datepicker("getDate");
+                        console.log(newEvent.begin);
+                        newEvent.end = $("#toDate").datepicker("getDate");
+                        console.log(newEvent.end);
+                        newEvent.documents = [];*/
+                        console.log(this.currentEventId);
+                        if (!this.currentEventId) {
+                            console.log("new event");
+                            var newEvent = {
+                                name: $('#title').val(),
+                                description: $('#description').val(),
+                                location: $('#location').val(),
+                                begin: $("#fromDate").datepicker("getDate"),
+                                end: $("#toDate").datepicker("getDate"),
+                                documents: []
+                            };
+                            console.log(newEvent);
+                            MyCalendar.eventsRepository.create(newEvent).done(function (event) {
+                                MyCalendar.calendarsRepository.findById("52a78ff5b0a242501b000002").done(function (calendar) {
+                                    if (!calendar.events) {
+                                        calendar.events = [];
+                                    }
+                                    var eventrefid = event.getRefId();
+                                    console.log(event);
+                                    var new_ref = new MyCalendar.Models.Ref(event.getRefId(), MyCalendar.eventsRepository);
+                                    console.log(new_ref);
+                                    calendar.events.push(new_ref);
+                                    console.log(calendar.events);
+                                    MyCalendar.calendarsRepository.save(calendar).done(function (calendar2) {
+                                        MyCalendar.calendarsRepository.findById("52a78ff5b0a242501b000002").done(function (calendar3) {
+                                            console.log(calendar3.events);
+                                        });
+                                    });
+                                });
+                            });
+                        } else {
+                            console.log("existing event");
+                            MyCalendar.eventsRepository.findById(this.currentEventId).done(function (event) {
+                                event.name = $('#title').val();
+                                event.description = $('#description').val();
+                                event.location = $('#location').val();
+                                event.begin = $("#fromDate").datepicker("getDate");
+                                event.end = $("#toDate").datepicker("getDate");
+
+                                //todo: documents
+                                MyCalendar.eventsRepository.save(event);
+                            });
+                        }
+
+                        //show previous panel
+                        MyCalendar.UI.PanelHost.getInstance().popPanel();
+                    });
+
+                    //click function for the 'calendar' button
+                    $("#calendar-button").click(function () {
+                        MyCalendar.UI.PanelHost.getInstance().popPanel();
+                    });
+
+                    $("#documents-button").click(function () {
+                        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
+                    });
+
+                    //click function for datepicker
+                    $('.datepicker').datepicker({ dateFormat: 'dd-mm-yy' }); //{
+                    //clickInput: true
+                    //doesnt work:
+                    /*beforeShow: function (input, inst) {
+                    // Handle calendar position before showing it.
+                    // It's not supported by Datepicker itself (for now) so we need to use its internal variables.
+                    var calendar = inst.dpDiv;
+                    
+                    // Dirty hack, but we can't do anything without it (for now, in jQuery UI 1.8.20)
+                    setTimeout(function () {
+                    calendar.position({
+                    my: 'left top',
+                    at: 'left bottom',
+                    collision: 'none'
+                    });
+                    }, 1);
+                    }*/
+                    //});
+                };
+
+                ItemManagerPanel.prototype.loadEvent = function (refId) {
+                    this.currentEventId = refId;
+                    console.log("currentEventId set");
+                    console.log(this.currentEventId);
+                    MyCalendar.eventsRepository.findById(refId).done(function (event) {
+                        $('#title').val(event.name);
+                        $('#description').val(event.description);
+                        $('#location').val(event.location);
+                        $("#fromDate").datepicker("setDate", event.begin);
+                        $("#toDate").datepicker("setDate", event.end);
+                        //TODO: DOCUMENTS
+                    });
+                };
+
+                ItemManagerPanel.prototype.onremove = function () {
+                };
+
+                ItemManagerPanel.prototype.view = function () {
+                    return $(Handlebars.templates['item-manager-panel']());
+                };
+
+                ItemManagerPanel.prototype.name = function () {
+                    return 'Item Manager';
+                };
+
+                ItemManagerPanel.prototype.toolbar = function () {
+                    return new MyCalendar.UI.Toolbars.ItemManagerToolbar();
+                };
+
+                ItemManagerPanel.prototype.searchEnable = function () {
+                    return false;
+                };
+
+                ItemManagerPanel.prototype.onSearch = function (query) {
+                    // TODO!
+                };
+                return ItemManagerPanel;
+            })();
+            Panels.ItemManagerPanel = ItemManagerPanel;
+        })(UI.Panels || (UI.Panels = {}));
+        var Panels = UI.Panels;
+    })(MyCalendar.UI || (MyCalendar.UI = {}));
+    var UI = MyCalendar.UI;
+})(MyCalendar || (MyCalendar = {}));
+/// <reference path="../../definitions/jquery.d.ts"/>
+/// <reference path="../../definitions/fullCalendar.d.ts"/>
+/// <reference path="../../definitions/handlebars.d.ts"/>
+/// <reference path="../../repository.ts"/>
+/// <reference path="./ipanel.ts"/>
+/// <reference path="../toolbars/calendar-manager-toolbar.ts"/>
+/// <reference path="./item-manager.ts"/>
+var MyCalendar;
+(function (MyCalendar) {
+    (function (UI) {
+        (function (Panels) {
+            var CalendarManagerPanel = (function () {
+                function CalendarManagerPanel() {
+                }
+                CalendarManagerPanel.prototype.onload = function () {
+                    // get calendar ID's from user?
+                    var calendarIDs = ["52a78ff5b0a242501b000002"];
+
+                    var calendarEvents = [];
+                    if (calendarIDs.length > 0) {
+                        MyCalendar.calendarsRepository.findById(calendarIDs[0]).done(function (temp) {
+                            for (var i = 0; i < calendarIDs.length; i++) {
+                                MyCalendar.calendarsRepository.findById(calendarIDs[i]).done(function (calendar) {
+                                    var eventRefs = calendar.events;
+                                    console.log(eventRefs);
+
+                                    for (var j = 0; j < eventRefs.length; j++) {
+                                        eventRefs[j].deference().done(function (dbEvent) {
+                                            console.log(dbEvent);
+                                            var calendarEvent = { title: dbEvent.name, start: dbEvent.begin, end: dbEvent.end, description: dbEvent.description, location: dbEvent.location, documents: dbEvent.documents, id: dbEvent.getRefId() };
+                                            console.log(calendarEvent);
+                                            calendarEvents.push(calendarEvent);
+                                            console.log(calendarEvents);
+                                        });
+                                    }
+
+                                    console.log(calendarEvents);
+                                });
+                            }
+                            console.log(calendarEvents);
+                        }).done(function (temp2) {
+                            console.log(calendarEvents);
+                            $('#calendar').fullCalendar({
+                                header: {
+                                    left: 'prev,next today',
+                                    center: 'title',
+                                    right: 'month,agendaWeek,agendaDay'
+                                },
+                                editable: false,
+                                eventClick: function (calEvent, jsEvent, view) {
+                                    var newPanel = new MyCalendar.UI.Panels.ItemManagerPanel();
+                                    MyCalendar.UI.PanelHost.getInstance().pushPanel(newPanel);
+                                    newPanel.loadEvent(calEvent.id);
+                                },
+                                events: [
+                                    {
+                                        title: 'All Day Event',
+                                        start: new Date(2013, 12, 1),
+                                        id: "52a791baa31d03a416000014"
+                                    },
+                                    {
+                                        title: 'Long Event',
+                                        start: new Date(2013, 12, 2),
+                                        end: new Date(2013, 12, 5),
+                                        id: "52a7907fa31d03a416000004"
+                                    }]
+                            });
+                        });
+                    }
+
+                    $("#add-button").click(function () {
+                        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.ItemManagerPanel());
+                    });
+                };
+
+                CalendarManagerPanel.prototype.onremove = function () {
+                };
+
+                CalendarManagerPanel.prototype.view = function () {
+                    return $(Handlebars.templates['calendar-manager-panel']());
+                };
+
+                CalendarManagerPanel.prototype.name = function () {
+                    return 'Calendar Manager';
+                };
+
+                CalendarManagerPanel.prototype.toolbar = function () {
+                    return new MyCalendar.UI.Toolbars.CalendarManagerToolbar();
+                };
+
+                CalendarManagerPanel.prototype.searchEnable = function () {
+                    return false;
+                };
+
+                CalendarManagerPanel.prototype.onSearch = function (query) {
+                    // TODO!
+                };
+                return CalendarManagerPanel;
+            })();
+            Panels.CalendarManagerPanel = CalendarManagerPanel;
+        })(UI.Panels || (UI.Panels = {}));
+        var Panels = UI.Panels;
     })(MyCalendar.UI || (MyCalendar.UI = {}));
     var UI = MyCalendar.UI;
 })(MyCalendar || (MyCalendar = {}));

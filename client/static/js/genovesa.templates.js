@@ -78,7 +78,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "﻿<div id=\"page-number\">\r\n  <p>\r\n    << 1/1 >>\r\n  </p>\r\n</div>";
+  return "﻿<div id=\"page-number\">\r\n  <p>\r\n    << 1/1 >>\r\n  </p>\r\n</div>\r\n<div id=\"save-button\" class=\"dark-blue-button toolbar-button\">\r\n  <img src=\"./icons/save-button.png\" />\r\n</div>";
   });
 templates['document-manager-panel'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
@@ -94,7 +94,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div id=\"page-number\">\r\n  <p>\r\n    << 1/1 >>\r\n  </p>\r\n</div>\r\n<div id=\"calendar-button\" class=\"dark-blue-button toolbar-button\">\r\n	<img src=\"./icons/calendar-button.png\" />\r\n</div>";
+  return "<div id=\"page-number\">\r\n  <p>\r\n    << 1/1 >>\r\n  </p>\r\n</div>\r\n<div id=\"save-button\" class=\"dark-blue-button toolbar-button\">\r\n  <img src=\"./icons/save-button.png\" />\r\n</div>\r\n<div id=\"calendar-button\" class=\"dark-blue-button toolbar-button\">\r\n	<img src=\"./icons/calendar-button.png\" />\r\n</div>\r\n";
   });
 templates['item-manager-panel'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
@@ -102,6 +102,6 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div>\r\n<!-- Note: use this div for the transistions -->\r\n<!-- this div needed here? -->\r\n	<div id=\"item-create-frame\">\r\n		<form>\r\n			<label>Title:</label> <input type=\"text\" id=\"title\" size=\"23\" /><br />\r\n			<label>From:</label> <input type=\"text\" id=\"fromTime\" value=\"12:00\" size=\"6\"/>, <input class=\"datepicker\" type=\"text\" id=\"fromDate\" value=\"01/01/2014\" size=\"11\"/><br />\r\n			<label>To:</label> <input type=\"text\" id=\"toTime\" value=\"13:00\" size=\"6\"/>, <input class=\"datepicker\" type=\"text\" id=\"toDate\" value=\"01/01/2014\" size=\"11\"/><br />\r\n			<label>Location:</label> <input type=\"text\" id=\"location\" size=\"23\" /><br />\r\n			<label>Calendar:</label> <select id=\"available-calendars\">\r\n				<!--remove these options after calendars can be added dynamically-->\r\n				<option value=\"calendar1\">Calendar1</option>\r\n				<option value=\"calendar2\">Calendar2</option>\r\n			</select><br />\r\n			<label>Description:</label> <textarea id=\"description\" cols=\"18\" rows=\"6\"></textarea><br />\r\n			<label>Documents:</label><ul id=\"added-documents\">\r\n				<!--remove these list-items after documents can be added dynamically-->\r\n				<li>Document 1</li>\r\n				<li>Document 2</li>\r\n			</ul><br />\r\n		</form>\r\n		<div class=\"dark-blue-button item-manager-button\" id=\"save-button\">\r\n			<h2>Save</h2>\r\n		</div>\r\n    <div class=\"dark-blue-button item-manager-button\" id=\"documents-button\">\r\n      <h2>Documents</h2>\r\n    </div>\r\n	</div>\r\n</div>";
+  return "<div>\r\n<!-- Note: use this div for the transistions -->\r\n<!-- this div needed here? -->\r\n	<div id=\"item-create-frame\">\r\n		<form>\r\n			<label>Title:</label> <input type=\"text\" id=\"title\" size=\"23\" /><br />\r\n			<label>From:</label> <input type=\"text\" id=\"fromTime\" value=\"12:00\" size=\"6\"/>, <input class=\"datepicker\" type=\"text\" id=\"fromDate\" value=\"01/01/2014\" size=\"11\"/><br />\r\n			<label>To:</label> <input type=\"text\" id=\"toTime\" value=\"13:00\" size=\"6\"/>, <input class=\"datepicker\" type=\"text\" id=\"toDate\" value=\"01/01/2014\" size=\"11\"/><br />\r\n			<label>Location:</label> <input type=\"text\" id=\"location\" size=\"23\" /><br />\r\n			<label>Calendar:</label> <select id=\"available-calendars\">\r\n				<!--remove these options after calendars can be added dynamically-->\r\n				<option value=\"calendar1\">Calendar1</option>\r\n				<option value=\"calendar2\">Calendar2</option>\r\n			</select><br />\r\n			<label>Description:</label> <textarea id=\"description\" cols=\"18\" rows=\"6\"></textarea><br />\r\n      <!--<label>Documents:</label><ul id=\"added-documents\">\r\n				remove these list-items after documents can be added dynamically\r\n				<li>Document 1</li>\r\n				<li>Document 2</li>\r\n			</ul><br />-->\r\n    </form>\r\n    <br />\r\n    <div class=\"dark-blue-button item-manager-button\" id=\"documents-button\">\r\n      <h2>Documents</h2>\r\n    </div>\r\n	</div>\r\n</div>";
   });
 })();

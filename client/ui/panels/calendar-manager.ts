@@ -25,7 +25,7 @@ module MyCalendar.UI.Panels {
                             for (var j = 0; j < eventRefs.length; j++) {
                                 eventRefs[j].deference().done((dbEvent) => {
                                     console.log(dbEvent);
-                                    var calendarEvent = { title: dbEvent.name, start: dbEvent.begin, end: dbEvent.end, description: dbEvent.description, location: dbEvent.location, documents: dbEvent.documents };
+                                    var calendarEvent = { title: dbEvent.name, start: dbEvent.begin, end: dbEvent.end, description: dbEvent.description, location: dbEvent.location, documents: dbEvent.documents, id: dbEvent.getRefId() };
                                     console.log(calendarEvent);
                                     calendarEvents.push(calendarEvent);
                                     console.log(calendarEvents);
@@ -46,17 +46,21 @@ module MyCalendar.UI.Panels {
                             },
                             editable: false,
                             eventClick: function (calEvent, jsEvent, view) {
-                                MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.ItemManagerPanel());
+                                var newPanel = new MyCalendar.UI.Panels.ItemManagerPanel();
+                                MyCalendar.UI.PanelHost.getInstance().pushPanel(newPanel);
+                                newPanel.loadEvent(calEvent.id);
                             },
                             events: [
                                 {
                                     title: 'All Day Event',
-                                    start: new Date(2013, 12, 1)
+                                    start: new Date(2013, 12, 1),
+                                    id: "52a791baa31d03a416000014"
                                 },
                                 {
                                     title: 'Long Event',
                                     start: new Date(2013, 12, 2),
-                                    end: new Date(2013, 12, 5)
+                                    end: new Date(2013, 12, 5),
+                                    id: "52a7907fa31d03a416000004"
                                 }]
                         });
 

@@ -9,6 +9,7 @@ module MyCalendar.UI.Panels {
         private static DOCUMENT_MAX_SIZE = 20971520;
         private _uploadArea: JQuery;
         private _panel: JQuery;
+        private currentEventId: string;
 
         public onload(): void {
             this._uploadArea = $('#upload-area');
@@ -18,8 +19,11 @@ module MyCalendar.UI.Panels {
             this._uploadArea.on("dragleave", this.onFileDragLeave.bind(this));
             this._uploadArea.on("drop", this.onFileDrop.bind(this));
             this.updateDocumentList();
-        }
 
+            $("#save-button").click(function () {
+
+            });
+        }
         public onremove(): void {
 
         }
@@ -28,16 +32,47 @@ module MyCalendar.UI.Panels {
             return $(Handlebars.templates['document-manager-panel']());
         }
 
+        public loadEvent(eventId: string) {
+            this.currentEventId = eventId;
+        }
+
         private updateDocumentList(): void {
             this._panel.find('.uploaded-file').remove();
 
-            documentsRepository.find({}).done((documents :Array<Models.Document>): void => {
+            eventsRepository.findById(this.currentEventId).done((event: Models.Event) => {
+                event.documents.forEach((refDocument: MyCalendar.Models.Ref<MyCalendar.Models.Document>) => {
+                    refDocument.deference().done((document: Models.Document) => {
+                        var params: any = document;
+
+                        if (document.type == 'image%2Fjpeg' || document.type == 'image%2Fpng') {
+                            params.picture_path = '/api/documents/download/' + document.getRefId();
+
+                        }
+
+                        params.document_path = '/api/documents/download/' + document.getRefId();
+
+                        var documentItem = $(Handlebars.templates['document-item'](params));
+                        this._panel.append(documentItem);
+
+                        documentItem.find('.delete-document').click(() => {
+                            documentsRepository.deleteById(document.getRefId()).done(() => {
+                                this.updateDocumentList();
+                            });
+                        });
+
+                        documentItem.find('.file-title').children().on('input', () => {
+                            documentsRepository.update(document.getRefId(), { name: documentItem.find('.file-title').children().first().val() });
+                        });
+                    });
+                });
+            });
+            /*documentsRepository.find({}).done((documents :Array<Models.Document>): void => {
                 documents.forEach((document: Models.Document) => {
                     var params: any = document;
 
                     if (document.type == 'image%2Fjpeg' || document.type == 'image%2Fpng') {
-                        params.picture_path  = '/api/documents/download/' + document.getRefId();
-                        
+                        params.picture_path = '/api/documents/download/' + document.getRefId();
+
                     }
 
                     params.document_path = '/api/documents/download/' + document.getRefId();
@@ -55,7 +90,7 @@ module MyCalendar.UI.Panels {
                         documentsRepository.update(document.getRefId(), { name: documentItem.find('.file-title').children().first().val() });
                     });                    
                 });
-            });
+            });*/
         }
 
         private onFileDragOver(event: JQueryEventObject) {
