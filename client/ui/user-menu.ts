@@ -1,7 +1,9 @@
 ﻿/// <reference path="../definitions/jquery.d.ts"/>
 /// <reference path="../models/user.ts"/>
 /// <reference path="../definitions/handlebars.d.ts"/>
-/// <reference  path="panels/document-manager.ts"/>
+/// <reference  path="./panels/document-manager.ts"/>
+/// <reference  path="./panels/about.ts"/>
+/// <reference  path="./panels/help.ts"/>
 /// <reference  path="./panel-host.ts"/>
 
 module MyCalendar.UI {
@@ -11,6 +13,8 @@ module MyCalendar.UI {
         private _userInfo: JQuery;
         private _userConnection: JQuery;
         private _contentManagerButton: JQuery;
+        private _aboutButton: JQuery;
+        private _helpButton: JQuery;
 
         /**
          * Singleton instance.
@@ -26,11 +30,21 @@ module MyCalendar.UI {
             this._userInfo = $('#user-infos');
             this._userConnection = $('#user-connection');
             this._contentManagerButton = $('#content-manager-button');
+            this._aboutButton = $('#about-button');
+            this._helpButton = $('#help-button');
 
             this.logoutState();
 
             this._contentManagerButton.click(() => {
                 PanelHost.getInstance().pushPanel(new Panels.DocumentManagerPanel());
+            });
+
+            this._aboutButton.click(() => {
+                PanelHost.getInstance().pushPanel(new Panels.AboutPanel());
+            });
+
+            this._helpButton.click(() => {
+                PanelHost.getInstance().pushPanel(new Panels.HelpPanel());
             });
         }
 

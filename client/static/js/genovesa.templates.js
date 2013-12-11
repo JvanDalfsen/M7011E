@@ -1,5 +1,13 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
+templates['about-panel'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "﻿<div id=\"document-manager-panel\">\r\n<!-- Note: use this div for the transistions -->\r\n  <article class=\"panel-message about-panel\">\r\n    <h3>Description:</h3>\r\n    <p>\r\n      The goal of this project is to provide a tool that combine the features from doodle and a standard calendar (ie: Google calendar).<br/>\r\n      Users can create items (like a normal calendar), but additionally a user can invite other people to an item.<br/>\r\n      Users can upload files (ie: pdf files, images) to an item, either private (only uploader has access) or shared (alle users that are sharing an item have access).<br/>\r\n    </p>\r\n    <p>\r\n      Managing new accounts is always considered as a boring task.<br/>\r\n      We do hope to integrate our web-service with the applications already available on the market (g+, Facebook, etc).<br/>\r\n      Finally, as being a proof of concept for a course, our project targets the latest technologies/devices.<br/>\r\n    </p>\r\n    <h3>Credits:</h3>\r\n    <p>\r\n      This project started at Lulea University Of Technology during the course \"Design of Dynamic Web Systems - M7011E 2013\"\r\n    </p>\r\n    \r\n    <p>\r\n      Authors: Jurian van Dalfsen, Jean Guegant\r\n    </p>\r\n\r\n    <p>\r\n      Supervised by: Peter Parnes\r\n    </p>\r\n  </article>\r\n</div>";
+  });
 templates['breadcrumb-button'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -105,6 +113,14 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
   return "﻿<div id=\"document-manager-panel\">\r\n<!-- Note: use this div for the transistions -->\r\n  <article class=\"file-item\">\r\n	  <div class=\"file-title\">\r\n		  <h3 id=\"upload-area\">Drag a document to upload!</h3>\r\n	  </div>\r\n  </article>\r\n</div>";
   });
+templates['help-panel'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "﻿<div id=\"document-manager-panel\">\r\n<!-- Note: use this div for the transistions -->\r\n  <article class=\"panel-message\">\r\n    <h3>Help:</h3>\r\n    <p>\r\n     Contact us at: jeague-3@student.ltu.se or jurvan-3@student.ltu.se\r\n    </p>\r\n    <h3>Bug reports / issues:</h3>\r\n    <p>\r\n      Please report your problems on our repository: https://github.com/JvanDalfsen\r\n    </p>\r\n  </article>\r\n</div>";
+  });
 templates['home-panel-toolbar'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -143,7 +159,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "﻿<div id=\"document-manager-panel\">\r\n<!-- Note: use this div for the transistions -->\r\n  <article class=\"welcome-message\">\r\n    <h3>Welcome to My Calendar! <br/> Connect yourself in order to access our features!</h3>\r\n  </article>\r\n</div>";
+  return "﻿<div id=\"document-manager-panel\">\r\n<!-- Note: use this div for the transistions -->\r\n  <article class=\"panel-message\">\r\n    <h3>Welcome to My Calendar! <br/> Connect yourself in order to access our features!</h3>\r\n  </article>\r\n</div>";
   });
 templates['offline-user-connection'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];

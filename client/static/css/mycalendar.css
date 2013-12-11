@@ -520,7 +520,7 @@ body
   height: 25px;
 }
 
-.welcome-message
+.panel-message
 {
   position: relative;
   top: 80px;
@@ -531,13 +531,22 @@ body
   /*background-color: hsl(200, 79%, 50%);*/
   color:white;
   text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.welcome-message h3
+.panel-message h3
 {  
   padding-top: 40px;
   font-size: 2em;
   padding-bottom: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.about-panel
+{
+  top: 5px;
 }
 
 .calendar-item

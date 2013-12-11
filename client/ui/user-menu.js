@@ -3,7 +3,9 @@
     /// <reference path="../definitions/jquery.d.ts"/>
     /// <reference path="../models/user.ts"/>
     /// <reference path="../definitions/handlebars.d.ts"/>
-    /// <reference  path="panels/document-manager.ts"/>
+    /// <reference  path="./panels/document-manager.ts"/>
+    /// <reference  path="./panels/about.ts"/>
+    /// <reference  path="./panels/help.ts"/>
     /// <reference  path="./panel-host.ts"/>
     (function (UI) {
         var UserMenu = (function () {
@@ -16,11 +18,21 @@
                 this._userInfo = $('#user-infos');
                 this._userConnection = $('#user-connection');
                 this._contentManagerButton = $('#content-manager-button');
+                this._aboutButton = $('#about-button');
+                this._helpButton = $('#help-button');
 
                 this.logoutState();
 
                 this._contentManagerButton.click(function () {
                     UI.PanelHost.getInstance().pushPanel(new UI.Panels.DocumentManagerPanel());
+                });
+
+                this._aboutButton.click(function () {
+                    UI.PanelHost.getInstance().pushPanel(new UI.Panels.AboutPanel());
+                });
+
+                this._helpButton.click(function () {
+                    UI.PanelHost.getInstance().pushPanel(new UI.Panels.HelpPanel());
                 });
             }
             UserMenu.getInstance = /**

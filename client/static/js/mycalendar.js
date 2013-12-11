@@ -1010,10 +1010,137 @@ var MyCalendar;
     })(MyCalendar.UI || (MyCalendar.UI = {}));
     var UI = MyCalendar.UI;
 })(MyCalendar || (MyCalendar = {}));
+/// <reference path="../../definitions/jquery.d.ts"/>
+/// <reference path="../../definitions/handlebars.d.ts"/>
+/// <reference path="./itoolbar.ts"/>
+var MyCalendar;
+(function (MyCalendar) {
+    (function (UI) {
+        (function (Toolbars) {
+            /**
+            * Interface that every toolbar should implements.
+            */
+            var HomeToolbar = (function () {
+                function HomeToolbar() {
+                }
+                HomeToolbar.prototype.onload = function () {
+                    // Empty now.
+                };
+
+                HomeToolbar.prototype.onremove = function () {
+                };
+
+                HomeToolbar.prototype.view = function () {
+                    return $(Handlebars.templates['home-panel-toolbar']());
+                };
+                return HomeToolbar;
+            })();
+            Toolbars.HomeToolbar = HomeToolbar;
+        })(UI.Toolbars || (UI.Toolbars = {}));
+        var Toolbars = UI.Toolbars;
+    })(MyCalendar.UI || (MyCalendar.UI = {}));
+    var UI = MyCalendar.UI;
+})(MyCalendar || (MyCalendar = {}));
+/// <reference path="../../definitions/jquery.d.ts"/>
+/// <reference path="../../definitions/handlebars.d.ts"/>
+/// <reference path="../../repository.ts"/>
+/// <reference path="./ipanel.ts"/>
+/// <reference path="../toolbars/home-toolbar.ts"/>
+/// <reference path="../../models/user.ts"/>
+/// <reference path="../panel-host.ts"/>
+/// <reference path="../panels/calendar-manager.ts"/>
+var MyCalendar;
+(function (MyCalendar) {
+    (function (UI) {
+        (function (Panels) {
+            var AboutPanel = (function () {
+                function AboutPanel() {
+                }
+                AboutPanel.prototype.onload = function () {
+                };
+
+                AboutPanel.prototype.onremove = function () {
+                };
+
+                AboutPanel.prototype.view = function () {
+                    return $(Handlebars.templates['about-panel']());
+                };
+
+                AboutPanel.prototype.name = function () {
+                    return 'About';
+                };
+
+                AboutPanel.prototype.toolbar = function () {
+                    return null;
+                };
+
+                AboutPanel.prototype.searchEnable = function () {
+                    return false;
+                };
+
+                AboutPanel.prototype.onSearch = function (query) {
+                };
+                return AboutPanel;
+            })();
+            Panels.AboutPanel = AboutPanel;
+        })(UI.Panels || (UI.Panels = {}));
+        var Panels = UI.Panels;
+    })(MyCalendar.UI || (MyCalendar.UI = {}));
+    var UI = MyCalendar.UI;
+})(MyCalendar || (MyCalendar = {}));
+/// <reference path="../../definitions/jquery.d.ts"/>
+/// <reference path="../../definitions/handlebars.d.ts"/>
+/// <reference path="../../repository.ts"/>
+/// <reference path="./ipanel.ts"/>
+/// <reference path="../toolbars/home-toolbar.ts"/>
+/// <reference path="../../models/user.ts"/>
+/// <reference path="../panel-host.ts"/>
+/// <reference path="../panels/calendar-manager.ts"/>
+var MyCalendar;
+(function (MyCalendar) {
+    (function (UI) {
+        (function (Panels) {
+            var HelpPanel = (function () {
+                function HelpPanel() {
+                }
+                HelpPanel.prototype.onload = function () {
+                };
+
+                HelpPanel.prototype.onremove = function () {
+                };
+
+                HelpPanel.prototype.view = function () {
+                    return $(Handlebars.templates['help-panel']());
+                };
+
+                HelpPanel.prototype.name = function () {
+                    return 'Help';
+                };
+
+                HelpPanel.prototype.toolbar = function () {
+                    return null;
+                };
+
+                HelpPanel.prototype.searchEnable = function () {
+                    return false;
+                };
+
+                HelpPanel.prototype.onSearch = function (query) {
+                };
+                return HelpPanel;
+            })();
+            Panels.HelpPanel = HelpPanel;
+        })(UI.Panels || (UI.Panels = {}));
+        var Panels = UI.Panels;
+    })(MyCalendar.UI || (MyCalendar.UI = {}));
+    var UI = MyCalendar.UI;
+})(MyCalendar || (MyCalendar = {}));
 /// <reference path="../definitions/jquery.d.ts"/>
 /// <reference path="../models/user.ts"/>
 /// <reference path="../definitions/handlebars.d.ts"/>
-/// <reference  path="panels/document-manager.ts"/>
+/// <reference  path="./panels/document-manager.ts"/>
+/// <reference  path="./panels/about.ts"/>
+/// <reference  path="./panels/help.ts"/>
 /// <reference  path="./panel-host.ts"/>
 var MyCalendar;
 (function (MyCalendar) {
@@ -1028,11 +1155,21 @@ var MyCalendar;
                 this._userInfo = $('#user-infos');
                 this._userConnection = $('#user-connection');
                 this._contentManagerButton = $('#content-manager-button');
+                this._aboutButton = $('#about-button');
+                this._helpButton = $('#help-button');
 
                 this.logoutState();
 
                 this._contentManagerButton.click(function () {
                     MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
+                });
+
+                this._aboutButton.click(function () {
+                    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.AboutPanel());
+                });
+
+                this._helpButton.click(function () {
+                    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.HelpPanel());
                 });
             }
             /**
@@ -1104,37 +1241,6 @@ var MyCalendar;
             return UserMenu;
         })();
         UI.UserMenu = UserMenu;
-    })(MyCalendar.UI || (MyCalendar.UI = {}));
-    var UI = MyCalendar.UI;
-})(MyCalendar || (MyCalendar = {}));
-/// <reference path="../../definitions/jquery.d.ts"/>
-/// <reference path="../../definitions/handlebars.d.ts"/>
-/// <reference path="./itoolbar.ts"/>
-var MyCalendar;
-(function (MyCalendar) {
-    (function (UI) {
-        (function (Toolbars) {
-            /**
-            * Interface that every toolbar should implements.
-            */
-            var HomeToolbar = (function () {
-                function HomeToolbar() {
-                }
-                HomeToolbar.prototype.onload = function () {
-                    // Empty now.
-                };
-
-                HomeToolbar.prototype.onremove = function () {
-                };
-
-                HomeToolbar.prototype.view = function () {
-                    return $(Handlebars.templates['home-panel-toolbar']());
-                };
-                return HomeToolbar;
-            })();
-            Toolbars.HomeToolbar = HomeToolbar;
-        })(UI.Toolbars || (UI.Toolbars = {}));
-        var Toolbars = UI.Toolbars;
     })(MyCalendar.UI || (MyCalendar.UI = {}));
     var UI = MyCalendar.UI;
 })(MyCalendar || (MyCalendar = {}));
