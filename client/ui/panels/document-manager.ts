@@ -11,6 +11,7 @@ module MyCalendar.UI.Panels {
         private _panel: JQuery;
         private currentEventId: string;
 
+
         public onload(): void {
             this._uploadArea = $('#upload-area');
             this._panel      = $('#document-manager-panel');
@@ -36,12 +37,19 @@ module MyCalendar.UI.Panels {
             this.currentEventId = eventId;
         }
 
-        private updateDocumentList(): void {
+        private updateDocumentList(query?: string): void {
             this._panel.find('.uploaded-file').remove();
 
             eventsRepository.findById(this.currentEventId).done((event: Models.Event) => {
                 event.documents.forEach((refDocument: MyCalendar.Models.Ref<MyCalendar.Models.Document>) => {
                     refDocument.deference().done((document: Models.Document) => {
+                        // If the filter is applied.
+                        if (query) {
+                            if (document.name.toUpperCase().indexOf(query.toUpperCase()) == -1) {
+                                return;
+                            }
+                        }
+
                         var params: any = document;
 
                         if (document.type == 'image%2Fjpeg' || document.type == 'image%2Fpng') {
@@ -67,7 +75,18 @@ module MyCalendar.UI.Panels {
                 });
             });
             /*documentsRepository.find({}).done((documents :Array<Models.Document>): void => {
+        private updateDocumentList(query?: string): void {
+            documentsRepository.find({}).done((documents: Array<Models.Document>): void => {
+                this._panel.find('.uploaded-file').remove();
                 documents.forEach((document: Models.Document) => {
+
+                    // If the filter is applied.
+                    if (query) {
+                        if (document.name.toUpperCase().indexOf(query.toUpperCase()) == -1) {
+                            return;
+                        }
+                    }
+
                     var params: any = document;
 
                     if (document.type == 'image%2Fjpeg' || document.type == 'image%2Fpng') {
@@ -166,11 +185,11 @@ module MyCalendar.UI.Panels {
         }
 
         public searchEnable(): boolean {
-            return false;
+            return true;
         }
 
         public onSearch(query: string): void {
-            // TODO!
+            this.updateDocumentList(query);
         }
     }
 }

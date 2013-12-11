@@ -1,0 +1,17 @@
+﻿<div id="user-settings-button" class="deep-dark-blue-button avatar">
+    <p>{{displayName}}</p>
+    <img src="images/cartoon-avatar.png" alt="avatar" width="45" height="45"/>
+</div>
+<div id="user-details" class="hidable-menu">
+    <p>Firstname: {{ firstname }}</p>
+    <p>Lastname: {{ lastname }}</p>
+    {{#each emails}}
+    {{#if this.type}}
+        <p>{{this.type}}: {{this.value}}</p>
+    {{else}}
+        <p>{{this.value}}</p>
+    {{/if}}
+    {{/each}}
+
+    <p>Last seen: {{lastConnection}}</p>
+</div>

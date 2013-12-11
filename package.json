@@ -11,6 +11,10 @@
     "mongoose": "x",
     "uglify-js": "x",
     "handlebars": "x",
-	"async": "x"
+	"async": "x",
+	"passport": "x",
+	"passport-google": "x",
+	"passport-facebook": "x",
+	"passport-twitter": "x"
   }
 }

@@ -1,4 +1,4 @@
-var __extends = this.__extends || function (d, b) {
+﻿var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -6,18 +6,19 @@ var __extends = this.__extends || function (d, b) {
 };
 var MyCalendar;
 (function (MyCalendar) {
+    /// <reference path="./ref.ts"/>
+    /// <reference path="./calendar.ts"/>
     (function (Models) {
-        var Document = (function (_super) {
-            __extends(Document, _super);
-            function Document() {
+        var User = (function (_super) {
+            __extends(User, _super);
+            function User() {
                 _super.apply(this, arguments);
             }
-            Document.prototype.getURI = function () {
-                return '/documents/download/' + this.getRefId();
-            };
-            return Document;
+            return User;
         })(Models.Model);
-        Models.Document = Document;
+        Models.User = User;
+
+        Models.currentUser = null;
     })(MyCalendar.Models || (MyCalendar.Models = {}));
     var Models = MyCalendar.Models;
 })(MyCalendar || (MyCalendar = {}));

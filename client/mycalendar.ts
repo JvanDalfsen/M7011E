@@ -5,31 +5,18 @@
 /// <reference path="./ui/panels/document-manager.ts"/>
 /// <reference path="./ui/panels/calendar-manager.ts"/>
 /// <reference path="./ui/panel-host.ts"/>
+/// <reference path="./ui/user-menu.ts"/>
+
 
 // Start the script when the page is ready.
 $(() => {
-    var userButton = $('#user-settings-button');
-    var mainMenu = $('#main-menu');
+    // Just to trigger the attachEvent function.
+    MyCalendar.UI.UserMenu.getInstance();
 
-    // open and close the account-menu
-    userButton.click((event: JQueryEventObject) => {
-        var state: any = userButton.attr('selected');
-
-        if (typeof state === 'undefined' || <boolean>(state) === false) {
-            userButton.attr('selected', true);
-            mainMenu.show().animate({ width: 240 }, 200, () => {
-                mainMenu.children('.hidable-menu').show();
-            });
-            $('body').width($('body').width() - 100);
-        } else {
-            mainMenu.children('.hidable-menu').hide();
-            mainMenu.show().animate({ width: 80 }, 200, () => {
-                userButton.removeAttr('selected');
-            });
-            $('body').width($('body').width() + 100);
-        }
-
-        console.log("type: ");
+    MyCalendar.usersRepository.find({}).done((user: MyCalendar.Models.User) => {
+        MyCalendar.Models.currentUser = user;
+        MyCalendar.UI.UserMenu.getInstance().loginState(user);
+        MyCalendar.UI.UserMenu.getInstance().open();
     });
 
     // Database tests!

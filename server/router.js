@@ -6,6 +6,9 @@ var express = require('express');
 var CalendarController = require('./controllers/calendar');
 var DocumentController = require('./controllers/document');
 var EventController = require('./controllers/event');
+var UserController = require('./controllers/user');
+
+var passport = require('passport');
 
 var Router = (function () {
     function Router() {
@@ -14,6 +17,7 @@ var Router = (function () {
         this.setupCalendarsRoutes(app);
         this.setupEventsRoutes(app);
         this.setupDocumentsRoutes(app);
+        this.setupPassportRoutes(app);
     };
 
     Router.setupCalendarsRoutes = function (app) {
@@ -201,6 +205,20 @@ var Router = (function () {
         * @return { Array<Models.Event>} The document's data.
         */
         app.get(this._apiRoot + '/documents/download/:id', DocumentController.Document.download);
+    };
+
+    Router.setupPassportRoutes = function (app) {
+        app.get(this._apiRoot + '/auth/google', passport.authenticate('google'));
+        app.get(this._apiRoot + '/auth/google/return', passport.authenticate('google', {
+            successRedirect: '/',
+            failureRedirect: this._apiRoot + '/auth/failure'
+        }));
+
+        app.get(this._apiRoot + '/auth/logout', UserController.Event.logout);
+        app.get(this._apiRoot + '/auth', UserController.Event.currentSession);
+        app.get(this._apiRoot + '/auth/failure', UserController.Event.failure);
+        app.put(this._apiRoot + '/auth', UserController.Event.update);
+        app.del(this._apiRoot + '/auth', UserController.Event.delete);
     };
     Router._apiRoot = '/api';
     return Router;

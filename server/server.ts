@@ -3,6 +3,10 @@
 import express = require('express');
 import RouterModule = require('./router');
 import ServerConfigModule = require('./server-config');
+import Models = require('./models/user');
+
+var passport = require('passport');
+var GoogleStrategy = require('passport-google').Strategy;
 
 export class Server {
     /** @var {Express} ExpressJS app. */
@@ -32,8 +36,10 @@ export class Server {
         this._app.use(express.json());
         this._app.use(express.urlencoded());;
         this._app.use(express.methodOverride());
-        this._app.use(express.cookieParser('secret'));
+        this._app.use(express.cookieParser('michael jackson'));
         this._app.use(express.session());
+        this._app.use(passport.initialize());
+        this._app.use(passport.session());
 
         // TODO: Test why this.config() doesn't works.
         if (this._config.compress) {
@@ -45,6 +51,8 @@ export class Server {
 
         // Install dynamic routes.
         RouterModule.Router.setupRoutes(this._app);
+
+        this.setupGoogleAuth();
 
         // Install static routes.
         var staticFolder: string = process.cwd() + '/' + this._config.staticFolderPath;
@@ -58,6 +66,75 @@ export class Server {
 
         this._app.listen(process.env.PORT || this._config.port, () => {
             console.log('Server started to listen on port: ' + this._config.port);
+        });
+    }
+
+    private setupGoogleAuth(): void {
+        var returnURL = 'http://' + this._config.hostname + ':' + this._config.port + '/api/auth/google/return';
+        var realm = 'http://' + this._config.hostname + ':' + this._config.port + '/';
+
+        if (process.env.PORT) {
+            returnURL = 'http://' + this._config.hostname + '/api/auth/google/return';
+            realm = 'http://' + this._config.hostname + '/';
+        }
+
+        passport.use(new GoogleStrategy({
+            returnURL: returnURL,
+            realm: realm
+        }, (identifier, profile, done): void => {
+                Models.User.findOne({ userid: identifier }, (err, user) => {
+                    if (err) {
+                        done(err, user);
+                        return;
+                    }
+
+                    if (user) {
+                        user.lastConnection = Date.now();
+
+                        user.save((err) => {
+                            done(err, user);
+                        });
+
+                        return;
+                    }
+
+                    var user: any = {};
+                    user.userid   = identifier;
+
+                    if (profile.displayName) {
+                        user.displayName = profile.displayName;
+                    }
+
+                    if (profile.name.givenName) {
+                        user.firstname = profile.name.givenName;
+                    }
+
+                    if (profile.name.familyName) {
+                        user.lastname = profile.name.familyName;
+                    }
+
+                    if (profile.emails) {
+                        user.emails = profile.emails;
+                    }
+
+                    if (profile.photos) {
+                        user.avatars = profile.photos;
+                    }
+
+                    user.lastConnection = Date.now();
+
+                    Models.User.create(user, (err: any, user: any): void => {
+                        done(err, user);
+                    });
+                });
+        }));
+
+        passport.serializeUser(function (user, done) {
+            done(null, user);
+        });
+
+        passport.deserializeUser(function (user, done) {
+            done(null, user);
         });
     }
 

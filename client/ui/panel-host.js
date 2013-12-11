@@ -74,9 +74,11 @@
                 this._panel[this._panel.length - 1].onremove();
 
                 var result = this._panel.pop();
+                MyCalendar.UI.Breacrumb.getInstance().popPanel();
+
                 this._div.children().fadeOut(400, function () {
                     _this._div.empty();
-                    if (_this._panel.length > 1) {
+                    if (_this._panel.length > 0) {
                         var newPanel = _this._panel[_this._panel.length - 1];
 
                         var view = newPanel.view();
@@ -133,6 +135,8 @@
 
             PanelHost.prototype.setupSearch = function (panel) {
                 var _this = this;
+                this._searchBar.val('');
+
                 if (panel.searchEnable()) {
                     this._searchBar.prop('disabled', false);
 
