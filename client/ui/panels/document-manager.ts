@@ -10,6 +10,7 @@ module MyCalendar.UI.Panels {
         private _uploadArea: JQuery;
         private _panel: JQuery;
 
+
         public onload(): void {
             this._uploadArea = $('#upload-area');
             this._panel      = $('#document-manager-panel');
@@ -28,11 +29,18 @@ module MyCalendar.UI.Panels {
             return $(Handlebars.templates['document-manager-panel']());
         }
 
-        private updateDocumentList(): void {
-            this._panel.find('.uploaded-file').remove();
-
-            documentsRepository.find({}).done((documents :Array<Models.Document>): void => {
+        private updateDocumentList(query?: string): void {
+            documentsRepository.find({}).done((documents: Array<Models.Document>): void => {
+                this._panel.find('.uploaded-file').remove();
                 documents.forEach((document: Models.Document) => {
+
+                    // If the filter is applied.
+                    if (query) {
+                        if (document.name.toUpperCase().indexOf(query.toUpperCase()) == -1) {
+                            return;
+                        }
+                    }
+
                     var params: any = document;
 
                     if (document.type == 'image%2Fjpeg' || document.type == 'image%2Fpng') {
@@ -131,11 +139,11 @@ module MyCalendar.UI.Panels {
         }
 
         public searchEnable(): boolean {
-            return false;
+            return true;
         }
 
         public onSearch(query: string): void {
-            // TODO!
+            this.updateDocumentList(query);
         }
     }
 }

@@ -388,12 +388,18 @@ var MyCalendar;
                     return $(Handlebars.templates['document-manager-panel']());
                 };
 
-                DocumentManagerPanel.prototype.updateDocumentList = function () {
+                DocumentManagerPanel.prototype.updateDocumentList = function (query) {
                     var _this = this;
-                    this._panel.find('.uploaded-file').remove();
-
                     MyCalendar.documentsRepository.find({}).done(function (documents) {
+                        _this._panel.find('.uploaded-file').remove();
                         documents.forEach(function (document) {
+                            // If the filter is applied.
+                            if (query) {
+                                if (document.name.toUpperCase().indexOf(query.toUpperCase()) == -1) {
+                                    return;
+                                }
+                            }
+
                             var params = document;
 
                             if (document.type == 'image%2Fjpeg' || document.type == 'image%2Fpng') {
@@ -491,11 +497,11 @@ var MyCalendar;
                 };
 
                 DocumentManagerPanel.prototype.searchEnable = function () {
-                    return false;
+                    return true;
                 };
 
                 DocumentManagerPanel.prototype.onSearch = function (query) {
-                    // TODO!
+                    this.updateDocumentList(query);
                 };
                 DocumentManagerPanel.DOCUMENT_MAX_SIZE = 20971520;
                 return DocumentManagerPanel;
@@ -984,6 +990,8 @@ var MyCalendar;
 
             PanelHost.prototype.setupSearch = function (panel) {
                 var _this = this;
+                this._searchBar.val('');
+
                 if (panel.searchEnable()) {
                     this._searchBar.prop('disabled', false);
 

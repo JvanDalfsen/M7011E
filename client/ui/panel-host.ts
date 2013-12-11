@@ -145,6 +145,8 @@ module MyCalendar.UI {
         }
 
         private setupSearch(panel: Panels.IPanel) {
+            this._searchBar.val('');
+
             if (panel.searchEnable()) {
                 this._searchBar.prop('disabled', false);
                 // Bind the input event.
