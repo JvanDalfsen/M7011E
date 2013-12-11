@@ -1030,6 +1030,10 @@ var MyCalendar;
                 this._contentManagerButton = $('#content-manager-button');
 
                 this.logoutState();
+
+                this._contentManagerButton.click(function () {
+                    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
+                });
             }
             /**
             * Get the instance of this PanelHost.
@@ -1057,10 +1061,6 @@ var MyCalendar;
                     } else {
                         _this.close();
                     }
-                });
-
-                this._contentManagerButton.click(function () {
-                    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
                 });
             };
 
@@ -1107,6 +1107,156 @@ var MyCalendar;
     })(MyCalendar.UI || (MyCalendar.UI = {}));
     var UI = MyCalendar.UI;
 })(MyCalendar || (MyCalendar = {}));
+/// <reference path="../../definitions/jquery.d.ts"/>
+/// <reference path="../../definitions/handlebars.d.ts"/>
+/// <reference path="./itoolbar.ts"/>
+var MyCalendar;
+(function (MyCalendar) {
+    (function (UI) {
+        (function (Toolbars) {
+            /**
+            * Interface that every toolbar should implements.
+            */
+            var HomeToolbar = (function () {
+                function HomeToolbar() {
+                }
+                HomeToolbar.prototype.onload = function () {
+                    // Empty now.
+                };
+
+                HomeToolbar.prototype.onremove = function () {
+                };
+
+                HomeToolbar.prototype.view = function () {
+                    return $(Handlebars.templates['home-panel-toolbar']());
+                };
+                return HomeToolbar;
+            })();
+            Toolbars.HomeToolbar = HomeToolbar;
+        })(UI.Toolbars || (UI.Toolbars = {}));
+        var Toolbars = UI.Toolbars;
+    })(MyCalendar.UI || (MyCalendar.UI = {}));
+    var UI = MyCalendar.UI;
+})(MyCalendar || (MyCalendar = {}));
+/// <reference path="../../definitions/jquery.d.ts"/>
+/// <reference path="../../definitions/handlebars.d.ts"/>
+/// <reference path="../../repository.ts"/>
+/// <reference path="./ipanel.ts"/>
+/// <reference path="../toolbars/home-toolbar.ts"/>
+/// <reference path="../../models/user.ts"/>
+/// <reference path="../panel-host.ts"/>
+/// <reference path="../panels/calendar-manager.ts"/>
+var MyCalendar;
+(function (MyCalendar) {
+    (function (UI) {
+        (function (Panels) {
+            var HomePanel = (function () {
+                function HomePanel() {
+                }
+                HomePanel.prototype.onload = function () {
+                    var _this = this;
+                    this._panel = $('#home-panel');
+
+                    if (MyCalendar.Models.currentUser) {
+                        this._createCalendarButton = $('#create-calendar');
+                        this._createCalendarButton.click(function () {
+                            MyCalendar.calendarsRepository.create({ name: "new calendar", events: [] }).done(function () {
+                                _this.updateCalendarList();
+                            });
+                        });
+
+                        this.updateCalendarList();
+                    }
+                };
+
+                HomePanel.prototype.onremove = function () {
+                };
+
+                HomePanel.prototype.view = function () {
+                    if (MyCalendar.Models.currentUser) {
+                        return $(Handlebars.templates['home-panel']());
+                    } else {
+                        return $(Handlebars.templates['offline-home-panel']());
+                    }
+                };
+
+                HomePanel.prototype.name = function () {
+                    return 'Home';
+                };
+
+                HomePanel.prototype.toolbar = function () {
+                    if (MyCalendar.Models.currentUser) {
+                        return new MyCalendar.UI.Toolbars.HomeToolbar();
+                    } else {
+                        return null;
+                    }
+                };
+
+                HomePanel.prototype.searchEnable = function () {
+                    if (MyCalendar.Models.currentUser) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                };
+
+                HomePanel.prototype.onSearch = function (query) {
+                    if (MyCalendar.Models.currentUser) {
+                        this.updateCalendarList(query);
+                    }
+                };
+
+                HomePanel.prototype.updateCalendarList = function (query) {
+                    var _this = this;
+                    MyCalendar.calendarsRepository.find({}).done(function (calendars) {
+                        _this._panel.find('.remote-calendar').remove();
+                        calendars.forEach(function (calendar) {
+                            // If the filter is applied.
+                            if (query) {
+                                if (calendar.name.toUpperCase().indexOf(query.toUpperCase()) == -1) {
+                                    return;
+                                }
+                            }
+
+                            var params = calendar;
+                            params.events_count = calendar.events.length;
+
+                            var calendarItem = $(Handlebars.templates['calendar-item'](params));
+                            _this._panel.append(calendarItem);
+
+                            calendarItem.find('.delete-document').click(function (ev) {
+                                ev.stopPropagation();
+                                ev.preventDefault();
+                                MyCalendar.calendarsRepository.deleteById(calendar.getRefId()).done(function () {
+                                    _this.updateCalendarList();
+                                });
+                            });
+
+                            calendarItem.find('.calendar-name').on('input', function (ev) {
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                MyCalendar.calendarsRepository.update(calendar.getRefId(), { name: calendarItem.find('.calendar-name').val() });
+                            });
+
+                            calendarItem.find('.calendar-name').click(function (ev) {
+                                ev.stopPropagation();
+                            });
+
+                            calendarItem.click(function () {
+                                MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.CalendarManagerPanel());
+                                // PanelHost.getInstance().pushPanel(new Panels.CalendarManagerPanel(calendar));
+                            });
+                        });
+                    });
+                };
+                return HomePanel;
+            })();
+            Panels.HomePanel = HomePanel;
+        })(UI.Panels || (UI.Panels = {}));
+        var Panels = UI.Panels;
+    })(MyCalendar.UI || (MyCalendar.UI = {}));
+    var UI = MyCalendar.UI;
+})(MyCalendar || (MyCalendar = {}));
 /// <reference path="./definitions/jquery.d.ts"/>
 /// <reference path="./repository.ts"/>
 /// <reference path="./definitions/jqueryui.d.ts"/>
@@ -1115,6 +1265,7 @@ var MyCalendar;
 /// <reference path="./ui/panels/calendar-manager.ts"/>
 /// <reference path="./ui/panel-host.ts"/>
 /// <reference path="./ui/user-menu.ts"/>
+/// <reference path="./ui/panels/home.ts"/>
 // Start the script when the page is ready.
 $(function () {
     // Just to trigger the attachEvent function.
@@ -1124,8 +1275,9 @@ $(function () {
         MyCalendar.Models.currentUser = user;
         MyCalendar.UI.UserMenu.getInstance().loginState(user);
         MyCalendar.UI.UserMenu.getInstance().open();
+    }).always(function () {
+        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.HomePanel());
     });
-
     // Database tests!
     /*MyCalendar.calendarsRepository.create({ name: 'test', events: [] }).done((myCalendar) =>
     {
@@ -1184,11 +1336,5 @@ $(function () {
     });
     });
     */
-    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), function () {
-        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), function () {
-            MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
-        });
-    });
-    // MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.CalendarManagerPanel());
 });
 //# sourceMappingURL=mycalendar.js.map

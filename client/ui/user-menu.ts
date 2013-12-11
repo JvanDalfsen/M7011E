@@ -28,6 +28,10 @@ module MyCalendar.UI {
             this._contentManagerButton = $('#content-manager-button');
 
             this.logoutState();
+
+            this._contentManagerButton.click(() => {
+                PanelHost.getInstance().pushPanel(new Panels.DocumentManagerPanel());
+            });
         }
 
         /**
@@ -55,11 +59,7 @@ module MyCalendar.UI {
                 } else {
                     this.close();
                 }
-            });
-
-            this._contentManagerButton.click(() => {
-                PanelHost.getInstance().pushPanel(new Panels.DocumentManagerPanel());
-            });
+            });            
         }
 
         public logoutState(): void {

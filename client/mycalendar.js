@@ -6,6 +6,7 @@
 /// <reference path="./ui/panels/calendar-manager.ts"/>
 /// <reference path="./ui/panel-host.ts"/>
 /// <reference path="./ui/user-menu.ts"/>
+/// <reference path="./ui/panels/home.ts"/>
 // Start the script when the page is ready.
 $(function () {
     // Just to trigger the attachEvent function.
@@ -15,8 +16,9 @@ $(function () {
         MyCalendar.Models.currentUser = user;
         MyCalendar.UI.UserMenu.getInstance().loginState(user);
         MyCalendar.UI.UserMenu.getInstance().open();
+    }).always(function () {
+        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.HomePanel());
     });
-
     // Database tests!
     /*MyCalendar.calendarsRepository.create({ name: 'test', events: [] }).done((myCalendar) =>
     {
@@ -75,10 +77,4 @@ $(function () {
     });
     });
     */
-    MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), function () {
-        MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel(), function () {
-            MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.DocumentManagerPanel());
-        });
-    });
-    // MyCalendar.UI.PanelHost.getInstance().pushPanel(new MyCalendar.UI.Panels.CalendarManagerPanel());
 });

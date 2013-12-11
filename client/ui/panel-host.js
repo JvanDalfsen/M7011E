@@ -1,4 +1,4 @@
-﻿var MyCalendar;
+var MyCalendar;
 (function (MyCalendar) {
     /// <reference path="../definitions/jquery.d.ts"/>
     /// <reference path="./panels/ipanel.ts"/>
@@ -33,7 +33,6 @@
             };
 
             PanelHost.prototype.pushPanel = function (newPanel, callback) {
-                var _this = this;
                 if (this._panel.length > 1) {
                     this._panel[this._panel.length - 1].onremove();
                 }

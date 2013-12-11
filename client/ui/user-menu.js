@@ -18,6 +18,10 @@
                 this._contentManagerButton = $('#content-manager-button');
 
                 this.logoutState();
+
+                this._contentManagerButton.click(function () {
+                    UI.PanelHost.getInstance().pushPanel(new UI.Panels.DocumentManagerPanel());
+                });
             }
             UserMenu.getInstance = /**
             * Get the instance of this PanelHost.
@@ -45,10 +49,6 @@
                     } else {
                         _this.close();
                     }
-                });
-
-                this._contentManagerButton.click(function () {
-                    UI.PanelHost.getInstance().pushPanel(new UI.Panels.DocumentManagerPanel());
                 });
             };
 

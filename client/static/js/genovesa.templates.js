@@ -13,6 +13,23 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
     + "</a>\r\n</li>";
   return buffer;
   });
+templates['calendar-item'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "﻿<article class=\"calendar-item remote-calendar\">\r\n    <div class=\"calendar-content\">\r\n      <input type=\"text\" class=\"calendar-name\" value=\"";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = (depth0 && depth0.name); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\"/>\r\n      <br/>\r\n      <h3>";
+  if (stack1 = helpers.events_count) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = (depth0 && depth0.events_count); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
+  buffer += escapeExpression(stack1)
+    + " events</h3>\r\n    </div>\r\n\r\n    <i class=\"dark-blue-button delete-document\"> </i>\r\n</article>";
+  return buffer;
+  });
 templates['calendar-manager-panel-toolbar'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -78,7 +95,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "﻿<div id=\"page-number\">\r\n  <p>\r\n    << 1/1 >>\r\n  </p>\r\n</div>";
+  return "﻿<div id=\"page-number\">\r\n  <p>\r\n    Your documents:\r\n  </p>\r\n</div>";
   });
 templates['document-manager-panel'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
@@ -87,6 +104,22 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 
   return "﻿<div id=\"document-manager-panel\">\r\n<!-- Note: use this div for the transistions -->\r\n  <article class=\"file-item\">\r\n	  <div class=\"file-title\">\r\n		  <h3 id=\"upload-area\">Drag a document to upload!</h3>\r\n	  </div>\r\n  </article>\r\n</div>";
+  });
+templates['home-panel-toolbar'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "﻿<div id=\"page-number\">\r\n  Your calendars:\r\n</div>";
+  });
+templates['home-panel'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "﻿<div id=\"home-panel\">\r\n  <!-- Note: use this div for the transistions -->\r\n  <article class=\"calendar-item\" id =\"create-calendar\">\r\n    <div class=\"calendar-content\">\r\n      <h2>Create a new calendar!</h2>\r\n      <img src=\"/icons/add-button.png\" alt=\"add\" width=\"50\" height=\"50\"/>\r\n    </div>\r\n  </article>\r\n</div>";
   });
 templates['item-manager-panel-toolbar'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
@@ -103,6 +136,14 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 
   return "<div>\r\n<!-- Note: use this div for the transistions -->\r\n<!-- this div needed here? -->\r\n	<div id=\"item-create-frame\">\r\n		<form>\r\n			<label>Title:</label> <input type=\"text\" name=\"title\" size=\"23\" /><br />\r\n			<label>From:</label> <input type=\"text\" name=\"fromTime\" value=\"12:00\" size=\"6\"/>, <input class=\"datepicker\" type=\"text\" name=\"fromDate\" value=\"01/01/2014\" size=\"11\"/><br />\r\n			<label>To:</label> <input type=\"text\" name=\"toTime\" value=\"13:00\" size=\"6\"/>, <input class=\"datepicker\" type=\"text\" name=\"toDate\" value=\"01/01/2014\" size=\"11\"/><br />\r\n			<label>Location:</label> <input type=\"text\" name=\"location\" size=\"23\" /><br />\r\n			<label>Calendar:</label> <select id=\"available-calendars\">\r\n				<!--remove these options after calendars can be added dynamically-->\r\n				<option value=\"calendar1\">Calendar1</option>\r\n				<option value=\"calendar2\">Calendar2</option>\r\n			</select><br />\r\n			<label>Description:</label> <textarea name=\"description\" cols=\"18\" rows=\"6\"></textarea><br />\r\n			<label>Documents:</label><ul id=\"added-documents\">\r\n				<!--remove these list-items after documents can be added dynamically-->\r\n				<li>Document 1</li>\r\n				<li>Document 2</li>\r\n			</ul><br />\r\n		</form>\r\n		<div class=\"dark-blue-button save-button\">\r\n			<h2>Save</h2>\r\n		</div>\r\n	</div>\r\n</div>";
+  });
+templates['offline-home-panel'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "﻿<div id=\"document-manager-panel\">\r\n<!-- Note: use this div for the transistions -->\r\n  <article class=\"welcome-message\">\r\n    <h3>Welcome to My Calendar! <br/> Connect yourself in order to access our features!</h3>\r\n  </article>\r\n</div>";
   });
 templates['offline-user-connection'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
