@@ -112,7 +112,11 @@ export class Event {
         }
 
         if (req.body.documents) {
-            event.documents = req.body.documents;
+            if (req.body.documents == 'empty') {
+                event.documents = [];
+            } else {
+                event.documents = req.body.documents;
+            }
         }
 
         event.owner = req.user._id;

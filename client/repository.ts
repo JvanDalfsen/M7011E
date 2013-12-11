@@ -53,17 +53,29 @@ module MyCalendar {
         public save(obj: T): JQueryPromise<T> {
             if (this.isCalendar()) {
                 // Transform the ref into strings.
-                (<any>obj).events = (<Models.Calendar><any>obj).events.map(this.extractRef);                
+                (<any>obj).events = (<Models.Calendar><any>obj).events.map(this.extractRef);
+
+                if ((<any>obj).events.length <= 0) {
+                    (<any>obj).events = "empty";
+                }          
             }
 
             if (this.isEvent()) {
                 // Transform the ref into strings.
                 (<any>obj).documents = (<Models.Event><any>obj).documents.map(this.extractRef);
+
+                if ((<any>obj).documents.length <= 0) {
+                    (<any>obj).documents = "empty";
+                }  
             }
 
             if (this.isUser()) {
                 // Transform the ref into strings.
                 (<any>obj).calendars = (<Models.User><any>obj).calendars.map(this.extractRef);
+
+                if ((<any>obj).calendars.length <= 0) {
+                    (<any>obj).calendars = "empty";
+                }  
             }
 
             return this.callAPI('PUT', '/' + obj.getRefId(), obj).then((json: any): any => {

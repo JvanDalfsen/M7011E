@@ -1,4 +1,4 @@
-﻿/// <reference path="./definitions/jquery.d.ts"/>
+/// <reference path="./definitions/jquery.d.ts"/>
 /// <reference path="./models/model.ts"/>
 /// <reference path="./models/calendar.ts"/>
 /// <reference path="./models/event.ts"/>
@@ -52,16 +52,28 @@ var MyCalendar;
             if (this.isCalendar()) {
                 // Transform the ref into strings.
                 (obj).events = (obj).events.map(this.extractRef);
+
+                if ((obj).events.length <= 0) {
+                    (obj).events = "empty";
+                }
             }
 
             if (this.isEvent()) {
                 // Transform the ref into strings.
                 (obj).documents = (obj).documents.map(this.extractRef);
+
+                if ((obj).documents.length <= 0) {
+                    (obj).documents = "empty";
+                }
             }
 
             if (this.isUser()) {
                 // Transform the ref into strings.
                 (obj).calendars = (obj).calendars.map(this.extractRef);
+
+                if ((obj).calendars.length <= 0) {
+                    (obj).calendars = "empty";
+                }
             }
 
             return this.callAPI('PUT', '/' + obj.getRefId(), obj).then(function (json) {
@@ -112,8 +124,9 @@ var MyCalendar;
             } else if (this.isEvent()) {
                 var event = new MyCalendar.Models.Event();
                 event._id = json._id;
-                event.begin = json.being;
+                event.begin = json.begin;
                 event.end = json.end;
+                event.location = json.location;
                 event.name = json.name;
                 event.description = json.description;
 

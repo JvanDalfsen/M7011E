@@ -35,7 +35,11 @@ var Event = (function () {
             var update = {};
 
             if (req.body.calendars) {
-                update.calendars = req.body.calendars;
+                if (req.body.calendars == 'empty') {
+                    update.calendars = [];
+                } else {
+                    update.calendars = req.body.calendars;
+                }
             }
 
             Models.User.findByIdAndUpdate(req.user._id, update, function (err, user) {

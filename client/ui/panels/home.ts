@@ -96,7 +96,9 @@ module MyCalendar.UI.Panels {
                     calendarItem.find('.calendar-name').on('input', (ev: JQueryEventObject) => {
                         ev.preventDefault();
                         ev.stopPropagation();
-                        calendarsRepository.update(calendar.getRefId(), { name: calendarItem.find('.calendar-name').val() });
+                        calendarsRepository.update(calendar.getRefId(), { name: calendarItem.find('.calendar-name').val() }).done((json) => {
+                            calendar.name = json.name;
+                        });                        
                     });
 
                     calendarItem.find('.calendar-name').click((ev: JQueryEventObject) => {
@@ -104,8 +106,7 @@ module MyCalendar.UI.Panels {
                     });
 
                     calendarItem.click(() => {
-                        PanelHost.getInstance().pushPanel(new Panels.CalendarManagerPanel());
-                        // PanelHost.getInstance().pushPanel(new Panels.CalendarManagerPanel(calendar));
+                        PanelHost.getInstance().pushPanel(new Panels.CalendarManagerPanel(calendar));
                     });
                 });
             });

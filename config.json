@@ -3,5 +3,5 @@
 	"staticFolderPath": "client/static",
     "database": "mongodb://mycalendar:mycalendar@ds053808.mongolab.com:53808/heroku_app20209388",
 	"compress": true,
-	"hostname": "localhost"
+	"hostname": "mysterious-everglades-3254.herokuapp.com"
 }

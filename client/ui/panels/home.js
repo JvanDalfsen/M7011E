@@ -102,8 +102,7 @@
                             });
 
                             calendarItem.click(function () {
-                                UI.PanelHost.getInstance().pushPanel(new UI.Panels.CalendarManagerPanel());
-                                // PanelHost.getInstance().pushPanel(new Panels.CalendarManagerPanel(calendar));
+                                UI.PanelHost.getInstance().pushPanel(new UI.Panels.CalendarManagerPanel(calendar));
                             });
                         });
                     });

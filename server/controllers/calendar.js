@@ -62,6 +62,8 @@ var Calendar = (function () {
             } else {
                 var updatedCalendar = Calendar.buildModelFromReq(req);
 
+                console.log(updatedCalendar);
+
                 Models.Calendar.findByIdAndUpdate(req.params.id, updatedCalendar, function (err, calendar) {
                     if (err || !calendar) {
                         res.send(400, err);
@@ -97,7 +99,11 @@ var Calendar = (function () {
         }
 
         if (req.body.events) {
-            calendar.events = req.body.events;
+            if (req.body.events == 'empty') {
+                calendar.events = [];
+            } else {
+                calendar.events = req.body.events;
+            }
         }
 
         calendar.owner = req.user._id;

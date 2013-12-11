@@ -39,43 +39,6 @@ module MyCalendar.UI.Panels {
 
         private updateDocumentList(query?: string): void {
             this._panel.find('.uploaded-file').remove();
-
-            eventsRepository.findById(this.currentEventId).done((event: Models.Event) => {
-                event.documents.forEach((refDocument: MyCalendar.Models.Ref<MyCalendar.Models.Document>) => {
-                    refDocument.deference().done((document: Models.Document) => {
-                        // If the filter is applied.
-                        if (query) {
-                            if (document.name.toUpperCase().indexOf(query.toUpperCase()) == -1) {
-                                return;
-                            }
-                        }
-
-                        var params: any = document;
-
-                        if (document.type == 'image%2Fjpeg' || document.type == 'image%2Fpng') {
-                            params.picture_path = '/api/documents/download/' + document.getRefId();
-
-                        }
-
-                        params.document_path = '/api/documents/download/' + document.getRefId();
-
-                        var documentItem = $(Handlebars.templates['document-item'](params));
-                        this._panel.append(documentItem);
-
-                        documentItem.find('.delete-document').click(() => {
-                            documentsRepository.deleteById(document.getRefId()).done(() => {
-                                this.updateDocumentList();
-                            });
-                        });
-
-                        documentItem.find('.file-title').children().on('input', () => {
-                            documentsRepository.update(document.getRefId(), { name: documentItem.find('.file-title').children().first().val() });
-                        });
-                    });
-                });
-            });
-            /*documentsRepository.find({}).done((documents :Array<Models.Document>): void => {
-        private updateDocumentList(query?: string): void {
             documentsRepository.find({}).done((documents: Array<Models.Document>): void => {
                 this._panel.find('.uploaded-file').remove();
                 documents.forEach((document: Models.Document) => {
@@ -109,7 +72,7 @@ module MyCalendar.UI.Panels {
                         documentsRepository.update(document.getRefId(), { name: documentItem.find('.file-title').children().first().val() });
                     });                    
                 });
-            });*/
+            });
         }
 
         private onFileDragOver(event: JQueryEventObject) {

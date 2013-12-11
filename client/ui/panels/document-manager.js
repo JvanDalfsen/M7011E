@@ -18,8 +18,10 @@
                     this._uploadArea.on("dragleave", this.onFileDragLeave.bind(this));
                     this._uploadArea.on("drop", this.onFileDrop.bind(this));
                     this.updateDocumentList();
-                };
 
+                    $("#save-button").click(function () {
+                    });
+                };
                 DocumentManagerPanel.prototype.onremove = function () {
                 };
 
@@ -27,8 +29,13 @@
                     return $(Handlebars.templates['document-manager-panel']());
                 };
 
+                DocumentManagerPanel.prototype.loadEvent = function (eventId) {
+                    this.currentEventId = eventId;
+                };
+
                 DocumentManagerPanel.prototype.updateDocumentList = function (query) {
                     var _this = this;
+                    this._panel.find('.uploaded-file').remove();
                     MyCalendar.documentsRepository.find({}).done(function (documents) {
                         _this._panel.find('.uploaded-file').remove();
                         documents.forEach(function (document) {
