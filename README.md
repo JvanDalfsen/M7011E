@@ -15,16 +15,19 @@ This web-service is written using the following technologies:
 
 Client side:
 
-- JavaScript, HTML5 and CSS3
+- TypeScript, HTML5 and CSS3
 
-- JQuery, AngularJS and HandleBars
+- JQuery, HandleBars
 
 
 Server side:
+- TypeScript
 
 - NodeJS, ExpressJS
 
 - MongoDB, Mongoose
+
+- Passport 
 
 
 Communication:
