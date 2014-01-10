@@ -125,12 +125,12 @@ module MyCalendar.UI.Panels {
                 beginDate.setDate(beginDate.getDate() + 1);
                 var startTime = $("#fromTime").val();
                 beginDate.setHours(startTime.substring(0, startTime.indexOf(":")));
-                beginDate.setMinutes(startTime.substring(startTime.indexOf(":") + 1, startTime.length));
+                beginDate.setHours(startTime.substring(startTime.indexOf(":") + 1, startTime.length));
                 var endDate = $("#toDate").datepicker("getDate");
                 endDate.setDate(endDate.getDate() + 1);
                 var endTime = $("#toTime").val();
                 endDate.setHours(endTime.substring(0, endTime.indexOf(":")));
-                endDate.setMinutes(endTime.substring(endTime.indexOf(":") + 1, endTime.length));
+                endDate.setHours(endTime.substring(endTime.indexOf(":") + 1, endTime.length));
 
                 var update: any = {};
                 update.name = $('#title').val();
@@ -157,8 +157,8 @@ module MyCalendar.UI.Panels {
                 $('#title').val(event.name);
                 $('#description').val(event.description);
                 $('#location').val(event.location);
-                $('#fromTime').val(event.begin.getMinutes + ":" + event.begin.getHours);
-                $('#toTime').val(event.end.getMinutes + ":" + event.end.getHours);
+                $('#fromTime').val(event.begin.getMinutes + ":" + event.begin.getHours());
+                $('#toTime').val(event.end.getMinutes + ":" + event.end.getHours());
                 $(".datepicker").datepicker({ dateFormat: 'dd-mm-yy' });
 
                 var beginn = "" + (<Date>event.begin).getDate() + "-" + (<Date>event.begin).getMonth() + "-" + (<Date>event.begin).getFullYear();
